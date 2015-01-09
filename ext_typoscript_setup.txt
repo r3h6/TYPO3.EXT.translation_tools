@@ -1,0 +1,1 @@
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:translation_tools/Configuration/TypoScript/setup.txt">

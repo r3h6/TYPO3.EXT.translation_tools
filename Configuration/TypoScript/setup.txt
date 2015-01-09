@@ -1,0 +1,12 @@
+
+ # Module configuration
+module.tx_translationtools {
+	persistence {
+		storagePid = {$module.tx_translationtools.persistence.storagePid}
+	}
+	view {
+		templateRootPath = {$module.tx_translationtools.view.templateRootPath}
+		partialRootPath = {$module.tx_translationtools.view.partialRootPath}
+		layoutRootPath = {$module.tx_translationtools.view.layoutRootPath}
+	}
+}

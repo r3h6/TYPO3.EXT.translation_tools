@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2014-10-09T22:11:48Z" product-name="translation_tools">
+		<header/>
+		<body>
+			<trans-unit id="tx_translationtools_domain_model_translation">
+				<source>Translation</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

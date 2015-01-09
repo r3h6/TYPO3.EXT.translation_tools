@@ -1,0 +1,108 @@
+{
+    "modules": [
+        {
+            "config": {
+                "position": [
+                    187,
+                    74
+                ]
+            },
+            "name": "New Model Object",
+            "value": {
+                "actionGroup": {
+                    "_default0_list": true,
+                    "_default1_show": false,
+                    "_default2_new_create": false,
+                    "_default3_edit_update": false,
+                    "_default4_delete": false,
+                    "customActions": [
+                        ""
+                    ]
+                },
+                "name": "Translation",
+                "objectsettings": {
+                    "addDeletedField": true,
+                    "addHiddenField": true,
+                    "addStarttimeEndtimeFields": true,
+                    "aggregateRoot": false,
+                    "categorizable": false,
+                    "description": "",
+                    "mapToTable": "",
+                    "parentClass": "",
+                    "sorting": false,
+                    "type": "Entity",
+                    "uid": "932228501966"
+                },
+                "propertyGroup": {
+                    "properties": [
+
+                    ]
+                },
+                "relationGroup": {
+                    "relations": [
+
+                    ]
+                }
+            }
+        }
+    ],
+    "properties": {
+        "backendModules": [
+            {
+                "actions": {
+                    "controllerActionCombinations": "Translation=>list"
+                },
+                "description": "Translation tools",
+                "key": "tools",
+                "mainModule": "user",
+                "name": "Translation tools",
+                "tabLabel": "Translation tools"
+            },
+            {
+                "actions": {
+                    "controllerActionCombinations": "Translation=>list"
+                },
+                "description": "Translation admin",
+                "key": "admin",
+                "mainModule": "tools",
+                "name": "Translation admin",
+                "tabLabel": "Translation admin"
+            }
+        ],
+        "description": "Translation tools",
+        "emConf": {
+            "category": "module",
+            "custom_category": "",
+            "dependsOn": "typo3 => 6.2\n",
+            "disableLocalization": false,
+            "disableVersioning": false,
+            "sourceLanguage": "en",
+            "state": "alpha",
+            "targetVersion": "6.2",
+            "version": "1.0.0"
+        },
+        "extensionKey": "translation_tools",
+        "name": "Translation tools",
+        "originalExtensionKey": "translation_tools",
+        "persons": [
+            {
+                "company": "",
+                "email": "remo.haeusler@hotmail.com",
+                "name": "Remo H\u00e4usler",
+                "role": "Developer"
+            }
+        ],
+        "plugins": [
+
+        ],
+        "vendorName": "MONOGON"
+    },
+    "wires": [
+
+    ],
+    "log": {
+        "last_modified": "2014-10-09 10:11",
+        "extension_builder_version": "6.2.0",
+        "be_user": " (1)"
+    }
+}
