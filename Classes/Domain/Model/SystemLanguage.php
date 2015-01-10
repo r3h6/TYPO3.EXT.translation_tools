@@ -1,5 +1,5 @@
 <?php
-namespace MONOGON\TranslationTools\Controller;
+namespace MONOGON\TranslationTools\Domain\Model;
 
 /***************************************************************
  *
@@ -26,46 +26,63 @@ namespace MONOGON\TranslationTools\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use \MONOGON\TranslationTools\Exception\ExecutionTimeException;
-
 /**
- * TranslationController
+ * System Languages
  */
-class TranslationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
+class SystemLanguage extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
 	/**
-	 * @var MONOGON\TranslationTools\Domain\Repository\TranslationRepository
-	 * @inject
-	 */
-	protected $translationRepository = NULL;
-
-	/**
-	 * action list
+	 * Title
 	 *
-	 * @param \MONOGON\TranslationTools\Domain\Model\Dto\Demand $demand
-	 * @return void
+	 * @var string
+	 * @validate NotEmpty
 	 */
-	public function listAction(\MONOGON\TranslationTools\Domain\Model\Dto\Demand $demand = NULL) {
-		if ($demand === NULL) {
-			$demand = $this->objectManager->get('MONOGON\\TranslationTools\\Domain\\Model\\Dto\\Demand');
-		}
-		try {
-			$translations = $this->translationRepository->findDemanded($demand);
-		} catch (ExecutionTimeException $exception){
-			$translations = NULL;
-			$this->addFlashMessage($exception->getMessage());
-		}
-		$this->view->assign('translations', $translations);
-		$this->view->assign('demand', $demand);
+	protected $title = '';
+
+	/**
+	 * Flag
+	 *
+	 * @var string
+	 * @validate NotEmpty
+	 */
+	protected $flag = '';
+
+	/**
+	 * Returns the title
+	 *
+	 * @return string $title
+	 */
+	public function getTitle() {
+		return $this->title;
 	}
 
 	/**
-	 * action
+	 * Sets the title
 	 *
+	 * @param string $title
 	 * @return void
 	 */
-	public function updateAction() {
+	public function setTitle($title) {
+		$this->title = $title;
+	}
 
+	/**
+	 * Returns the flag
+	 *
+	 * @return string $flag
+	 */
+	public function getFlag() {
+		return $this->flag;
+	}
+
+	/**
+	 * Sets the flag
+	 *
+	 * @param string $flag
+	 * @return void
+	 */
+	public function setFlag($flag) {
+		$this->flag = $flag;
 	}
 
 }

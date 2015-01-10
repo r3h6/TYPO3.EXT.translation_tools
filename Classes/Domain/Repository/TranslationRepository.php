@@ -27,6 +27,8 @@ namespace MONOGON\TranslationTools\Domain\Repository;
  ***************************************************************/
 
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
+use \MONOGON\TranslationTools\Configuration\PhpIni;
+use \MONOGON\TranslationTools\Exception\ExecutionTimeException;
 
 /**
  * TranslationRepository
@@ -51,7 +53,7 @@ class TranslationRepository {
 	 */
 	protected $propertyMapper;
 
-	public function findDemanded ($demand){
+	public function findDemanded (\MONOGON\TranslationTools\Domain\Model\Dto\Demand $demand){
 		$translations = array();
 
 		if ($file = $demand->getFile()){
@@ -64,11 +66,17 @@ class TranslationRepository {
 		$localizationFactory = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Localization\\LocalizationFactory');
 
 		$sourceLanguage = 'default';
-		$language = 'de';
+		$languages = $demand->getLanguages();
 		$charset = 'utf8';
-		$language = NULL;
+		//$language = NULL;
+
+		$microTimeLimit = $GLOBALS['TYPO3_MISC']['microtime_start'] + (0.75 * PhpIni::getMaxExecutionTime());
 
 		foreach ($files as $file){
+
+			if (microtime(TRUE) > $microTimeLimit){
+				throw new ExecutionTimeException("Error Processing Request", 1420919679);
+			}
 
 			/*if ($demand->getLabel()){
 				$filePath = GeneralUtility::getFileAbsFileName($file);
@@ -77,28 +85,31 @@ class TranslationRepository {
 					continue;
 				}
 			}*/
+			foreach ($languages as $language){
 
-			$parsedData = $localizationFactory->getParsedData($file, $language, $charset, self::ERROR_MODE_EXCEPTION);
 
-			foreach ($parsedData[$sourceLanguage] as $id => $value){
-				$target = isset($parsedData[$language][$id][0]['target']) ? $parsedData[$language][$id][0]['target']: NULL;
-				$source = $parsedData[$sourceLanguage][$id][0]['source'];
+				$parsedData = $localizationFactory->getParsedData($file, $language, $charset, self::ERROR_MODE_EXCEPTION);
 
-				if ($demand->getLabel() && stripos("$source,$target", $demand->getLabel()) === FALSE){
-					continue;
+				foreach ($parsedData[$sourceLanguage] as $id => $value){
+					$target = isset($parsedData[$language][$id][0]['target']) ? $parsedData[$language][$id][0]['target']: NULL;
+					$source = $parsedData[$sourceLanguage][$id][0]['source'];
+
+					if ($demand->getLabel() && stripos("$source,$target", $demand->getLabel()) === FALSE){
+						continue;
+					}
+					if ($demand->getId() && stripos($id, $demand->getId()) === FALSE){
+						continue;
+					}
+
+					$translations[$id][$language] = $this->propertyMapper->convert(array(
+						'source' => $source,
+						'target' => $target,
+						'id' => $id,
+						'file' => $file,
+						'sourceLanguage' => $sourceLanguage,
+						'targetLanguage' => $language
+					), $this->model);
 				}
-				if ($demand->getId() && stripos($id, $demand->getId()) === FALSE){
-					continue;
-				}
-
-				$translations[] = $this->propertyMapper->convert(array(
-					'source' => $source,
-					'target' => $target,
-					'id' => $id,
-					'file' => $file,
-					'sourceLanguage' => $sourceLanguage,
-					'targetLanguage' => $language
-				), $this->model);
 			}
 		}
 

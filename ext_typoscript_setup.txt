@@ -1,1 +1,19 @@
+
+
+## EXTENSION BUILDER DEFAULTS END TOKEN - Everything BEFORE this line is overwritten with the defaults of the extension builder
+
 <INCLUDE_TYPOSCRIPT: source="FILE:EXT:translation_tools/Configuration/TypoScript/setup.txt">
+
+config.tx_extbase{
+    persistence{
+        classes{
+
+            MONOGON\TranslationTools\Domain\Model\SystemLanguage {
+                mapping {
+                    tableName = sys_language
+                }
+            }
+
+    	}
+    }
+}

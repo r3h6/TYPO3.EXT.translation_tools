@@ -1,8 +1,6 @@
 {namespace mgn=MONOGON\TranslationTools\ViewHelpers}
 <f:layout name="Default" />
 
-<f:debug>{parsedData}</f:debug>
-<f:debug>{files}</f:debug>
 
 <f:section name="content">
 
@@ -12,7 +10,10 @@
 
 <f:form class="inline-form" action="list" name="demand" object="{demand}">
   <div class="form-group">
-    <f:form.select property="file" options="{files}" size="1" class="form-control" title="{f:translate(key: 'tx_addresscollection_domain_model_address.addressgroup')}" prependOptionValue="" prependOptionLabel="" />
+    <f:form.select property="file" options="{mgn:form.options.files()}" size="1" class="form-control" title="{f:translate(key: 'tx_addresscollection_domain_model_address.addressgroup')}" prependOptionValue="" prependOptionLabel="" />
+  </div>
+  <div class="form-group">
+    <f:form.select class="form-control" multiple="multiple" property="languages" options="{mgn:form.options.systemLanguages()}" optionValueField="flag" optionLabelField="title" prependOptionValue="" prependOptionLabel="" />
   </div>
   <div class="form-group">
     <f:form.textfield property="id" class="form-control" title="" placeholder="id" />
@@ -23,21 +24,38 @@
   <input type="submit">
 </f:form>
 
+<mgn:translationTable translations="{translations}" demand="{demand}"></mgn:translationTable>
+
+<f:comment>
 
 <table class="translations table table-striped" >
     <tr>
       <th>ID</th>
       <th>Source</th>
-      <th>Target</th>
+      <f:if condition="{demand.languages}">
+        <f:for each="{demand.languages}" as="language">
+          <th>{language}</th>
+        </f:for>
+      </f:if>
     </tr>
 
-  <f:for each="{translations}" as="translation">
+  <f:for each="{translations}" as="translation" key="translationId">
     <tr>
-      <td>{translation.id}</td>
-      <td class="editable">{translation.source}</td>
-      <td class="editable">{translation.target}</td>
+      <td>{translationId}</td>
+      <f:if condition="{demand.languages}">
+        <f:for each="{demand.languages}" as="language">
+          <td class="editable">{translation.{language}.source}</td>
+        </f:for>
+      </f:if>
     </tr>
   </f:for>
 </table>
+</f:comment>
+
+<f:form name="translation">
+  <f:form.hidden property="id" />
+  <f:form.hidden property="source" />
+  <f:form.hidden property="target" />
+</f:form>
 
 </f:section>

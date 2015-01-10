@@ -1,10 +1,25 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2014-10-09T22:11:48Z" product-name="translation_tools">
+	<file source-language="en" datatype="plaintext" original="messages" date="2015-01-10T19:43:57Z" product-name="translation_tools">
 		<header/>
 		<body>
 			<trans-unit id="tx_translationtools_domain_model_translation">
 				<source>Translation</source>
+			</trans-unit>
+			<trans-unit id="tx_translationtools_domain_model_systemlanguage">
+				<source>System Language</source>
+			</trans-unit>
+			<trans-unit id="tx_translationtools_domain_model_systemlanguage.title">
+				<source>Title</source>
+			</trans-unit>
+			<trans-unit id="tx_translationtools_domain_model_systemlanguage.flag">
+				<source>Flag</source>
+			</trans-unit>
+			<trans-unit id="sys_language.tx_extbase_type.Tx_TranslationTools_SystemLanguage">
+				<source>Translation tools SystemLanguage</source>
+			</trans-unit>
+			<trans-unit id="tx_translationtools_domain_model_systemlanguage.iso_code">
+				<source>Iso Code</source>
 			</trans-unit>
 		</body>
 	</file>

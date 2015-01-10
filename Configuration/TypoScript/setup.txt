@@ -10,3 +10,5 @@ module.tx_translationtools {
 		layoutRootPath = {$module.tx_translationtools.view.layoutRootPath}
 	}
 }
+
+## EXTENSION BUILDER DEFAULTS END TOKEN - Everything BEFORE this line is overwritten with the defaults of the extension builder

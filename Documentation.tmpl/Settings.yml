@@ -8,7 +8,7 @@
 
 ---
 conf.py:
-  copyright: 2014
+  copyright: 2015
   project: Translation tools
   version: 1.0.0
   release: 1.0.0

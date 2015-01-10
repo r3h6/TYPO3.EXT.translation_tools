@@ -33,46 +33,52 @@ class Translation extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
 	/**
 	 * [$source description]
+	 *
 	 * @var string
 	 */
-	protected $source;
+	protected $source = NULL;
 
 	/**
 	 * [$target description]
+	 *
 	 * @var string
 	 */
-	protected $target;
+	protected $target = NULL;
 
 	/**
 	 * [$sourceLanguage description]
+	 *
 	 * @var string
 	 */
-	protected $sourceLanguage;
+	protected $sourceLanguage = NULL;
 
 	/**
 	 * [$targetLanguage description]
+	 *
 	 * @var string
 	 */
-	protected $targetLanguage;
+	protected $targetLanguage = NULL;
 
 	/**
 	 * [$file description]
+	 *
 	 * @var string
 	 */
-	protected $file;
+	protected $file = NULL;
 
 	/**
 	 * [$id description]
+	 *
 	 * @var string
 	 */
-	protected $id;
+	protected $id = NULL;
 
 	/**
 	 * Returns the  source
 	 *
 	 * @return string $source
 	 */
-	public function getSource(){
+	public function getSource() {
 		return $this->source;
 	}
 
@@ -82,7 +88,7 @@ class Translation extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 * @param string $source
 	 * @return object $this
 	 */
-	public function setSource($source){
+	public function setSource($source) {
 		$this->source = $source;
 		return $this;
 	}
@@ -92,7 +98,7 @@ class Translation extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 *
 	 * @return string $target
 	 */
-	public function getTarget(){
+	public function getTarget() {
 		return $this->target;
 	}
 
@@ -102,7 +108,7 @@ class Translation extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 * @param string $target
 	 * @return object $this
 	 */
-	public function setTarget($target){
+	public function setTarget($target) {
 		$this->target = $target;
 		return $this;
 	}
@@ -112,7 +118,7 @@ class Translation extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 *
 	 * @return string $sourceLanguage
 	 */
-	public function getSourceLanguage(){
+	public function getSourceLanguage() {
 		return $this->sourceLanguage;
 	}
 
@@ -122,7 +128,7 @@ class Translation extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 * @param string $sourceLanguage
 	 * @return object $this
 	 */
-	public function setSourceLanguage($sourceLanguage){
+	public function setSourceLanguage($sourceLanguage) {
 		$this->sourceLanguage = $sourceLanguage;
 		return $this;
 	}
@@ -132,7 +138,7 @@ class Translation extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 *
 	 * @return string $targetLanguage
 	 */
-	public function getTargetLanguage(){
+	public function getTargetLanguage() {
 		return $this->targetLanguage;
 	}
 
@@ -142,7 +148,7 @@ class Translation extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 * @param string $targetLanguage
 	 * @return object $this
 	 */
-	public function setTargetLanguage($targetLanguage){
+	public function setTargetLanguage($targetLanguage) {
 		$this->targetLanguage = $targetLanguage;
 		return $this;
 	}
@@ -152,7 +158,7 @@ class Translation extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 *
 	 * @return string $file
 	 */
-	public function getFile(){
+	public function getFile() {
 		return $this->file;
 	}
 
@@ -162,7 +168,7 @@ class Translation extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 * @param string $file
 	 * @return object $this
 	 */
-	public function setFile($file){
+	public function setFile($file) {
 		$this->file = $file;
 		return $this;
 	}
@@ -172,7 +178,7 @@ class Translation extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 *
 	 * @return string $id
 	 */
-	public function getId(){
+	public function getId() {
 		return $this->id;
 	}
 
@@ -182,8 +188,9 @@ class Translation extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 * @param string $id
 	 * @return object $this
 	 */
-	public function setId($id){
+	public function setId($id) {
 		$this->id = $id;
 		return $this;
 	}
+
 }

@@ -3,8 +3,8 @@ namespace MONOGON\TranslationTools\Tests\Unit\Controller;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2014 R3 H6 <r3h6@outlook.com>
- *
+ *  (c) 2015 Remo Häusler <remo.haeusler@hotmail.com>
+ *  			
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -27,7 +27,7 @@ namespace MONOGON\TranslationTools\Tests\Unit\Controller;
 /**
  * Test case for class MONOGON\TranslationTools\Controller\TranslationController.
  *
- * @author R3 H6 <r3h6@outlook.com>
+ * @author Remo Häusler <remo.haeusler@hotmail.com>
  */
 class TranslationControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 
@@ -60,5 +60,18 @@ class TranslationControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		$this->inject($this->subject, 'view', $view);
 
 		$this->subject->listAction();
+	}
+
+	/**
+	 * @test
+	 */
+	public function updateActionUpdatesTheGivenTranslationInTranslationRepository() {
+		$translation = new \MONOGON\TranslationTools\Domain\Model\Translation();
+
+		$translationRepository = $this->getMock('', array('update'), array(), '', FALSE);
+		$translationRepository->expects($this->once())->method('update')->with($translation);
+		$this->inject($this->subject, 'translationRepository', $translationRepository);
+
+		$this->subject->updateAction($translation);
 	}
 }

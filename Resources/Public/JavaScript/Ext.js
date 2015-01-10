@@ -3,13 +3,13 @@
 		var $el = $(this);
 		var text = $el.text();
 		$el.html(
-			'<form class="form">' +
+			'<div class="form">' +
 			'<div class="form-group">' +
 			'<textarea class="form-control">' + text + '</textarea>' +
 			'</div>' +
 			'<input class="btn btn-default" type="submit" value="ok">' +
 			'<input class="btn btn-default" type="submit" value="nok">' +
-			'</form>'
+			'</div>'
 		);
 	};
 }(jQuery));

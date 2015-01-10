@@ -27,21 +27,21 @@ namespace MONOGON\TranslationTools\Tests\Unit\Domain\Model;
  ***************************************************************/
 
 /**
- * Test case for class \MONOGON\TranslationTools\Domain\Model\Translation.
+ * Test case for class \MONOGON\TranslationTools\Domain\Model\SystemLanguage.
  *
  * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  * @author Remo Häusler <remo.haeusler@hotmail.com>
  */
-class TranslationTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
+class SystemLanguageTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	/**
-	 * @var \MONOGON\TranslationTools\Domain\Model\Translation
+	 * @var \MONOGON\TranslationTools\Domain\Model\SystemLanguage
 	 */
 	protected $subject = NULL;
 
 	protected function setUp() {
-		$this->subject = new \MONOGON\TranslationTools\Domain\Model\Translation();
+		$this->subject = new \MONOGON\TranslationTools\Domain\Model\SystemLanguage();
 	}
 
 	protected function tearDown() {
@@ -51,7 +51,46 @@ class TranslationTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function dummyTestToNotLeaveThisFileEmpty() {
-		$this->markTestIncomplete();
+	public function getTitleReturnsInitialValueForString() {
+		$this->assertSame(
+			'',
+			$this->subject->getTitle()
+		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function setTitleForStringSetsTitle() {
+		$this->subject->setTitle('Conceived at T3CON10');
+
+		$this->assertAttributeEquals(
+			'Conceived at T3CON10',
+			'title',
+			$this->subject
+		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function getFlagReturnsInitialValueForString() {
+		$this->assertSame(
+			'',
+			$this->subject->getFlag()
+		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function setFlagForStringSetsFlag() {
+		$this->subject->setFlag('Conceived at T3CON10');
+
+		$this->assertAttributeEquals(
+			'Conceived at T3CON10',
+			'flag',
+			$this->subject
+		);
 	}
 }

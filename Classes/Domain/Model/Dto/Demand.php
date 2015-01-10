@@ -51,9 +51,9 @@ class Demand extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
 	/**
 	 *
-	 * @var string
+	 * @var array
 	 */
-	protected $languages;
+	protected $languages = array();
 
 	/**
 	 * Returns the  file
@@ -112,6 +112,29 @@ class Demand extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 */
 	public function setId($id){
 		$this->id = $id;
+		return $this;
+	}
+
+	/**
+	 * Returns the languages
+	 *
+	 * @return array $languages
+	 */
+	public function getLanguages(){
+		if (empty($this->languages)){
+			return array('default');
+		}
+		return $this->languages;
+	}
+
+	/**
+	 * Sets the languages
+	 *
+	 * @param array $languages
+	 * @return object $this
+	 */
+	public function setLanguages($languages){
+		$this->languages = $languages;
 		return $this;
 	}
 }

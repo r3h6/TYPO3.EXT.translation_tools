@@ -16,7 +16,7 @@
                     "_default3_edit_update": false,
                     "_default4_delete": false,
                     "customActions": [
-                        ""
+                        "update"
                     ]
                 },
                 "name": "Translation",
@@ -44,13 +44,77 @@
                     ]
                 }
             }
+        },
+        {
+            "config": {
+                "position": [
+                    558,
+                    106
+                ]
+            },
+            "name": "New Model Object",
+            "value": {
+                "actionGroup": {
+                    "_default0_list": false,
+                    "_default1_show": false,
+                    "_default2_new_create": false,
+                    "_default3_edit_update": false,
+                    "_default4_delete": false,
+                    "customActions": [
+
+                    ]
+                },
+                "name": "SystemLanguage",
+                "objectsettings": {
+                    "addDeletedField": false,
+                    "addHiddenField": true,
+                    "addStarttimeEndtimeFields": false,
+                    "aggregateRoot": true,
+                    "categorizable": false,
+                    "description": "System Languages",
+                    "mapToTable": "sys_language",
+                    "parentClass": "",
+                    "sorting": false,
+                    "type": "Entity",
+                    "uid": "1408940804925"
+                },
+                "propertyGroup": {
+                    "properties": [
+                        {
+                            "allowedFileTypes": "",
+                            "maxItems": "1",
+                            "propertyDescription": "Title",
+                            "propertyIsExcludeField": false,
+                            "propertyIsRequired": true,
+                            "propertyName": "title",
+                            "propertyType": "String",
+                            "uid": "844645491103"
+                        },
+                        {
+                            "allowedFileTypes": "",
+                            "maxItems": "1",
+                            "propertyDescription": "Flag",
+                            "propertyIsExcludeField": false,
+                            "propertyIsRequired": true,
+                            "propertyName": "flag",
+                            "propertyType": "String",
+                            "uid": "580468718379"
+                        }
+                    ]
+                },
+                "relationGroup": {
+                    "relations": [
+
+                    ]
+                }
+            }
         }
     ],
     "properties": {
         "backendModules": [
             {
                 "actions": {
-                    "controllerActionCombinations": "Translation=>list"
+                    "controllerActionCombinations": "Translation=>list,update"
                 },
                 "description": "Translation tools",
                 "key": "tools",
@@ -101,7 +165,7 @@
 
     ],
     "log": {
-        "last_modified": "2014-10-09 10:11",
+        "last_modified": "2015-01-10 07:43",
         "extension_builder_version": "6.2.0",
         "be_user": " (1)"
     }

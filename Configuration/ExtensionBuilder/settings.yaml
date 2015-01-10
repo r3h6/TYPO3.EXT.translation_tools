@@ -46,7 +46,7 @@ overwriteSettings:
 
   Configuration:
     TCA: keep
-    #TypoScript: keep
+    TypoScript: merge
 
   Resources:
     Private:
