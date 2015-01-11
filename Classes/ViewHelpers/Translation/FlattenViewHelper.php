@@ -1,5 +1,5 @@
 <?php
-namespace MONOGON\TranslationTools\ViewHelpers\Form\Options;
+namespace MONOGON\TranslationTools\ViewHelpers\Translation;
 
 /***************************************************************
  *
@@ -26,25 +26,19 @@ namespace MONOGON\TranslationTools\ViewHelpers\Form\Options;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use MONOGON\TranslationTools\Utility\FileUtility;
-
 /**
- * TranslationController
+ *
  */
-class FilesViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
+class FlattenViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
-	 * @return array Files
+	 *
+	 * @param array $translationGroup
+	 * @param \MONOGON\TranslationTools\Domain\Model\Dto\Demand $data
+	 * @return type
 	 */
-	public function render (){
-		$options = array();
-		$files = FileUtility::getLocallangFiles();
-
-		foreach ($files as $file) {
-			$options[$file] = $file;
-		}
-
-		return $options;
+	public function render ($translationGroup = NULL, $demand = NULL){
+		$firstTranslation = reset($translationGroup);
 	}
 
 }

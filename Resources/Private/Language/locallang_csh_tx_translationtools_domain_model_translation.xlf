@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2015-01-10T19:43:57Z" product-name="translation_tools">
+	<file source-language="en" datatype="plaintext" original="messages" date="2015-01-11T22:06:20Z" product-name="translation_tools">
 		<header/>
 		<body>
+			<trans-unit id="id.description">
+				<source>id</source>
+			</trans-unit>
+			<trans-unit id="file.description">
+				<source>file</source>
+			</trans-unit>
+			<trans-unit id="units.description">
+				<source>Units</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

@@ -24,33 +24,31 @@
   <input type="submit">
 </f:form>
 
-<mgn:translationTable translations="{translations}" demand="{demand}"></mgn:translationTable>
-
-<f:comment>
-
 <table class="translations table table-striped" >
-    <tr>
-      <th>ID</th>
-      <th>Source</th>
-      <f:if condition="{demand.languages}">
-        <f:for each="{demand.languages}" as="language">
-          <th>{language}</th>
-        </f:for>
-      </f:if>
-    </tr>
+  <tr>
+    <th>ID</th>
+    <th>Source</th>
+    <f:if condition="{demand.languages}">
+      <f:for each="{demand.languages}" as="language">
+        <th>{language}</th>
+      </f:for>
+    </f:if>
+  </tr>
 
-  <f:for each="{translations}" as="translation" key="translationId">
-    <tr>
-      <td>{translationId}</td>
+  <f:for each="{translations}" as="translation">
+    <tr data-file="{translation.file}" data-id="{translation.id}">
+      <td title="{translation.file}">{translation.id}</td>
+      <td>{translation.source}</td>
       <f:if condition="{demand.languages}">
         <f:for each="{demand.languages}" as="language">
-          <td class="editable">{translation.{language}.source}</td>
+          <mgn:translation.unit translation="{translation}" language="{language}">
+            <td class="editable" data-targetLanguage="{unit.targetLanguage}">{unit.target}</td>
+          </mgn:translation.unit>
         </f:for>
       </f:if>
     </tr>
   </f:for>
 </table>
-</f:comment>
 
 <f:form name="translation">
   <f:form.hidden property="id" />

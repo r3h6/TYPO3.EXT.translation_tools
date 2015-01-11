@@ -3,15 +3,6 @@
 	<file source-language="en" datatype="plaintext" original="messages" date="2015-01-11T22:06:20Z" product-name="translation_tools">
 		<header/>
 		<body>
-			<trans-unit id="title.description">
-				<source>Title</source>
-			</trans-unit>
-			<trans-unit id="flag.description">
-				<source>Flag</source>
-			</trans-unit>
-			<trans-unit id="iso_code.description">
-				<source>ISO code</source>
-			</trans-unit>
 		</body>
 	</file>
 </xliff>

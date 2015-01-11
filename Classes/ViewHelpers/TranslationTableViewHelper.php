@@ -49,8 +49,8 @@ class TranslationTableViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\Abstra
 
 		$output .= '<thead>';
 		$output .= '<tr>';
-		$output .= '<th>ID</th>';
 		if (count($languages)){
+			$output .= '<th>ID</th>';
 			$output .= '<th>Source</th>';
 		}
 		foreach ($languages as $language){
@@ -64,16 +64,25 @@ class TranslationTableViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\Abstra
 
 		$output .= '<tbody>';
 
-		foreach ($translations as $translationId => $translation){
+		foreach ($translations as $translation){
 			$output .= '<tr>';
 
-			$output .= '<td>' . $translationId . '</td>';
 			if (count($languages)){
-				$output .= '<td>' . reset($translation)->getSource() . '</td>';
+				$firstTranslation = reset($translation);
+				if ($firstTranslation){
+					$output .= '<td title="' . $firstTranslation->getFile() . '">' . $firstTranslation->getId() . '</td>';
+					$output .= '<td>' . $firstTranslation->getSource() . '</td>';
+				} else {
+					$output .= '<td></td>';
+					$output .= '<td></td>';
+				}
 			}
-			\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($translation);
 			foreach ($languages as $language){
-				$output .= '<td>' . $translation[$language]->getTarget() . '</td>';
+				if (isset($translation[$language])){
+					$output .= '<td>' . $translation[$language]->getTarget() . '</td>';
+				} else {
+					$output .= '<td></td>';
+				}
 			}
 
 			$output .= '</tr>';

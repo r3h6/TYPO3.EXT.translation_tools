@@ -3,23 +3,23 @@
         {
             "config": {
                 "position": [
-                    187,
-                    74
+                    300,
+                    104
                 ]
             },
             "name": "New Model Object",
             "value": {
                 "actionGroup": {
-                    "_default0_list": true,
+                    "_default0_list": false,
                     "_default1_show": false,
                     "_default2_new_create": false,
                     "_default3_edit_update": false,
                     "_default4_delete": false,
                     "customActions": [
-                        "update"
+
                     ]
                 },
-                "name": "Translation",
+                "name": "TranslationUnit",
                 "objectsettings": {
                     "addDeletedField": true,
                     "addHiddenField": true,
@@ -108,6 +108,79 @@
                     ]
                 }
             }
+        },
+        {
+            "config": {
+                "position": [
+                    55,
+                    104
+                ]
+            },
+            "name": "New Model Object",
+            "value": {
+                "actionGroup": {
+                    "_default0_list": true,
+                    "_default1_show": false,
+                    "_default2_new_create": false,
+                    "_default3_edit_update": false,
+                    "_default4_delete": false,
+                    "customActions": [
+                        "update"
+                    ]
+                },
+                "name": "Translation",
+                "objectsettings": {
+                    "addDeletedField": true,
+                    "addHiddenField": true,
+                    "addStarttimeEndtimeFields": true,
+                    "aggregateRoot": true,
+                    "categorizable": false,
+                    "description": "",
+                    "mapToTable": "",
+                    "parentClass": "",
+                    "sorting": false,
+                    "type": "Entity",
+                    "uid": "377689593942"
+                },
+                "propertyGroup": {
+                    "properties": [
+                        {
+                            "allowedFileTypes": "",
+                            "maxItems": "1",
+                            "propertyDescription": "",
+                            "propertyIsExcludeField": true,
+                            "propertyIsRequired": false,
+                            "propertyName": "id",
+                            "propertyType": "String",
+                            "uid": "325563204954"
+                        },
+                        {
+                            "allowedFileTypes": "",
+                            "maxItems": "1",
+                            "propertyDescription": "",
+                            "propertyIsExcludeField": true,
+                            "propertyIsRequired": false,
+                            "propertyName": "file",
+                            "propertyType": "String",
+                            "uid": "765494468376"
+                        }
+                    ]
+                },
+                "relationGroup": {
+                    "relations": [
+                        {
+                            "foreignRelationClass": "",
+                            "lazyLoading": false,
+                            "propertyIsExcludeField": true,
+                            "relationDescription": "Units",
+                            "relationName": "units",
+                            "relationType": "zeroToMany",
+                            "relationWire": "[wired]",
+                            "uid": "148931851547"
+                        }
+                    ]
+                }
+            }
         }
     ],
     "properties": {
@@ -162,10 +235,21 @@
         "vendorName": "MONOGON"
     },
     "wires": [
-
+        {
+            "src": {
+                "moduleId": 2,
+                "terminal": "relationWire_0",
+                "uid": "148931851547"
+            },
+            "tgt": {
+                "moduleId": 0,
+                "terminal": "SOURCES",
+                "uid": "932228501966"
+            }
+        }
     ],
     "log": {
-        "last_modified": "2015-01-10 07:43",
+        "last_modified": "2015-01-11 10:06",
         "extension_builder_version": "6.2.0",
         "be_user": " (1)"
     }

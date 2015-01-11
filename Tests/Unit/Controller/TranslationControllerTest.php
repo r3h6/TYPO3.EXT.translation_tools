@@ -51,7 +51,7 @@ class TranslationControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 
 		$allTranslations = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage', array(), array(), '', FALSE);
 
-		$translationRepository = $this->getMock('', array('findAll'), array(), '', FALSE);
+		$translationRepository = $this->getMock('MONOGON\\TranslationTools\\Domain\\Repository\\TranslationRepository', array('findAll'), array(), '', FALSE);
 		$translationRepository->expects($this->once())->method('findAll')->will($this->returnValue($allTranslations));
 		$this->inject($this->subject, 'translationRepository', $translationRepository);
 
@@ -68,7 +68,7 @@ class TranslationControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	public function updateActionUpdatesTheGivenTranslationInTranslationRepository() {
 		$translation = new \MONOGON\TranslationTools\Domain\Model\Translation();
 
-		$translationRepository = $this->getMock('', array('update'), array(), '', FALSE);
+		$translationRepository = $this->getMock('MONOGON\\TranslationTools\\Domain\\Repository\\TranslationRepository', array('update'), array(), '', FALSE);
 		$translationRepository->expects($this->once())->method('update')->with($translation);
 		$this->inject($this->subject, 'translationRepository', $translationRepository);
 

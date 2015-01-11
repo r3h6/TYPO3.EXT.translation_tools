@@ -3,8 +3,8 @@ if (!defined ('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 
-$GLOBALS['TCA']['tx_translationtools_domain_model_translation'] = array(
-	'ctrl' => $GLOBALS['TCA']['tx_translationtools_domain_model_translation']['ctrl'],
+$GLOBALS['TCA']['tx_translationtools_domain_model_translationunit'] = array(
+	'ctrl' => $GLOBALS['TCA']['tx_translationtools_domain_model_translationunit']['ctrl'],
 	'interface' => array(
 		'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, ',
 	),
@@ -38,8 +38,8 @@ $GLOBALS['TCA']['tx_translationtools_domain_model_translation'] = array(
 				'items' => array(
 					array('', 0),
 				),
-				'foreign_table' => 'tx_translationtools_domain_model_translation',
-				'foreign_table_where' => 'AND tx_translationtools_domain_model_translation.pid=###CURRENT_PID### AND tx_translationtools_domain_model_translation.sys_language_uid IN (-1,0)',
+				'foreign_table' => 'tx_translationtools_domain_model_translationunit',
+				'foreign_table_where' => 'AND tx_translationtools_domain_model_translationunit.pid=###CURRENT_PID### AND tx_translationtools_domain_model_translationunit.sys_language_uid IN (-1,0)',
 			),
 		),
 		'l10n_diffsource' => array(
@@ -97,5 +97,10 @@ $GLOBALS['TCA']['tx_translationtools_domain_model_translation'] = array(
 			),
 		),
 
+		'translation' => array(
+			'config' => array(
+				'type' => 'passthrough',
+			),
+		),
 	),
 );
