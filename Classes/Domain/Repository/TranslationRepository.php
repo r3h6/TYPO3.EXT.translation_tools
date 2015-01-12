@@ -107,16 +107,14 @@ class TranslationRepository {
 						$translation->setSource($source);
 						$translations[$key] = $translation;
 					}
-					$translationUnit = $this->propertyMapper->convert(array(
-							'source' => $source,
-							'target' => $target,
-							'id' => $id,
-							'file' => $file,
-							'sourceLanguage' => $sourceLanguage,
-							'targetLanguage' => $language
-						),
-						$this->model
-					);
+					$translationUnit = $this->createTranslationUnit(array(
+						'source' => $source,
+						'target' => $target,
+						'id' => $id,
+						'file' => $file,
+						'sourceLanguage' => $sourceLanguage,
+						'targetLanguage' => $language
+					));
 
 					$translations[$key]->addUnit($translationUnit);
 				}
@@ -126,4 +124,32 @@ class TranslationRepository {
 		return $translations;
 	}
 
+	public function update ($translationUnit){
+
+		$file = $translationUnit->getFile();
+
+		// $l10nDir = 'typo3conf/l10n/';
+		// $extDir = 'typo3conf/ext/';
+		// if (strpos($file, $extDir) === 0){
+		// 	$fileParts = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode('/', $file);
+		// 	$extensionKey = $fileParts[2];
+
+		// 	$theDir = PATH_site . $l10nDir . $extensionKey;
+		// 	if (!GeneralUtility::validPathStr($theDir)){
+		// 		throw new \Exception("Invalid path '$theDir'!", 1);
+		// 	}
+		// 	if (!is_dir($theDir)){
+		// 		$file = str_replace($extDir, $l10nDir, $file);
+		// 	}
+		// }
+
+
+		\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($file);
+
+		\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($translationUnit);
+	}
+
+	public function createTranslationUnit ($properties){
+		return $this->propertyMapper->convert($properties, $this->model);
+	}
 }

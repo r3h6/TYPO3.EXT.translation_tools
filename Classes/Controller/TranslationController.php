@@ -61,13 +61,21 @@ class TranslationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCont
 		$this->view->assign('demand', $demand);
 	}
 
+	protected function initializeUpdateAction (){
+		if ($this->request->hasArgument('translationUnit')){
+			$translationUnit = $this->translationRepository->createTranslationUnit($this->request->getArgument('translationUnit'));
+			$this->request->setArgument('translationUnit', $translationUnit);
+		}
+	}
+
 	/**
 	 * action update
 	 *
-	 * @param \MONOGON\TranslationTools\Domain\Model\Translation $translation
+	 * @param \MONOGON\TranslationTools\Domain\Model\Translation $TranslationUnit
 	 * @return void
 	 */
-	public function updateAction(\MONOGON\TranslationTools\Domain\Model\Translation $translation) {
+	public function updateAction(\MONOGON\TranslationTools\Domain\Model\TranslationUnit $translationUnit) {
+		$this->translationRepository->update($translationUnit);
 		// $this->addFlashMessage('The object was updated. Please be aware that this action is publicly accessible unless you implement an access check. See <a href="http://wiki.typo3.org/T3Doc/Extension_Builder/Using_the_Extension_Builder#1._Model_the_domain" target="_blank">Wiki</a>', '', \TYPO3\CMS\Core\Messaging\AbstractMessage::ERROR);
 		// $this->translationRepository->update($translation);
 		// $this->redirect('list');

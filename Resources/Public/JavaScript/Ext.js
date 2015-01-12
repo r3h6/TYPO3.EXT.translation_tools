@@ -1,16 +1,23 @@
 (function ($){
 	$.fn.editable = function (){
 		var $el = $(this);
+		if ($el.hasClass('edit')) return null;
+
+		var targetLanguage = $el.attr('data-targetLanguage');
+		var id = $el.closest('[data-id]').attr('data-id');
+		var file = $el.closest('[data-file]').attr('data-file');
+
 		var text = $el.text();
-		$el.html(
-			'<div class="form">' +
-			'<div class="form-group">' +
-			'<textarea class="form-control">' + text + '</textarea>' +
-			'</div>' +
-			'<input class="btn btn-default" type="submit" value="ok">' +
-			'<input class="btn btn-default" type="submit" value="nok">' +
-			'</div>'
-		);
+		var $tpl = $($('#EditableTemplate').html());
+		// console.log($tpl);
+		$el.addClass('edit').html($tpl);
+
+		$tpl.find('.js-target').val(text).focus();
+		$tpl.find('.js-id').val(id);
+		$tpl.find('.js-file').val(file);
+		$tpl.find('.js-target-language').val(targetLanguage);
+
+
 	};
 }(jQuery));
 

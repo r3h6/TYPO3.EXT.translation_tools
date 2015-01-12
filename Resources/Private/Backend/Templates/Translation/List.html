@@ -50,10 +50,14 @@
   </f:for>
 </table>
 
-<f:form name="translation">
-  <f:form.hidden property="id" />
-  <f:form.hidden property="source" />
-  <f:form.hidden property="target" />
+<script id="EditableTemplate" type="text/template">
+<f:form name="translationUnit" action="update">
+  <f:form.hidden class="js-id" property="id" />
+  <f:form.hidden class="js-file" property="file" />
+  <f:form.hidden class="js-target-language" property="targetLanguage" />
+  <f:form.textarea class="js-target" property="target"></f:form.textarea>
+  <f:form.submit value="Save" />
 </f:form>
+</script>
 
 </f:section>
