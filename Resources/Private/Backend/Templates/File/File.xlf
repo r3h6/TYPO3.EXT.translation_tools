@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2015-01-14T22:25:05Z" product-name="translation_tools">
+		<header>
+			<generator>TranslationTools</generator>
+		</header>
+		<body>
+			<f:for each="{translations}" as="translation">
+			<trans-unit id="{translation.id}" xml:space="preserve">
+				<source>{translation.source}</source>
+				<target>{translation.target}</target>
+			</trans-unit>
+			</f:for>
+		</body>
+	</file>
+</xliff>
+

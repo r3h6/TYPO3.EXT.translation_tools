@@ -5,7 +5,7 @@ namespace MONOGON\TranslationTools\Domain\Model;
  *
  *  Copyright notice
  *
- *  (c) 2015 Remo Häusler <remo.haeusler@hotmail.com>
+ *  (c) 2015 R3 H6 <r3h6@outlook.com>
  *
  *  All rights reserved
  *

@@ -3,51 +3,6 @@
         {
             "config": {
                 "position": [
-                    300,
-                    104
-                ]
-            },
-            "name": "New Model Object",
-            "value": {
-                "actionGroup": {
-                    "_default0_list": false,
-                    "_default1_show": false,
-                    "_default2_new_create": false,
-                    "_default3_edit_update": false,
-                    "_default4_delete": false,
-                    "customActions": [
-
-                    ]
-                },
-                "name": "TranslationUnit",
-                "objectsettings": {
-                    "addDeletedField": true,
-                    "addHiddenField": true,
-                    "addStarttimeEndtimeFields": true,
-                    "aggregateRoot": false,
-                    "categorizable": false,
-                    "description": "",
-                    "mapToTable": "",
-                    "parentClass": "",
-                    "sorting": false,
-                    "type": "Entity",
-                    "uid": "932228501966"
-                },
-                "propertyGroup": {
-                    "properties": [
-
-                    ]
-                },
-                "relationGroup": {
-                    "relations": [
-
-                    ]
-                }
-            }
-        },
-        {
-            "config": {
-                "position": [
                     558,
                     106
                 ]
@@ -112,8 +67,8 @@
         {
             "config": {
                 "position": [
-                    55,
-                    104
+                    239,
+                    105
                 ]
             },
             "name": "New Model Object",
@@ -135,7 +90,7 @@
                     "addStarttimeEndtimeFields": true,
                     "aggregateRoot": true,
                     "categorizable": false,
-                    "description": "",
+                    "description": "Translation",
                     "mapToTable": "",
                     "parentClass": "",
                     "sorting": false,
@@ -168,16 +123,7 @@
                 },
                 "relationGroup": {
                     "relations": [
-                        {
-                            "foreignRelationClass": "",
-                            "lazyLoading": false,
-                            "propertyIsExcludeField": true,
-                            "relationDescription": "Units",
-                            "relationName": "units",
-                            "relationType": "zeroToMany",
-                            "relationWire": "[wired]",
-                            "uid": "148931851547"
-                        }
+
                     ]
                 }
             }
@@ -224,8 +170,8 @@
         "persons": [
             {
                 "company": "",
-                "email": "remo.haeusler@hotmail.com",
-                "name": "Remo H\u00e4usler",
+                "email": "r3h6@outlook.com",
+                "name": "R3 H6",
                 "role": "Developer"
             }
         ],
@@ -235,21 +181,10 @@
         "vendorName": "MONOGON"
     },
     "wires": [
-        {
-            "src": {
-                "moduleId": 2,
-                "terminal": "relationWire_0",
-                "uid": "148931851547"
-            },
-            "tgt": {
-                "moduleId": 0,
-                "terminal": "SOURCES",
-                "uid": "932228501966"
-            }
-        }
+
     ],
     "log": {
-        "last_modified": "2015-01-11 10:06",
+        "last_modified": "2015-01-16 09:13",
         "extension_builder_version": "6.2.0",
         "be_user": " (1)"
     }

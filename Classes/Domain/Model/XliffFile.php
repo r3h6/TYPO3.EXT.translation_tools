@@ -5,7 +5,7 @@ namespace MONOGON\TranslationTools\Domain\Model;
  *
  *  Copyright notice
  *
- *  (c) 2015 Remo Häusler <remo.haeusler@hotmail.com>
+ *  (c) 2015 R3 H6 <r3h6@outlook.com>
  *
  *  All rights reserved
  *
@@ -32,19 +32,4 @@ namespace MONOGON\TranslationTools\Domain\Model;
 class XliffFile extends File {
 
 
-	public function addTranslation ($translation){
-
-	}
-
-	public function removeTranslation ($translation){
-
-	}
-
-	public function render (){
-
-	}
-
-	public function save ($path){
-
-	}
 }

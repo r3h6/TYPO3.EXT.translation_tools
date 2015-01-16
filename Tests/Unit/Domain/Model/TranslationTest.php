@@ -5,7 +5,7 @@ namespace MONOGON\TranslationTools\Tests\Unit\Domain\Model;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2015 Remo Häusler <remo.haeusler@hotmail.com>
+ *  (c) 2015 R3 H6 <r3h6@outlook.com>
  *
  *  All rights reserved
  *
@@ -32,7 +32,7 @@ namespace MONOGON\TranslationTools\Tests\Unit\Domain\Model;
  * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
- * @author Remo Häusler <remo.haeusler@hotmail.com>
+ * @author R3 H6 <r3h6@outlook.com>
  */
 class TranslationTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	/**
@@ -92,57 +92,5 @@ class TranslationTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 			'file',
 			$this->subject
 		);
-	}
-
-	/**
-	 * @test
-	 */
-	public function getUnitsReturnsInitialValueForTranslationUnit() {
-		$newObjectStorage = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-		$this->assertEquals(
-			$newObjectStorage,
-			$this->subject->getUnits()
-		);
-	}
-
-	/**
-	 * @test
-	 */
-	public function setUnitsForObjectStorageContainingTranslationUnitSetsUnits() {
-		$unit = new \MONOGON\TranslationTools\Domain\Model\TranslationUnit();
-		$objectStorageHoldingExactlyOneUnits = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-		$objectStorageHoldingExactlyOneUnits->attach($unit);
-		$this->subject->setUnits($objectStorageHoldingExactlyOneUnits);
-
-		$this->assertAttributeEquals(
-			$objectStorageHoldingExactlyOneUnits,
-			'units',
-			$this->subject
-		);
-	}
-
-	/**
-	 * @test
-	 */
-	public function addUnitToObjectStorageHoldingUnits() {
-		$unit = new \MONOGON\TranslationTools\Domain\Model\TranslationUnit();
-		$unitsObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage', array('attach'), array(), '', FALSE);
-		$unitsObjectStorageMock->expects($this->once())->method('attach')->with($this->equalTo($unit));
-		$this->inject($this->subject, 'units', $unitsObjectStorageMock);
-
-		$this->subject->addUnit($unit);
-	}
-
-	/**
-	 * @test
-	 */
-	public function removeUnitFromObjectStorageHoldingUnits() {
-		$unit = new \MONOGON\TranslationTools\Domain\Model\TranslationUnit();
-		$unitsObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage', array('detach'), array(), '', FALSE);
-		$unitsObjectStorageMock->expects($this->once())->method('detach')->with($this->equalTo($unit));
-		$this->inject($this->subject, 'units', $unitsObjectStorageMock);
-
-		$this->subject->removeUnit($unit);
-
 	}
 }

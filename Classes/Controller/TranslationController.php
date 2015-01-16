@@ -1,11 +1,12 @@
 <?php
 namespace MONOGON\TranslationTools\Controller;
 
+use MONOGON\TranslationTools\Exception\ExecutionTimeException;
 /***************************************************************
  *
  *  Copyright notice
  *
- *  (c) 2015 Remo Häusler <remo.haeusler@hotmail.com>
+ *  (c) 2015 R3 H6 <r3h6@outlook.com>
  *
  *  All rights reserved
  *
@@ -25,8 +26,6 @@ namespace MONOGON\TranslationTools\Controller;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
-use \MONOGON\TranslationTools\Exception\ExecutionTimeException;
 
 /**
  * TranslationController
@@ -53,7 +52,7 @@ class TranslationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCont
 		}
 		try {
 			$translations = $this->translationRepository->findDemanded($demand);
-		} catch (ExecutionTimeException $exception){
+		} catch (ExecutionTimeException $exception) {
 			$translations = NULL;
 			$this->addFlashMessage($exception->getMessage());
 		}
@@ -61,24 +60,21 @@ class TranslationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCont
 		$this->view->assign('demand', $demand);
 	}
 
-	protected function initializeUpdateAction (){
-		if ($this->request->hasArgument('translationUnit')){
-			$translationUnit = $this->translationRepository->createTranslationUnit($this->request->getArgument('translationUnit'));
-			$this->request->setArgument('translationUnit', $translationUnit);
+	protected function initializeUpdateAction() {
+		if ($this->request->hasArgument('translation')) {
+			$translation = $this->translationRepository->createTranslation($this->request->getArgument('translation'));
+			$this->request->setArgument('translation', $translation);
 		}
 	}
 
 	/**
 	 * action update
 	 *
-	 * @param \MONOGON\TranslationTools\Domain\Model\Translation $TranslationUnit
+	 * @param \MONOGON\TranslationTools\Domain\Model\Translation $Translation
 	 * @return void
 	 */
-	public function updateAction(\MONOGON\TranslationTools\Domain\Model\TranslationUnit $translationUnit) {
-		$this->translationRepository->update($translationUnit);
-		// $this->addFlashMessage('The object was updated. Please be aware that this action is publicly accessible unless you implement an access check. See <a href="http://wiki.typo3.org/T3Doc/Extension_Builder/Using_the_Extension_Builder#1._Model_the_domain" target="_blank">Wiki</a>', '', \TYPO3\CMS\Core\Messaging\AbstractMessage::ERROR);
-		// $this->translationRepository->update($translation);
-		// $this->redirect('list');
+	public function updateAction(\MONOGON\TranslationTools\Domain\Model\Translation $translation) {
+		$this->translationRepository->update($translation);
 	}
 
 }

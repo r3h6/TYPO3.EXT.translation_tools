@@ -20,7 +20,7 @@ conf.py:
   - - Index
     - translation_tools.tex
     - Translation tools
-    - Remo Häusler
+    - R3 H6
     - manual
   latex_elements:
     papersize: a4paper

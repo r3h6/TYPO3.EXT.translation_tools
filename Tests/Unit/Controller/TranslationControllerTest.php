@@ -3,7 +3,7 @@ namespace MONOGON\TranslationTools\Tests\Unit\Controller;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2015 Remo Häusler <remo.haeusler@hotmail.com>
+ *  (c) 2015 R3 H6 <r3h6@outlook.com>
  *  			
  *  All rights reserved
  *
@@ -27,7 +27,7 @@ namespace MONOGON\TranslationTools\Tests\Unit\Controller;
 /**
  * Test case for class MONOGON\TranslationTools\Controller\TranslationController.
  *
- * @author Remo Häusler <remo.haeusler@hotmail.com>
+ * @author R3 H6 <r3h6@outlook.com>
  */
 class TranslationControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 

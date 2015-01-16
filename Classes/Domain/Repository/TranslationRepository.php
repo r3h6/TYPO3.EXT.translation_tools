@@ -4,12 +4,11 @@ namespace MONOGON\TranslationTools\Domain\Repository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use MONOGON\TranslationTools\Configuration\PhpIni;
 use MONOGON\TranslationTools\Exception\ExecutionTimeException;
-
 /***************************************************************
  *
  *  Copyright notice
  *
- *  (c) 2015 Remo Häusler <remo.haeusler@hotmail.com>
+ *  (c) 2015 R3 H6 <r3h6@outlook.com>
  *
  *  All rights reserved
  *
@@ -37,7 +36,7 @@ class TranslationRepository {
 
 	const ERROR_MODE_EXCEPTION = 2;
 
-	protected $model = 'MONOGON\\TranslationTools\\Domain\\Model\\TranslationUnit';
+	protected $model = 'MONOGON\\TranslationTools\\Domain\\Model\\Translation';
 
 	/**
 	 * [$fileRepository description]
@@ -70,70 +69,58 @@ class TranslationRepository {
 		$sourceLanguage = 'default';
 		$languages = $demand->getLanguages();
 		$charset = 'utf8';
-		//$language = NULL;
 		$microTimeLimit = $GLOBALS['TYPO3_MISC']['microtime_start'] + 0.75 * PhpIni::getMaxExecutionTime();
-
 		foreach ($files as $file) {
 			if (microtime(TRUE) > $microTimeLimit) {
 				throw new ExecutionTimeException('Error Processing Request', 1420919679);
 			}
-			/*if ($demand->getLabel()){
-							$filePath = GeneralUtility::getFileAbsFileName($file);
-							$fileContent = file_get_contents($filePath);
-							if (!preg_match('#<source>' . preg_quote($demand->getLabel(), '#') . '.*?</source>#', $fileContent)){
-								continue;
-							}
-						}*/
-
 			foreach ($languages as $language) {
 				$parsedData = $localizationFactory->getParsedData($file, $language, $charset, self::ERROR_MODE_EXCEPTION);
-				// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($parsedData);
 				foreach ($parsedData[$sourceLanguage] as $id => $value) {
 					$target = isset($parsedData[$language][$id][0]['target']) ? $parsedData[$language][$id][0]['target'] : NULL;
 					$source = $parsedData[$sourceLanguage][$id][0]['source'];
-					// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($demand->getLabel());
+					// Search, filter
 					if ($demand->getLabel() && stripos("{$source},{$target}", $demand->getLabel()) === FALSE) {
 						continue;
 					}
 					if ($demand->getId() && stripos($id, $demand->getId()) === FALSE) {
 						continue;
 					}
-					// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($key);
 					$key = sha1($file . $id);
-					if (!isset($translations[$key])){
-						$translation = GeneralUtility::makeInstance('MONOGON\\TranslationTools\\Domain\\Model\\Translation');
-						$translation->setId($id);
-						$translation->setFile($file);
-						$translation->setSource($source);
-						$translations[$key] = $translation;
+					if (!isset($translations[$key])) {
+						$translations[$key] = array(
+							'_id' => $id,
+							'_file' => $file,
+							'_source' => $source
+						);
 					}
-					$translationUnit = $this->createTranslationUnit(array(
-						'source' => $source,
-						'target' => $target,
-						'id' => $id,
-						'file' => $file,
-						'sourceLanguage' => $sourceLanguage,
-						'targetLanguage' => $language
-					));
-
-					$translations[$key]->addUnit($translationUnit);
+					$translations[$key][$language] = $this->createTranslation(array(
+							'source' => $source,
+							'target' => $target,
+							'id' => $id,
+							'file' => $file,
+							'sourceLanguage' => $sourceLanguage,
+							'targetLanguage' => $language
+						));
 				}
 			}
 		}
-		//return $this->dataMapper->map($this->model, $translations);
 		return $translations;
 	}
 
-	public function update ($translationUnit){
-
-		$file = $translationUnit->getFile();
-
+	/**
+	 * @param $translation
+	 */
+	public function update($translation) {
+		// 1. Write to TS or locallangXMLOverride
+		// 2. Write to l10n
+		// 3. Write to extension
+		$identifier = $translation->getFile();
 		// $l10nDir = 'typo3conf/l10n/';
 		// $extDir = 'typo3conf/ext/';
 		// if (strpos($file, $extDir) === 0){
 		// 	$fileParts = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode('/', $file);
 		// 	$extensionKey = $fileParts[2];
-
 		// 	$theDir = PATH_site . $l10nDir . $extensionKey;
 		// 	if (!GeneralUtility::validPathStr($theDir)){
 		// 		throw new \Exception("Invalid path '$theDir'!", 1);
@@ -142,14 +129,18 @@ class TranslationRepository {
 		// 		$file = str_replace($extDir, $l10nDir, $file);
 		// 	}
 		// }
-
-
-		\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($file);
-
-		\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($translationUnit);
+		\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($identifier);
+		\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($translation);
+		$file = $this->fileRepository->getFile($identifier);
+		$file->setTranslation($translation);
+		$this->fileRepository->update($file);
 	}
 
-	public function createTranslationUnit ($properties){
+	/**
+	 * @param $properties
+	 */
+	public function createTranslation($properties) {
 		return $this->propertyMapper->convert($properties, $this->model);
 	}
+
 }

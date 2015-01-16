@@ -42,4 +42,13 @@ class FileRepository {
 	public function findByIdentifier ($identifier){
 		return $identifier;
 	}
+
+	public function getFile ($identifier){
+
+
+	}
+
+	public function update ($file){
+
+	}
 }

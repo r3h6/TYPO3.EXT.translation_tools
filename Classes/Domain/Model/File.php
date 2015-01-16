@@ -5,7 +5,7 @@ namespace MONOGON\TranslationTools\Domain\Model;
  *
  *  Copyright notice
  *
- *  (c) 2015 Remo Häusler <remo.haeusler@hotmail.com>
+ *  (c) 2015 R3 H6 <r3h6@outlook.com>
  *
  *  All rights reserved
  *
@@ -29,8 +29,25 @@ namespace MONOGON\TranslationTools\Domain\Model;
 /**
  * File
  */
-class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
+abstract class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
+	protected $translations = array();
+
+	public function setTranslation (\MONOGON\TranslationTools\Domain\Model\Translation $translation){
+		$this->translations[] = $translation;
+	}
+
+	public function removeTranslation (\MONOGON\TranslationTools\Domain\Model\Translation $translation){
+
+	}
+
+	public function render (){
+
+	}
+
+	public function save ($path){
+
+	}
 
 
 }

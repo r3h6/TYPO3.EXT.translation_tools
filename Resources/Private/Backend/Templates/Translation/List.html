@@ -36,9 +36,9 @@
   </tr>
 
   <f:for each="{translations}" as="translation">
-    <tr data-file="{translation.file}" data-id="{translation.id}">
-      <td title="{translation.file}">{translation.id}</td>
-      <td>{translation.source}</td>
+    <tr data-file="{translation._file}" data-id="{translation._id}">
+      <td title="{translation._file}">{translation._id}</td>
+      <td>{translation._source}</td>
       <f:if condition="{demand.languages}">
         <f:for each="{demand.languages}" as="language">
           <mgn:translation.unit translation="{translation}" language="{language}">
@@ -51,7 +51,7 @@
 </table>
 
 <script id="EditableTemplate" type="text/template">
-<f:form name="translationUnit" action="update">
+<f:form name="translation" action="update">
   <f:form.hidden class="js-id" property="id" />
   <f:form.hidden class="js-file" property="file" />
   <f:form.hidden class="js-target-language" property="targetLanguage" />

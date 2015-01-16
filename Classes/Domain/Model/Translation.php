@@ -1,12 +1,11 @@
 <?php
 namespace MONOGON\TranslationTools\Domain\Model;
 
-
 /***************************************************************
  *
  *  Copyright notice
  *
- *  (c) 2015 Remo Häusler <remo.haeusler@hotmail.com>
+ *  (c) 2015 R3 H6 <r3h6@outlook.com>
  *
  *  All rights reserved
  *
@@ -33,53 +32,129 @@ namespace MONOGON\TranslationTools\Domain\Model;
 class Translation extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
 	/**
-	 * id
-	 *
-	 * @var string
-	 */
-	protected $id = '';
-
-	/**
-	 * file
-	 *
-	 * @var string
-	 */
-	protected $file = '';
-
-	/**
 	 * [$source description]
+	 *
 	 * @var string
 	 */
-	protected $source = '';
+	protected $source = NULL;
 
 	/**
-	 * Units
+	 * [$target description]
 	 *
-	 * @var array
+	 * @var string
 	 */
-	protected $units = array();
+	protected $target = NULL;
 
 	/**
-	 * Returns the id
+	 * [$sourceLanguage description]
 	 *
-	 * @return string $id
+	 * @var string
 	 */
-	public function getId() {
-		return $this->id;
+	protected $sourceLanguage = NULL;
+
+	/**
+	 * [$targetLanguage description]
+	 *
+	 * @var string
+	 */
+	protected $targetLanguage = NULL;
+
+	/**
+	 * [$id description]
+	 *
+	 * @var string
+	 */
+	protected $id = NULL;
+
+	/**
+	 * [$file description]
+	 *
+	 * @var string
+	 */
+	protected $file = NULL;
+
+	/**
+	 * Returns the  source
+	 *
+	 * @return string $source
+	 */
+	public function getSource() {
+		return $this->source;
 	}
 
 	/**
-	 * Sets the id
+	 * Sets the source
 	 *
-	 * @param string $id
-	 * @return void
+	 * @param string $source
+	 * @return object $this
 	 */
-	public function setId($id) {
-		$this->id = $id;
+	public function setSource($source) {
+		$this->source = $source;
+		return $this;
 	}
 
 	/**
-	 * Returns the file
+	 * Returns the  target
+	 *
+	 * @return string $target
+	 */
+	public function getTarget() {
+		return $this->target;
+	}
+
+	/**
+	 * Sets the target
+	 *
+	 * @param string $target
+	 * @return object $this
+	 */
+	public function setTarget($target) {
+		$this->target = $target;
+		return $this;
+	}
+
+	/**
+	 * Returns the  sourceLanguage
+	 *
+	 * @return string $sourceLanguage
+	 */
+	public function getSourceLanguage() {
+		return $this->sourceLanguage;
+	}
+
+	/**
+	 * Sets the sourceLanguage
+	 *
+	 * @param string $sourceLanguage
+	 * @return object $this
+	 */
+	public function setSourceLanguage($sourceLanguage) {
+		$this->sourceLanguage = $sourceLanguage;
+		return $this;
+	}
+
+	/**
+	 * Returns the  targetLanguage
+	 *
+	 * @return string $targetLanguage
+	 */
+	public function getTargetLanguage() {
+		return $this->targetLanguage;
+	}
+
+	/**
+	 * Sets the targetLanguage
+	 *
+	 * @param string $targetLanguage
+	 * @return object $this
+	 */
+	public function setTargetLanguage($targetLanguage) {
+		$this->targetLanguage = $targetLanguage;
+		return $this;
+	}
+
+	/**
+	 * Returns the  file
 	 *
 	 * @return string $file
 	 */
@@ -91,72 +166,31 @@ class Translation extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 * Sets the file
 	 *
 	 * @param string $file
-	 * @return void
+	 * @return object $this
 	 */
 	public function setFile($file) {
 		$this->file = $file;
-	}
-
-	/**
-	 * Returns the source
-	 *
-	 * @return string $source
-	 */
-	public function getSource(){
-		return $this->source;
-	}
-
-	/**
-	 * Sets the source
-	 *
-	 * @param string $source
-	 * @return object $this
-	 */
-	public function setSource($source){
-		$this->source = $source;
 		return $this;
 	}
 
 	/**
-	 * Adds a TranslationUnit
+	 * Returns the  id
 	 *
-	 * @param \MONOGON\TranslationTools\Domain\Model\TranslationUnit $unit
-	 * @return void
+	 * @return string $id
 	 */
-	public function addUnit(\MONOGON\TranslationTools\Domain\Model\TranslationUnit $unit) {
-		$this->units[$unit->getTargetLanguage()] = $unit;
+	public function getId() {
+		return $this->id;
 	}
 
 	/**
-	 * Removes a TranslationUnit
+	 * Sets the id
 	 *
-	 * @param \MONOGON\TranslationTools\Domain\Model\TranslationUnit $unitToRemove The TranslationUnit to be removed
-	 * @return void
+	 * @param string $id
+	 * @return object $this
 	 */
-	public function removeUnit(\MONOGON\TranslationTools\Domain\Model\TranslationUnit $unitToRemove) {
-		//$this->units->detach($unitToRemove);
+	public function setId($id) {
+		$this->id = $id;
+		return $this;
 	}
 
-	/**
-	 * Returns the units
-	 *
-	 * @return array $units
-	 */
-	public function getUnits() {
-		return $this->units;
-	}
-
-	/**
-	 * Sets the units
-	 *
-	 * @param array $units
-	 * @return void
-	 */
-	public function setUnits(array $units) {
-		$this->units = $units;
-	}
-
-	public function getUnit ($language){
-		return isset($this->units[$language]) ? $this->units[$language]: NULL;
-	}
 }

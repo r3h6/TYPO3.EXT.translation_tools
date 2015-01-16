@@ -32,10 +32,10 @@ Translation tools
 		2015
 
 	:Author:
-		Remo Häusler
+		R3 H6
 
 	:Email:
-		remo.haeusler@hotmail.com
+		r3h6@outlook.com
 
 	:License:
 		This document is published under the Open Content License

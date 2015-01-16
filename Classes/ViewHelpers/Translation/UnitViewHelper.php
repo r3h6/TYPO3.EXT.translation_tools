@@ -33,13 +33,13 @@ class UnitViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
 
 	/**
 	 *
-	 * @param \MONOGON\TranslationTools\Domain\Model\Translation $translation
+	 * @param array $translation
 	 * @param string $language
 	 * @param string $as
 	 * @return string
 	 */
 	public function render ($translation, $language, $as = 'unit'){
-		$unit = $translation->getUnit($language);
+		$unit = isset($translation[$language]) ? $translation[$language]: NULL;
 		$templateVariableContainer = $this->renderingContext->getTemplateVariableContainer();
 		$templateVariableContainer->add($as, $unit);
 		$output = $this->renderChildren();
