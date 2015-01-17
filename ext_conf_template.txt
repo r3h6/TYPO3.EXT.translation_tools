@@ -2,13 +2,13 @@
 locallangDirectories = fileadmin,typo3conf/ext,typo3conf/l10n,typo3/sysext
 
 # cat=basic//; type=string; label= Allow write to extensions: Comma seperated list of extensions keys where the locallang is directly written into the extension directory.
-allowWriteToExtensions =
+allowWriteToExtension =
 
 # cat=basic//; type=string; label= Allow write to l10n: Comma seperated list of extensions keys where the locallang is directly written into the extension directory.
 allowWriteToL10nDir =
 
 # cat=basic//; type=string; label= Storage folder: Where to store generated files.
-storageFolder = typo3temp/TranslationTools
+storageFolder = EXT:l10n_overwrite/Resources/Private/l10n
 
 # cat=basic//; type=string; label= Language: Use these languages instead of sys_languages.
 sysLanguages =

@@ -75,7 +75,43 @@ class FileUtility {
 		return $files;
 	}
 
-	public static function determineLanguageFile ($sourceFile, $language){
+	/**
+	 * [determineLanguageFile description]
+	 *
+	 * 1. If can write to extension
+	 * 2. If can write to l10n
+	 * 3. Write to extension l10n_overwrite as xlf,xml or ts
+	 *
+	 * @param  [type] $identifier [description]
+	 * @param  [type] $language   [description]
+	 * @return [type]             [description]
+	 */
+	public static function determineLanguageFile ($identifier, $language){
+		$extKey = self::extractExtKey($identifier);
 
+
+		$objectManager = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
+		$extensionRepository = $objectManager->get('TYPO3\\CMS\\Extensionmanager\\Domain\\Repository\\ExtensionRepository');
+		$result = $extensionRepository->countByExtensionKey($extKey);
+		// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($result); exit;
+		$extConfManager = $objectManager->get('MONOGON\\TranslationTools\\Configuration\\ExtConfManager');
+
+
+		$allowWriteToExtension = $extConfManager->get('allowWriteToExtension');
+
+		$allowWriteToL10nDir = $extConfManager->get('allowWriteToL10nDir');
+	}
+
+	/**
+	 * [extractExtKey description]
+	 *
+	 * @param  string $identifier [description]
+	 * @return string|NULL             [description]
+	 */
+	public static function extractExtKey ($identifier){
+		if (preg_match('#^typo3conf[/\\\\]{1,}ext[/\\\\]{1,}([^/\\\\]+)[/\\\\]{1,}#i', $identifier, $matches)){
+			return $matches[1];
+		}
+		return NULL;
 	}
 }

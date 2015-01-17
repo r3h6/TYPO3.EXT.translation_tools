@@ -115,7 +115,9 @@ class TranslationRepository {
 		// 1. Write to TS or locallangXMLOverride
 		// 2. Write to l10n
 		// 3. Write to extension
-		$identifier = $translation->getFile();
+
+
+		$identifier = FileUtility::determineLanguageFile($translation->getFile(), $translation->getTargetLanguage());
 		// $l10nDir = 'typo3conf/l10n/';
 		// $extDir = 'typo3conf/ext/';
 		// if (strpos($file, $extDir) === 0){
