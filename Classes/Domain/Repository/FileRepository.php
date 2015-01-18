@@ -34,18 +34,32 @@ use MONOGON\TranslationTools\Utility\FileUtility;
  */
 class FileRepository {
 
-	public function findAll (){
+	/**
+	 * [$objectManager description]
+	 *
+	 * @var TYPO3\CMS\Extbase\Object\ObjectManager
+	 * @inject
+	 */
+	protected $objectManager;
+
+	protected function makeInstance ($identifier){
+		$extension = pathinfo($identifier, PATHINFO_EXTENSION);
+		switch ($extension) {
+			case 'xlf': $class = 'MONOGON\\TranslationTools\\Domain\\Model\\File\\Xliff'; break;
+			case 'xml': $class = 'MONOGON\\TranslationTools\\Domain\\Model\\File\\Xml'; break;
+			case 'txt': $class = 'MONOGON\\TranslationTools\\Domain\\Model\\File\\TypoScript'; break;
+			default: throw new \InvalidArgumentException ("Could not find a class for $identifier", 1421615253);
+		}
+		return $this->objectManager->get($class, $identifier);
+	}
+
+	public function findAllRaw (){
 		$files = FileUtility::getLocallangFiles();
 		return $files;
 	}
 
 	public function findByIdentifier ($identifier){
-		return $identifier;
-	}
-
-	public function getFile ($identifier){
-
-
+		return $this->makeInstance($identifier);
 	}
 
 	public function update ($file){

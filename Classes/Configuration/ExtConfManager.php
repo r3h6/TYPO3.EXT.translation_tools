@@ -26,6 +26,8 @@ namespace MONOGON\TranslationTools\Configuration;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use \TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  *
  * @package MONOGON
@@ -62,6 +64,18 @@ class ExtConfManager implements \TYPO3\CMS\Core\SingletonInterface {
 		} else {
 			return NULL;
 		}
+	}
+
+	public function getAllowWriteToExtension (){
+		return GeneralUtility::trimExplode(',', $this->get('allowWriteToExtension'));
+	}
+
+	public function getAllowWriteToL10nDir (){
+		return GeneralUtility::trimExplode(',', $this->get('getAllowWriteToL10nDir'));
+	}
+
+	public function getUseTypeScript (){
+		return (boolean) $this->get('useTypeScript');
 	}
 }
 

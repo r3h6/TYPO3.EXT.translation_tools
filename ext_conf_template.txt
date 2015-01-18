@@ -10,5 +10,8 @@ allowWriteToL10nDir =
 # cat=basic//; type=string; label= Storage folder: Where to store generated files.
 storageFolder = EXT:l10n_overwrite/Resources/Private/l10n
 
+# cat=basic//; type=boolean; label= Use TypoScript: Write translation to a TypoScript file.
+useTypoScript = 0
+
 # cat=basic//; type=string; label= Language: Use these languages instead of sys_languages.
 sysLanguages =

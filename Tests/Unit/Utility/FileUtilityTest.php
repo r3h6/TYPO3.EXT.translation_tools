@@ -38,65 +38,97 @@ use \MONOGON\TranslationTools\Utility\FileUtility;
  */
 class FileUtilityUnitTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 
-	protected $dummyLocalExtensionPath = 'typo3conf/ext/test/Resources/Private/Language/locallang.xlf';
-	protected $dummyLocalExtensionPathBackslashes = 'typo3conf\\ext\\test\\Resources\\Private\\Language\\locallang.xlf';
-	protected $dummyWeirdLocalExtensionPath = 'typo3conf/ext/test/typo3conf/ext/foobar/locallang.xlf';
-	protected $dummyFileadminPath = 'fileadmin/templates/Private/Language/locallang.xlf';
-	protected $dummyWeirdFileadminPath = 'fileadmin/templates/typo3conf/ext/test/locallang.xlf';
-	protected $dummyBrokenPath = 'typo3conf/ext/locallang.xlf';
+	// protected $dummyLocalExtensionPath = 'typo3conf/ext/test/Resources/Private/Language/locallang.xlf';
+	// protected $dummyLocalExtensionPathBackslashes = 'typo3conf\\ext\\test\\Resources\\Private\\Language\\locallang.xlf';
+	// protected $dummyWeirdLocalExtensionPath = 'typo3conf/ext/test/typo3conf/ext/foobar/locallang.xlf';
+	// protected $dummyFileadminPath = 'fileadmin/templates/Private/Language/locallang.xlf';
+	// protected $dummyWeirdFileadminPath = 'fileadmin/templates/typo3conf/ext/test/locallang.xlf';
+	// protected $dummyBrokenPath = 'typo3conf/ext/locallang.xlf';
+	const EXT_KEY = 'translation_tools';
+	protected $l10nDir = 'typo3conf/l10n/';
+	protected $l10nOverwriteDir = 'EXT:l10n_overwrite/Resources/Private/l10n/';
 
 	protected function setUp() {
+		$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][self::EXT_KEY] = serialize(array(
+			'allowWriteToExtension' => '',
+			'getAllowWriteToL10nDir' => '',
+			'allowWriteToExtension' => '0',
+		));
 	}
 
 	protected function tearDown() {
 	}
 
+
 	/**
 	 * @test
 	 */
-	public function determineLanguageFile (){
-		$this->assertEquals('test', FileUtility::determineLanguageFile($this->dummyLocalExtensionPath, 'de'));
+	public function addLanguageToPath (){
+		$language = 'de';
+		$identifier = 'typo3conf/ext/news/Resources/Private/Language/locallang.xml';
+		$expected = 'typo3conf/ext/news/Resources/Private/Language/de.locallang.xml';
+		$this->assertEquals($expected, FileUtility::addLanguageToPath($identifier, $language));
+	}
+
+	/**
+	 * @test
+	 */
+	public function determineLanguageFileForNews (){
+		$language = 'de';
+		$identifier = 'typo3conf/ext/news/Resources/Private/Language/locallang.xml';
+		$expected = $this->l10nOverwriteDir . "news/Resources/Private/Language/$language.locallang.xml";
+		$this->assertEquals($expected, FileUtility::determineLanguageFile($identifier, $language));
+	}
+
+	/**
+	 * @test
+	 */
+	public function determineLanguageFileForMgnExample (){
+		$language = 'fr';
+		$identifier = 'typo3conf/ext/mgn_example/Resources/Private/Language/locallang.xml';
+		$expected = $this->l10nDir . "mgn_example/Resources/Private/Language/$language.locallang.xml";
+		$this->assertEquals($expected, FileUtility::determineLanguageFile($identifier, $language));
 	}
 
 	/**
 	 * @test
 	 */
 	public function extractExtKeyFromLocalExtensionPath() {
-		$this->assertEquals('test', FileUtility::extractExtKey($this->dummyLocalExtensionPath));
+		$this->assertEquals('test', FileUtility::extractExtKey('typo3conf/ext/test/Resources/Private/Language/locallang.xlf'));
 	}
 
 	/**
 	 * @test
 	 */
 	public function extractExtKeyFromFileadminPath() {
-		$this->assertEquals(NULL, FileUtility::extractExtKey($this->dummyFileadminPath));
+		$this->assertEquals(NULL, FileUtility::extractExtKey('fileadmin/templates/Private/Language/locallang.xlf'));
 	}
 
 	/**
 	 * @test
 	 */
 	public function extractExtKeyFromWeirdLocalExtensionPath() {
-		$this->assertEquals('test', FileUtility::extractExtKey($this->dummyWeirdLocalExtensionPath));
+		$this->assertEquals('test', FileUtility::extractExtKey('typo3conf/ext/test/typo3conf/ext/foobar/locallang.xlf'));
 	}
 
 	/**
 	 * @test
 	 */
 	public function extractExtKeyFromLocalExtensionPathBackslashes() {
-		$this->assertEquals('test', FileUtility::extractExtKey($this->dummyLocalExtensionPathBackslashes));
+		$this->assertEquals('test', FileUtility::extractExtKey('typo3conf\\ext\\test\\Resources\\Private\\Language\\locallang.xlf'));
 	}
 
 	/**
 	 * @test
 	 */
 	public function extractExtKeyFromWeirdFileadminPath() {
-		$this->assertEquals(NULL, FileUtility::extractExtKey($this->dummyWeirdFileadminPath));
+		$this->assertEquals(NULL, FileUtility::extractExtKey('fileadmin/templates/typo3conf/ext/test/locallang.xlf'));
 	}
 
 	/**
 	 * @test
 	 */
 	public function extractExtKeyFromBrokenPath() {
-		$this->assertEquals(NULL, FileUtility::extractExtKey($this->dummyBrokenPath));
+		$this->assertEquals(NULL, FileUtility::extractExtKey('typo3conf/ext/locallang.xlf'));
 	}
 }

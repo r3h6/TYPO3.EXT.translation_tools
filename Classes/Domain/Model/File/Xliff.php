@@ -1,5 +1,5 @@
 <?php
-namespace MONOGON\TranslationTools\Domain\Model;
+namespace MONOGON\TranslationTools\Domain\Model\File;
 
 /***************************************************************
  *
@@ -27,9 +27,9 @@ namespace MONOGON\TranslationTools\Domain\Model;
  ***************************************************************/
 
 /**
- * XliffFile
+ * Xliff
  */
-class XliffFile extends File {
+class Xliff extends \MONOGON\TranslationTools\Domain\Model\File {
 
 
 }

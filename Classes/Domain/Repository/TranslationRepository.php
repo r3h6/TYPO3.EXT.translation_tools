@@ -61,9 +61,10 @@ class TranslationRepository {
 		$translations = array();
 		// Load files¦
 		if ($file = $demand->getFile()) {
-			$files = array($this->fileRepository->findByIdentifier($file));
+			// $files = array($this->fileRepository->findByIdentifier($file));
+			$files = array($file);
 		} else {
-			$files = $this->fileRepository->findAll();
+			$files = $this->fileRepository->findAllRaw();
 		}
 		$localizationFactory = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Localization\\LocalizationFactory');
 		$sourceLanguage = 'default';
@@ -112,28 +113,10 @@ class TranslationRepository {
 	 * @param $translation
 	 */
 	public function update($translation) {
-		// 1. Write to TS or locallangXMLOverride
-		// 2. Write to l10n
-		// 3. Write to extension
-
 
 		$identifier = FileUtility::determineLanguageFile($translation->getFile(), $translation->getTargetLanguage());
-		// $l10nDir = 'typo3conf/l10n/';
-		// $extDir = 'typo3conf/ext/';
-		// if (strpos($file, $extDir) === 0){
-		// 	$fileParts = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode('/', $file);
-		// 	$extensionKey = $fileParts[2];
-		// 	$theDir = PATH_site . $l10nDir . $extensionKey;
-		// 	if (!GeneralUtility::validPathStr($theDir)){
-		// 		throw new \Exception("Invalid path '$theDir'!", 1);
-		// 	}
-		// 	if (!is_dir($theDir)){
-		// 		$file = str_replace($extDir, $l10nDir, $file);
-		// 	}
-		// }
-		\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($identifier);
-		\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($translation);
-		$file = $this->fileRepository->getFile($identifier);
+
+		$file = $this->fileRepository->findByIdentifier($identifier);
 		$file->setTranslation($translation);
 		$this->fileRepository->update($file);
 	}

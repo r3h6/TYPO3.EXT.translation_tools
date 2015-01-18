@@ -87,19 +87,50 @@ class FileUtility {
 	 * @return [type]             [description]
 	 */
 	public static function determineLanguageFile ($identifier, $language){
-		$extKey = self::extractExtKey($identifier);
-
 
 		$objectManager = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
-		$extensionRepository = $objectManager->get('TYPO3\\CMS\\Extensionmanager\\Domain\\Repository\\ExtensionRepository');
-		$result = $extensionRepository->countByExtensionKey($extKey);
-		// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($result); exit;
 		$extConfManager = $objectManager->get('MONOGON\\TranslationTools\\Configuration\\ExtConfManager');
+		$extKey = self::extractExtKey($identifier);
 
+		// 1. Check write permission for extension directory
+		$allowWriteToExtension = $extConfManager->getAllowWriteToExtension();
+		if (in_array($extKey, $allowWriteToExtension)){
+			return self::addLanguageToPath($identifier, $language);
+		}
 
-		$allowWriteToExtension = $extConfManager->get('allowWriteToExtension');
+		// 2. Check write permission for l10n directory
+		$allowWriteToL10nDir = $extConfManager->getAllowWriteToL10nDir();
+		if (in_array($extKey, $allowWriteToL10nDir)){
+			return self::addLanguageToPath(self::makeL10nPath($identifier), $language);
+		}
 
-		$allowWriteToL10nDir = $extConfManager->get('allowWriteToL10nDir');
+		// 3. Write to TypoScript file if configured this way
+		$useTypeScript = $extConfManager->getUseTypeScript();
+		if ($useTypeScript){
+			return 'EXT:l10n_overwrite/Configuration/TypoScript/l10n/setup.txt';
+		}
+
+		$extensionRepository = $objectManager->get('TYPO3\\CMS\\Extensionmanager\\Domain\\Repository\\ExtensionRepository');
+		$isInTER = (boolean) $extensionRepository->countByExtensionKey($extKey);
+
+		// 4. Write to l10n directory if extension is not in TER
+		if (!$isInTER){
+			return self::addLanguageToPath(self::makeL10nPath($identifier), $language);
+		}
+
+		// 5. Write to EXT:l10n_overwrite
+		return self::addLanguageToPath(str_replace('typo3conf/ext/', 'EXT:l10n_overwrite/Resources/Private/l10n/', $identifier), $language);
+	}
+
+	public static function addLanguageToPath ($identifier, $language){
+		return str_replace('/locallang.', "/$language.locallang.", $identifier);
+	}
+
+	public static function makeL10nPath ($identifier){
+		if (strpos($identifier, 'typo3conf/ext/') === 0){
+			return str_replace('typo3conf/ext/', 'typo3conf/l10n/', $identifier);
+		}
+		throw new \InvalidArgumentException("Could not make l10n path from $identifier!", 1421611864);
 	}
 
 	/**

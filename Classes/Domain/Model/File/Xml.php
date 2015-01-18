@@ -1,5 +1,5 @@
 <?php
-namespace MONOGON\TranslationTools\Domain\Model;
+namespace MONOGON\TranslationTools\Domain\Model\File;
 
 /***************************************************************
  *
@@ -27,37 +27,9 @@ namespace MONOGON\TranslationTools\Domain\Model;
  ***************************************************************/
 
 /**
- * File
+ * Xml
  */
-class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
-
-	protected $translations = array();
-
-	protected $identifier;
-
-	public function __construct ($identifier){
-		$this->identifier = $identifier;
-	}
-
-	public function getIdentifier (){
-		return $this->identifier;
-	}
-
-	public function setTranslation (\MONOGON\TranslationTools\Domain\Model\Translation $translation){
-		$this->translations[] = $translation;
-	}
-
-	public function removeTranslation (\MONOGON\TranslationTools\Domain\Model\Translation $translation){
-
-	}
-
-	public function render (){
-
-	}
-
-	public function save ($path){
-
-	}
+class Xml extends \MONOGON\TranslationTools\Domain\Model\File {
 
 
 }
