@@ -31,5 +31,5 @@ namespace MONOGON\TranslationTools\Domain\Model\File;
  */
 class Xliff extends \MONOGON\TranslationTools\Domain\Model\File {
 
-
+	protected $format = 'xlf';
 }

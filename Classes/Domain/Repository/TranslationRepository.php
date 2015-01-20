@@ -4,6 +4,7 @@ namespace MONOGON\TranslationTools\Domain\Repository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use MONOGON\TranslationTools\Configuration\PhpIni;
 use MONOGON\TranslationTools\Exception\ExecutionTimeException;
+use MONOGON\TranslationTools\Utility\FileUtility;
 /***************************************************************
  *
  *  Copyright notice

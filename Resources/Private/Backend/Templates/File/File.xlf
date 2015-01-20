@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2015-01-14T22:25:05Z" product-name="translation_tools">
+	<file source-language="{sourceLanguage}" {f:if(condition: targetLanguage, then: 'target-language="{targetLanguage}"')} datatype="plaintext" original="messages" date="{f:format.date(format: 'c', date: 'now')}" product-name="translation_tools">
 		<header>
 			<generator>TranslationTools</generator>
 		</header>

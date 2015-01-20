@@ -42,7 +42,7 @@ class FileRepository {
 	 */
 	protected $objectManager;
 
-	protected function makeInstance ($identifier){
+	public function makeInstance ($identifier){
 		$extension = pathinfo($identifier, PATHINFO_EXTENSION);
 		switch ($extension) {
 			case 'xlf': $class = 'MONOGON\\TranslationTools\\Domain\\Model\\File\\Xliff'; break;
@@ -63,6 +63,6 @@ class FileRepository {
 	}
 
 	public function update ($file){
-
+		$file->save();
 	}
 }
