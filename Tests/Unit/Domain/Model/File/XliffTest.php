@@ -84,9 +84,41 @@ class XliffTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 */
 	public function saveAs (){
 		$path = GeneralUtility::tempnam('test_', '.xlf');
-		$this->subject->saveAs($path);
+		$this->subject->saveAs($path, TRUE);
 		$this->assertFileExists($path);
 		GeneralUtility::unlink_tempfile($path);
 		$this->assertFileNotExists($path);
+	}
+
+	/**
+	 * @test
+	 */
+	public function parseDefault (){
+		$identifier = dirname(__FILE__) . '/locallang.xlf';
+		$this->subject->setIdentifier($identifier);
+		$translations = $this->subject->getTranslations();
+		$this->assertCount(3, $translations);
+		$this->assertContainsOnlyInstancesOf('MONOGON\\TranslationTools\\Domain\\Model\\Translation', $translations);
+		// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($translations);
+		// exit;
+		$this->assertSame('Telephon', $translations[1]->getSource());
+	}
+
+	/**
+	 * @test
+	 */
+	public function parseDe (){
+		$identifier = dirname(__FILE__) . '/de.locallang.xlf';
+		$identifier = dirname(__FILE__) . '/foobar.xlf';
+		$this->subject->setIdentifier($identifier)
+		->setSourceLanguage('en')
+		->setTargetLanguage('de');
+		$translations = $this->subject->getTranslations();
+		// $this->assertCount(3, $translations);
+		// $this->assertContainsOnlyInstancesOf('MONOGON\\TranslationTools\\Domain\\Model\\Translation', $translations);
+		// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($translations);
+		// exit;
+		//$this->assertSame('Title', $translations[1]->getSource());
+		$this->markTestIncomplete('This test has not been implemented yet.');
 	}
 }

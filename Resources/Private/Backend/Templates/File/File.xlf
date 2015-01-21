@@ -8,7 +8,9 @@
 			<f:for each="{translations}" as="translation">
 			<trans-unit id="{translation.id}" xml:space="preserve">
 				<source>{translation.source}</source>
+				<f:if condition="{translation.target}">
 				<target>{translation.target}</target>
+				</f:if>
 			</trans-unit>
 			</f:for>
 		</body>

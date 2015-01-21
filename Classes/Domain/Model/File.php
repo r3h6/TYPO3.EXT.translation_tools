@@ -31,7 +31,10 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * File
  */
-class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
+abstract class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
+
+	const EXT_KEY = 'translation_tools';
+
 
 	protected $translations = array();
 
@@ -41,7 +44,19 @@ class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
 	protected $format = NULL;
 
-	const EXT_KEY = 'translation_tools';
+	protected $targetLanguage;
+	protected $sourceLanguage;
+
+	protected $charset = 'utf8';
+
+
+	/**
+	 * translationRepository
+	 *
+	 * @var \MONOGON\TranslationTools\Domain\Repository\TranslationRepository
+	 * @inject
+	 */
+	protected $translationRepository = NULL;
 
 	/**
 	 * [$view description]
@@ -80,28 +95,106 @@ class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
 	}
 
-	public function getIdentifier (){
+	/**
+	 * Returns the sourceLanguage
+	 *
+	 * @return string $sourceLanguage
+	 */
+	public function getSourceLanguage(){
+		return $this->sourceLanguage;
+	}
+
+	/**
+	 * Sets the sourceLanguage
+	 *
+	 * @param string $sourceLanguage
+	 * @return object $this
+	 */
+	public function setSourceLanguage($sourceLanguage){
+		$this->sourceLanguage = $sourceLanguage;
+		return $this;
+	}
+
+	/**
+	 * Returns the targetLanguage
+	 *
+	 * @return string $targetLanguage
+	 */
+	public function getTargetLanguage(){
+		return $this->targetLanguage;
+	}
+
+	/**
+	 * Sets the targetLanguage
+	 *
+	 * @param string $targetLanguage
+	 * @return object $this
+	 */
+	public function setTargetLanguage($targetLanguage){
+		$this->targetLanguage = $targetLanguage;
+		return $this;
+	}
+
+	/**
+	 * Returns the identifier
+	 *
+	 * @return string $identifier
+	 */
+	public function getIdentifier(){
 		return $this->identifier;
+	}
+
+	/**
+	 * Sets the identifier
+	 *
+	 * @param string $identifier
+	 * @return object $this
+	 */
+	public function setIdentifier($identifier){
+		$this->identifier = $identifier;
+		return $this;
 	}
 
 	public function getContent (){
 		return $this->content;
 	}
 
-	public function setTranslation (\MONOGON\TranslationTools\Domain\Model\Translation $translation){
+	public function addTranslation (\MONOGON\TranslationTools\Domain\Model\Translation $translation){
 		$this->translations[] = $translation;
+		return $this;
+	}
+
+	public function getTranslations (){
+		$this->parse();
+		return $this->translations;
 	}
 
 	public function removeTranslation (\MONOGON\TranslationTools\Domain\Model\Translation $translation){
 
 	}
-
-	protected function load (){
-
+	// abstract protected function parse ();
+	protected function parse (){
+		$sourceLanguage = 'default';
+		//$translationRepository = GeneralUtility::makeInstance('MONOGON\\TranslationTools\\Domain\\Repository\\TranslationRepository');
+		$localizationFactory = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Localization\\LocalizationFactory');
+		$parsedData = $localizationFactory->getParsedData($this->identifier, $this->targetLanguage, $this->charset, 2);
+		foreach ($parsedData[$sourceLanguage] as $id => $value) {
+			$target = isset($parsedData[$this->targetLanguage][$id][0]['target']) ? $parsedData[$this->targetLanguage][$id][0]['target'] : NULL;
+			$source = $parsedData[$sourceLanguage][$id][0]['source'];
+			$this->translations[] = $this->translationRepository->createTranslation(array(
+				'source' => $source,
+				'target' => $target,
+				'id' => $id,
+				'file' => $this->identifier,
+				'sourceLanguage' => $this->sourceLanguage,
+				'targetLanguage' => $this->targetLanguage
+			));
+		}
 	}
 
 	public function render (){
-		$this->view->assign('sourceLanguage', '');
+		$this->view->assign('sourceLanguage', $this->sourceLanguage);
+		$this->view->assign('targetLanguage', $this->targetLanguage);
 		$this->view->assign('translations', $this->translations);
 		$this->content = $this->view->render();
 		return $this;
@@ -117,7 +210,7 @@ class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 		}
 
 		if (!$overwrite && file_exists($path)){
-			throw new \Exception("Could not save file", 1421790718);
+			throw new \Exception("Not allowed to overwrite file '$path'!", 1421790718);
 		}
 		GeneralUtility::writeFile($path, $this->content);
 		$this->identifier = $path;

@@ -35,6 +35,8 @@ use TYPO3\CMS\Core\Localization\Parser\XliffParser;
  */
 class FileUtility {
 
+	// private static $localizationFactory;
+
 	public static function getLocallangFiles ($cached = TRUE){
 		global $BE_USER;
 
@@ -122,10 +124,22 @@ class FileUtility {
 		return self::addLanguageToPath(str_replace('typo3conf/ext/', 'EXT:l10n_overwrite/Resources/Private/l10n/', $identifier), $language);
 	}
 
+	/**
+	 * [addLanguageToPath description]
+	 * @param string $identifier [description]
+	 * @param string $language   [description]
+	 * @return string
+	 */
 	public static function addLanguageToPath ($identifier, $language){
 		return str_replace('/locallang.', "/$language.locallang.", $identifier);
 	}
 
+	/**
+	 * [makeL10nPath description]
+	 * @param  string $identifier [description]
+	 * @return string             [description]
+	 * @throws InvalidArgumentException
+	 */
 	public static function makeL10nPath ($identifier){
 		if (strpos($identifier, 'typo3conf/ext/') === 0){
 			return str_replace('typo3conf/ext/', 'typo3conf/l10n/', $identifier);
@@ -145,4 +159,11 @@ class FileUtility {
 		}
 		return NULL;
 	}
+
+	// public static function getTranslations ($file, $language, $charset = 'utf8'){
+	// 	if (!self::$localizationFactory){
+	// 		self::$localizationFactory = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Localization\\LocalizationFactory');
+	// 	}
+	// 	$parsedData = self::$localizationFactory->getParsedData($file, $language, $charset, self::ERROR_MODE_EXCEPTION);
+	// }
 }

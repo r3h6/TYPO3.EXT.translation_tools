@@ -78,6 +78,7 @@ class TranslationRepository {
 			}
 			foreach ($languages as $language) {
 				$parsedData = $localizationFactory->getParsedData($file, $language, $charset, self::ERROR_MODE_EXCEPTION);
+
 				foreach ($parsedData[$sourceLanguage] as $id => $value) {
 					$target = isset($parsedData[$language][$id][0]['target']) ? $parsedData[$language][$id][0]['target'] : NULL;
 					$source = $parsedData[$sourceLanguage][$id][0]['source'];
@@ -118,7 +119,9 @@ class TranslationRepository {
 		$identifier = FileUtility::determineLanguageFile($translation->getFile(), $translation->getTargetLanguage());
 
 		$file = $this->fileRepository->findByIdentifier($identifier);
-		$file->setTranslation($translation);
+		$file->addTranslation($translation)
+		->setSourceLanguage($translation->getSourceLanguage())
+		->setTargetLanguage($translation->getTargetLanguage());
 		$this->fileRepository->update($file);
 	}
 

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2015-01-21T19:05:10Z">
+		<header>
+			<generator>LFEditor</generator>
+		</header>
+		<body>
+		<trans-unit id="tx_translationtools_domain_model_test" approved="yes" xml:space="preserve">
+			<source>Test</source>
+			<target>Test</target>
+		</trans-unit>
+		<trans-unit id="tx_translationtools_domain_model_test.telephone" approved="yes" xml:space="preserve">
+			<source>Telephon</source>
+			<target>Telefon</target>
+		</trans-unit>
+		<trans-unit id="tx_translationtools_domain_model_test.title" approved="yes" xml:space="preserve">
+			<source>Title</source>
+			<target>Titel</target>
+		</trans-unit>
+		</body>
+	</file>
+</xliff>

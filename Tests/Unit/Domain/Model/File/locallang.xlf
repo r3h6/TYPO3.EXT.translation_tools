@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2015-01-16T21:13:54Z" product-name="translation_tools">
-		<header/>
+	<file source-language="en" datatype="plaintext" original="messages" date="2015-01-21T19:05:10Z">
+		<header>
+			<generator>LFEditor</generator>
+		</header>
 		<body>
-			<trans-unit id="tx_translationtools_domain_model_test">
-				<source>Test</source>
-			</trans-unit>
-			<trans-unit id="tx_translationtools_domain_model_test.title">
-				<source>Title</source>
-			</trans-unit>
-			<trans-unit id="tx_translationtools_domain_model_test.flag">
-				<source>Flag</source>
-			</trans-unit>
+		<trans-unit id="tx_translationtools_domain_model_test" xml:space="preserve">
+			<source>Test</source>
+		</trans-unit>
+		<trans-unit id="tx_translationtools_domain_model_test.telephone" xml:space="preserve">
+			<source>Telephon</source>
+		</trans-unit>
+		<trans-unit id="tx_translationtools_domain_model_test.title" xml:space="preserve">
+			<source>Title</source>
+		</trans-unit>
 		</body>
 	</file>
 </xliff>
