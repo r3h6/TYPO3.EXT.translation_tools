@@ -84,29 +84,30 @@ class FileUtility {
 	 * 2. If can write to l10n
 	 * 3. Write to extension l10n_overwrite as xlf,xml or ts
 	 *
-	 * @param  [type] $identifier [description]
+	 * @param  [type] $sourcePath [description]
 	 * @param  [type] $language   [description]
 	 * @return [type]             [description]
 	 */
-	public static function determineLanguageFile ($identifier, $language){
+	public static function determineLanguageFile ($sourcePath, $language){
+		$targetPath = self::addLanguageToPath($sourcePath, $language);
 
 		$objectManager = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
 		$extConfManager = $objectManager->get('MONOGON\\TranslationTools\\Configuration\\ExtConfManager');
-		$extKey = self::extractExtKey($identifier);
+		$extKey = self::extractExtKey($sourcePath);
 
-		// 1. Check write permission for extension directory
+		// Check write permission for extension directory
 		$allowWriteToExtension = $extConfManager->getAllowWriteToExtension();
 		if (in_array($extKey, $allowWriteToExtension)){
-			return self::addLanguageToPath($identifier, $language);
+			return self::addLanguageToPath($sourcePath, $language);
 		}
 
-		// 2. Check write permission for l10n directory
+		// Check write permission for l10n directory
 		$allowWriteToL10nDir = $extConfManager->getAllowWriteToL10nDir();
 		if (in_array($extKey, $allowWriteToL10nDir)){
-			return self::addLanguageToPath(self::makeL10nPath($identifier, $language), $language);
+			return self::addLanguageToPath(self::makeL10nPath($sourcePath, $language), $language);
 		}
 
-		// 3. Write to TypoScript file if configured this way
+		// Write to TypoScript file if configured this way
 		$useTypeScript = $extConfManager->getUseTypeScript();
 		if ($useTypeScript){
 			return 'EXT:l10n_overwrite/Configuration/TypoScript/l10n/setup.txt';
@@ -115,13 +116,18 @@ class FileUtility {
 		$extensionRepository = $objectManager->get('TYPO3\\CMS\\Extensionmanager\\Domain\\Repository\\ExtensionRepository');
 		$isInTER = (boolean) $extensionRepository->countByExtensionKey($extKey);
 
-		// 4. Write to l10n directory if extension is not in TER
-		if (!$isInTER){
-			return self::addLanguageToPath(self::makeL10nPath($identifier, $language), $language);
+		// Overwrite
+		if (file_exists(GeneralUtility::getFileAbsFileName($targetPath))){
+			return self::addLanguageToPath(str_replace('typo3conf/ext/', 'EXT:l10n_overwrite/Resources/Private/l10n/', $sourcePath), $language);
 		}
 
-		// 5. Write to EXT:l10n_overwrite
-		return self::addLanguageToPath(str_replace('typo3conf/ext/', 'EXT:l10n_overwrite/Resources/Private/l10n/', $identifier), $language);
+		// Write to l10n directory if extension is not in TER
+		if (!$isInTER){
+			return self::addLanguageToPath(self::makeL10nPath($sourcePath, $language), $language);
+		}
+
+		// Write to EXT:l10n_overwrite
+		return self::addLanguageToPath(str_replace('typo3conf/ext/', 'EXT:l10n_overwrite/Resources/Private/l10n/', $sourcePath), $language);
 	}
 
 	/**

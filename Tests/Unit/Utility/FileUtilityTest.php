@@ -48,7 +48,10 @@ class FileUtilitTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	protected $l10nDir = 'typo3conf/l10n/';
 	protected $l10nOverwriteDir = 'EXT:l10n_overwrite/Resources/Private/l10n/';
 
+	protected $extConf;
+
 	protected function setUp() {
+		$this->extConf = $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][self::EXT_KEY];
 		$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][self::EXT_KEY] = serialize(array(
 			'allowWriteToExtension' => '',
 			'getAllowWriteToL10nDir' => '',
@@ -57,23 +60,24 @@ class FileUtilitTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	}
 
 	protected function tearDown() {
+		$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][self::EXT_KEY] = $this->extConf;
 	}
 
 
 	/**
 	 * @test
 	 */
-	public function addLanguageToPath (){
+	public function addLanguageToPathGerman (){
 		$language = 'de';
-		$identifier = 'typo3conf/ext/news/Resources/Private/Language/locallang.xml';
-		$expected = 'typo3conf/ext/news/Resources/Private/Language/de.locallang.xml';
+		$identifier = 'typo3conf/ext/news/Resources/Private/Language/locallang.xlf';
+		$expected = 'typo3conf/ext/news/Resources/Private/Language/de.locallang.xlf';
 		$this->assertEquals($expected, FileUtility::addLanguageToPath($identifier, $language));
 	}
 
 	/**
 	 * @test
 	 */
-	public function determineLanguageFileForNews (){
+	public function determineLanguageFileForNewsGerman (){
 		$language = 'de';
 		$identifier = 'typo3conf/ext/news/Resources/Private/Language/locallang.xml';
 		$expected = $this->l10nOverwriteDir . "news/Resources/Private/Language/$language.locallang.xml";
@@ -83,10 +87,20 @@ class FileUtilitTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function determineLanguageFileForMgnExample (){
+	public function determineLanguageFileForTestExtensionFrench (){
 		$language = 'fr';
-		$identifier = 'typo3conf/ext/mgn_example/Resources/Private/Language/locallang.xml';
-		$expected = $this->l10nDir . "$language/mgn_example/Resources/Private/Language/$language.locallang.xml";
+		$identifier = 'typo3conf/ext/test_extension/Resources/Private/Language/locallang.xlf';
+		$expected = $this->l10nDir . "$language/test_extension/Resources/Private/Language/$language.locallang.xlf";
+		$this->assertEquals($expected, FileUtility::determineLanguageFile($identifier, $language));
+	}
+
+	/**
+	 * @test
+	 */
+	public function determineLanguageFileForTestsGerman (){
+		$language = 'de';
+		$identifier = 'typo3conf/ext/translation_tools/Tests/Resources/Private/Language/locallang.xlf';
+		$expected = $this->l10nOverwriteDir . "translation_tools/Tests/Resources/Private/Language/$language.locallang.xlf";
 		$this->assertEquals($expected, FileUtility::determineLanguageFile($identifier, $language));
 	}
 
