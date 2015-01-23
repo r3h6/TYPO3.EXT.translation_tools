@@ -103,7 +103,7 @@ class FileUtility {
 		// 2. Check write permission for l10n directory
 		$allowWriteToL10nDir = $extConfManager->getAllowWriteToL10nDir();
 		if (in_array($extKey, $allowWriteToL10nDir)){
-			return self::addLanguageToPath(self::makeL10nPath($identifier), $language);
+			return self::addLanguageToPath(self::makeL10nPath($identifier, $language), $language);
 		}
 
 		// 3. Write to TypoScript file if configured this way
@@ -117,7 +117,7 @@ class FileUtility {
 
 		// 4. Write to l10n directory if extension is not in TER
 		if (!$isInTER){
-			return self::addLanguageToPath(self::makeL10nPath($identifier), $language);
+			return self::addLanguageToPath(self::makeL10nPath($identifier, $language), $language);
 		}
 
 		// 5. Write to EXT:l10n_overwrite
@@ -137,12 +137,13 @@ class FileUtility {
 	/**
 	 * [makeL10nPath description]
 	 * @param  string $identifier [description]
+	 * @param  string $language   [description]
 	 * @return string             [description]
 	 * @throws InvalidArgumentException
 	 */
-	public static function makeL10nPath ($identifier){
+	public static function makeL10nPath ($identifier, $language){
 		if (strpos($identifier, 'typo3conf/ext/') === 0){
-			return str_replace('typo3conf/ext/', 'typo3conf/l10n/', $identifier);
+			return str_replace('typo3conf/ext/', "typo3conf/l10n/$language/", $identifier);
 		}
 		throw new \InvalidArgumentException("Could not make l10n path from $identifier!", 1421611864);
 	}
@@ -158,6 +159,42 @@ class FileUtility {
 			return $matches[1];
 		}
 		return NULL;
+	}
+
+	/**
+	 * [mekeBackupPath description]
+	 * @param  string $identifier [description]
+	 * @return string             [description]
+	 * @throws InvalidArgumentException
+	 */
+	public static function makeBackupPath ($identifier){
+		if (strpos($identifier, 'typo3conf/ext/') === 0){
+			return str_replace('typo3conf/ext/', 'uploads/tx_translationtools/', $identifier);
+		}
+		throw new \InvalidArgumentException("Could not make backup path from $identifier!", 1421997699);
+	}
+
+	/**
+	 * Creates a directory deep
+	 * @param  string $directory [description]
+	 */
+	public static function createDirectory ($directory){
+		$absoluteDirectory = GeneralUtility::getFileAbsFileName($directory);
+
+		if (!GeneralUtility::isAllowedAbsPath($absoluteDirectory)){
+			throw new \InvalidArgumentException("Create directory '$directory' is not allowed!", 1422004899);
+		}
+
+		GeneralUtility::mkdir_deep(dirname($absoluteDirectory) . '/', basename($absoluteDirectory));
+	}
+
+	/**
+	 * [getRelativePath description]
+	 * @param  string $path [description]
+	 * @return string       [description]
+	 */
+	public static function getRelativePath ($path){
+		return str_replace(PATH_site, '', $path);
 	}
 
 	// public static function getTranslations ($file, $language, $charset = 'utf8'){

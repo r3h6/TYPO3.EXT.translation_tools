@@ -27,6 +27,7 @@ namespace MONOGON\TranslationTools\Domain\Model;
  ***************************************************************/
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use MONOGON\TranslationTools\Utility\FileUtility;
 
 /**
  * File
@@ -84,7 +85,7 @@ abstract class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	public function initializeObject (){
 
 		$extPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath(self::EXT_KEY);
-		$templateRootPath = $extPath . 'Resources/Private/Backend/Templates/File/File.' . $this->format;
+		$templateRootPath = $extPath . 'Resources/Private/Backend/Templates/File/Render.' . $this->format;
 
 		$this->view->setTemplatePathAndFilename($templateRootPath);
 		$this->view->setFormat($this->format);
@@ -205,16 +206,46 @@ abstract class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	}
 
 	public function saveAs ($path, $overwrite = FALSE){
-		if (!$this->content){
-			$this->render();
+		$path = GeneralUtility::getFileAbsFileName($path);
+
+		if (!GeneralUtility::isAllowedAbsPath($path)){
+			throw new \InvalidArgumentException("Could not save file because path '$path' is not allowed!", 1422004887);
 		}
 
 		if (!$overwrite && file_exists($path)){
 			throw new \Exception("Not allowed to overwrite file '$path'!", 1421790718);
 		}
-		GeneralUtility::writeFile($path, $this->content);
-		$this->identifier = $path;
+
+		if (!$this->content){
+			$this->render();
+		}
+
+		FileUtility::createDirectory(dirname($path));
+
+		if (!GeneralUtility::writeFile($path, $this->content)){
+			throw new \Exception("Could not save file '$path'!", 1422005075);
+		}
+
+		$this->identifier = FileUtility::getRelativePath($path);
 	}
 
+	public function getAbsolutePath (){
+		return GeneralUtility::getFileAbsFileName($this->identifier, FALSE);
+	}
 
+	public function exists (){
+		return file_exists($this->getAbsolutePath());
+	}
+
+	public function copy ($destination){
+		$destination = GeneralUtility::getFileAbsFileName($destination);
+		$source = $this->getAbsolutePath();
+		if (!GeneralUtility::isAllowedAbsPath($source)){
+			throw new \InvalidArgumentException("Could not copy file because source '$source' is not allowd!");
+		}
+		if (!GeneralUtility::isAllowedAbsPath($destination)){
+			throw new \InvalidArgumentException("Could not copy file because destination '$destination' is not allowd!");
+		}
+		return copy($source, $destination);
+	}
 }

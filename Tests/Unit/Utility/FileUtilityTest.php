@@ -36,7 +36,7 @@ use \MONOGON\TranslationTools\Utility\FileUtility;
  *
  * @author R3 H6 <r3h6@outlook.com>
  */
-class FileUtilityUnitTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
+class FileUtilitTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 
 	// protected $dummyLocalExtensionPath = 'typo3conf/ext/test/Resources/Private/Language/locallang.xlf';
 	// protected $dummyLocalExtensionPathBackslashes = 'typo3conf\\ext\\test\\Resources\\Private\\Language\\locallang.xlf';
@@ -86,7 +86,7 @@ class FileUtilityUnitTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	public function determineLanguageFileForMgnExample (){
 		$language = 'fr';
 		$identifier = 'typo3conf/ext/mgn_example/Resources/Private/Language/locallang.xml';
-		$expected = $this->l10nDir . "mgn_example/Resources/Private/Language/$language.locallang.xml";
+		$expected = $this->l10nDir . "$language/mgn_example/Resources/Private/Language/$language.locallang.xml";
 		$this->assertEquals($expected, FileUtility::determineLanguageFile($identifier, $language));
 	}
 
@@ -130,5 +130,16 @@ class FileUtilityUnitTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 */
 	public function extractExtKeyFromBrokenPath() {
 		$this->assertEquals(NULL, FileUtility::extractExtKey('typo3conf/ext/locallang.xlf'));
+	}
+
+
+	/**
+	 * @test
+	 */
+	public function makeBackupPath() {
+		$this->assertEquals(
+			'uploads/tx_translationtools/test/locallang.xlf',
+			FileUtility::makeBackupPath('typo3conf/ext/test/locallang.xlf')
+		);
 	}
 }

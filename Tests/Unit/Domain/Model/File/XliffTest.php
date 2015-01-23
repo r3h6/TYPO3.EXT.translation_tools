@@ -47,9 +47,12 @@ class XliffTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 */
 	protected $objectManager = NULL;
 
+	protected static $locallangFile = 'typo3conf/ext/translation_tools/Tests/Resources/Private/Language/locallang.xlf';
+
+
 	protected function setUp() {
 		$this->objectManager = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
-		$this->subject = $this->objectManager->get('MONOGON\\TranslationTools\\Domain\\Model\\File\\Xliff');
+		$this->subject = $this->objectManager->get('MONOGON\\TranslationTools\\Domain\\Model\\File\\Xliff', self::$locallangFile);
 
 		//$this->inject($this->subject, 'view', new \TYPO3\CMS\Fluid\View\StandaloneView());
 	}
@@ -58,6 +61,10 @@ class XliffTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		unset($this->subject);
 		unset($this->objectManager);
 	}
+
+	// protected function getLocallangPath ($fileName){
+	// 	return \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('translation_tools') . self::$locallangDir . $fileName;
+	// }
 
 	/**
 	 * @test
@@ -94,13 +101,11 @@ class XliffTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function parseDefault (){
-		$identifier = dirname(__FILE__) . '/locallang.xlf';
-		$this->subject->setIdentifier($identifier);
+		// $identifier = $this->getLocallangPath('locallang.xlf');
+		// $this->subject->setIdentifier($identifier);
 		$translations = $this->subject->getTranslations();
 		$this->assertCount(3, $translations);
 		$this->assertContainsOnlyInstancesOf('MONOGON\\TranslationTools\\Domain\\Model\\Translation', $translations);
-		// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($translations);
-		// exit;
 		$this->assertSame('Telephon', $translations[1]->getSource());
 	}
 
@@ -108,17 +113,37 @@ class XliffTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function parseDe (){
-		$identifier = dirname(__FILE__) . '/de.locallang.xlf';
-		$identifier = dirname(__FILE__) . '/foobar.xlf';
-		$this->subject->setIdentifier($identifier)
-		->setSourceLanguage('en')
-		->setTargetLanguage('de');
-		$translations = $this->subject->getTranslations();
+		// $identifier = $this->getLocallangPath('de.locallang.xlf');
+		// $identifier = $this->getLocallangPath('foobar.xlf');
+		// $this->subject->setIdentifier($identifier)
+		// ->setSourceLanguage('en')
+		// ->setTargetLanguage('de');
+		// $translations = $this->subject->getTranslations();
 		// $this->assertCount(3, $translations);
 		// $this->assertContainsOnlyInstancesOf('MONOGON\\TranslationTools\\Domain\\Model\\Translation', $translations);
 		// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($translations);
 		// exit;
 		//$this->assertSame('Title', $translations[1]->getSource());
 		$this->markTestIncomplete('This test has not been implemented yet.');
+	}
+
+	/**
+	 * @test
+	 */
+	public function getAbsolutePath (){
+		$this->assertSame(
+			PATH_site . self::$locallangFile,
+			$this->subject->getAbsolutePath()
+		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function exists (){
+		$this->assertSame(
+			TRUE,
+			$this->subject->exists()
+		);
 	}
 }

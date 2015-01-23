@@ -36,42 +36,42 @@ class Translation extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 *
 	 * @var string
 	 */
-	protected $source = NULL;
+	protected $source = '';
 
 	/**
 	 * [$target description]
 	 *
 	 * @var string
 	 */
-	protected $target = NULL;
+	protected $target = '';
 
 	/**
 	 * [$sourceLanguage description]
 	 *
 	 * @var string
 	 */
-	protected $sourceLanguage = NULL;
+	protected $sourceLanguage = '';
 
 	/**
 	 * [$targetLanguage description]
 	 *
 	 * @var string
 	 */
-	protected $targetLanguage = NULL;
+	protected $targetLanguage = '';
 
 	/**
 	 * [$id description]
 	 *
 	 * @var string
 	 */
-	protected $id = NULL;
+	protected $id = '';
 
 	/**
 	 * [$file description]
 	 *
 	 * @var string
 	 */
-	protected $file = NULL;
+	protected $file = '';
 
 	/**
 	 * Returns the  source

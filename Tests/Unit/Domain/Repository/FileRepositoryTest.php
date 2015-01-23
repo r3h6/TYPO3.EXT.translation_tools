@@ -27,6 +27,7 @@ namespace MONOGON\TranslationTools\Tests\Unit\Repository;
  ***************************************************************/
 
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
+use \MONOGON\TranslationTools\Utility\FileUtility;
 
 /**
  * Test case for class \MONOGON\TranslationTools\Domain\Model\Translation.
@@ -48,6 +49,8 @@ class FileRepositoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 */
 	protected $objectManager = NULL;
 
+	protected static $locallangFile = 'typo3conf/ext/translation_tools/Tests/Resources/Private/Language/locallang.xlf';
+
 	protected function setUp() {
 		$this->objectManager = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
 		$this->subject = $this->objectManager->get('MONOGON\\TranslationTools\\Domain\\Repository\\FileRepository');
@@ -61,33 +64,33 @@ class FileRepositoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function findByIdentifierXliff() {
+	public function makeInstanceXliff() {
 		$identifier = 'path/to/somewhere/locallang.xlf';
 		$this->assertInstanceOf(
 			'MONOGON\\TranslationTools\\Domain\\Model\\File\\Xliff',
-			$this->subject->findByIdentifier($identifier)
+			$this->subject->makeInstance($identifier)
 		);
 	}
 
 	/**
 	 * @test
 	 */
-	public function findByIdentifierXml() {
+	public function makeInstanceXml() {
 		$identifier = 'path/to/somewhere/locallang.xml';
 		$this->assertInstanceOf(
 			'MONOGON\\TranslationTools\\Domain\\Model\\File\\Xml',
-			$this->subject->findByIdentifier($identifier)
+			$this->subject->makeInstance($identifier)
 		);
 	}
 
 	/**
 	 * @test
 	 */
-	public function findByIdentifierTypoScript() {
+	public function makeInstanceTypoScript() {
 		$identifier = 'path/to/somewhere/setup.txt';
 		$this->assertInstanceOf(
 			'MONOGON\\TranslationTools\\Domain\\Model\\File\\TypoScript',
-			$this->subject->findByIdentifier($identifier)
+			$this->subject->makeInstance($identifier)
 		);
 	}
 
@@ -95,20 +98,33 @@ class FileRepositoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 * @test
 	 * @expectedException \InvalidArgumentException
 	 */
-	public function findByIdentifierException() {
+	public function makeInstanceException() {
 		$identifier = 'path/to/somewhere/setup.foo';
-		$this->subject->findByIdentifier($identifier);
+		$this->subject->makeInstance($identifier);
 	}
 
 	/**
 	 * @test
 	 */
-	public function findByIdentifierCheckConstructor() {
+	public function makeInstanceCheckConstructor() {
 		$identifier = 'path/to/somewhere/locallang.xlf';
-		$file = $this->subject->findByIdentifier($identifier);
+		$file = $this->subject->makeInstance($identifier);
 		$this->assertSame(
 			$identifier,
 			$file->getIdentifier()
 		);
 	}
+
+	/**
+	 * @test
+	 */
+	public function backup (){
+		$expected = PATH_site . FileUtility::makeBackupPath(self::$locallangFile);
+		$file = $this->subject->makeInstance(self::$locallangFile);
+		$this->subject->backup($file);
+		$this->assertFileExists($expected);
+		unlink($expected);
+		$this->assertFileNotExists($expected);
+	}
+
 }

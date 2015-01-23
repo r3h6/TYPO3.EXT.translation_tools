@@ -115,14 +115,13 @@ class TranslationRepository {
 	 * @param $translation
 	 */
 	public function update($translation) {
-
 		$identifier = FileUtility::determineLanguageFile($translation->getFile(), $translation->getTargetLanguage());
 
-		$file = $this->fileRepository->findByIdentifier($identifier);
+		$file = $this->fileRepository->makeInstance($identifier);
 		$file->addTranslation($translation)
 		->setSourceLanguage($translation->getSourceLanguage())
 		->setTargetLanguage($translation->getTargetLanguage());
-		$this->fileRepository->update($file);
+		$this->fileRepository->save($file);
 	}
 
 	/**

@@ -26,6 +26,7 @@ namespace MONOGON\TranslationTools\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use \TYPO3\CMS\Core\Utility\GeneralUtility;
 use MONOGON\TranslationTools\Utility\FileUtility;
 
 
@@ -62,7 +63,15 @@ class FileRepository {
 		return $this->makeInstance($identifier);
 	}
 
-	public function update ($file){
+	public function save ($file){
 		$file->save();
+	}
+
+	public function backup ($file){
+		if ($file->exists()){
+			$backupPath = FileUtility::makeBackupPath($file->getIdentifier());
+			FileUtility::createDirectory(dirname($backupPath));
+			$file->copy($backupPath);
+		}
 	}
 }
