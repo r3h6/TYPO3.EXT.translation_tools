@@ -56,6 +56,15 @@ class TranslationRepository {
 	protected $propertyMapper = NULL;
 
 	/**
+	 * [$localizationFactory description]
+	 * TYPO3\CMS\Core\Localization\LocalizationFactory
+	 * \MONOGON\TranslationTools\Localization\LocalizationFactory
+	 * @var \MONOGON\TranslationTools\Localization\LocalizationFactory
+	 * @inject
+	 */
+	protected $localizationFactory = NULL;
+
+	/**
 	 * @param \MONOGON\TranslationTools\Domain\Model\Dto\Demand $demand
 	 */
 	public function findDemanded(\MONOGON\TranslationTools\Domain\Model\Dto\Demand $demand) {
@@ -67,7 +76,9 @@ class TranslationRepository {
 		} else {
 			$files = $this->fileRepository->findAllRaw();
 		}
-		$localizationFactory = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Localization\\LocalizationFactory');
+
+
+		//$localizationFactory = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Localization\\LocalizationFactory');
 		$sourceLanguage = 'default';
 		$languages = $demand->getLanguages();
 		$charset = 'utf8';
@@ -77,7 +88,7 @@ class TranslationRepository {
 				throw new ExecutionTimeException('Error Processing Request', 1420919679);
 			}
 			foreach ($languages as $language) {
-				$parsedData = $localizationFactory->getParsedData($file, $language, $charset, self::ERROR_MODE_EXCEPTION);
+				$parsedData = $this->localizationFactory->getParsedData($file, $language, $charset, self::ERROR_MODE_EXCEPTION);
 
 				foreach ($parsedData[$sourceLanguage] as $id => $value) {
 					$target = isset($parsedData[$language][$id][0]['target']) ? $parsedData[$language][$id][0]['target'] : NULL;

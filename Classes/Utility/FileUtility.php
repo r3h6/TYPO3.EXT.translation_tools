@@ -29,6 +29,7 @@ namespace MONOGON\TranslationTools\Utility;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Localization\Parser\XliffParser;
+use MONOGON\TranslationTools\Configuration\ExtConf;
 
 /**
  * FileUtility
@@ -71,6 +72,8 @@ class FileUtility {
 		foreach($files as $key => $value)   {
 			if (strpos(basename($value), 'locallang') !== 0) {
 				unset($files[$key]);
+			} else {
+				$files[$key] = self::makeExtPath($value);
 			}
 		}
 
@@ -92,42 +95,52 @@ class FileUtility {
 		$targetPath = self::addLanguageToPath($sourcePath, $language);
 
 		$objectManager = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
-		$extConfManager = $objectManager->get('MONOGON\\TranslationTools\\Configuration\\ExtConfManager');
+		// $extConfManager = $objectManager->get('MONOGON\\TranslationTools\\Configuration\\ExtConfManager');
 		$extKey = self::extractExtKey($sourcePath);
 
 		// Check write permission for extension directory
-		$allowWriteToExtension = $extConfManager->getAllowWriteToExtension();
+		$allowWriteToExtension = ExtConf::get('getAllowWriteToExtension');
 		if (in_array($extKey, $allowWriteToExtension)){
-			return self::addLanguageToPath($sourcePath, $language);
+			return $targetPath;
 		}
 
 		// Check write permission for l10n directory
-		$allowWriteToL10nDir = $extConfManager->getAllowWriteToL10nDir();
+		$allowWriteToL10nDir = ExtConf::get('getAllowWriteToL10nDir');
 		if (in_array($extKey, $allowWriteToL10nDir)){
-			return self::addLanguageToPath(self::makeL10nPath($sourcePath, $language), $language);
+			return self::makeL10nPath($sourcePath, $language);
 		}
 
 		// Write to TypoScript file if configured this way
-		$useTypeScript = $extConfManager->getUseTypeScript();
-		if ($useTypeScript){
-			return 'EXT:l10n_overwrite/Configuration/TypoScript/l10n/setup.txt';
-		}
+		// $useTypeScript = ExtConf::get('getUseTypeScript');
+		// if ($useTypeScript){
+		// 	return 'EXT:l10n_overwrite/Configuration/TypoScript/l10n/setup.txt';
+		// }
 
 		$extensionRepository = $objectManager->get('TYPO3\\CMS\\Extensionmanager\\Domain\\Repository\\ExtensionRepository');
 		$isInTER = (boolean) $extensionRepository->countByExtensionKey($extKey);
 
 		// Overwrite
 		if (file_exists(GeneralUtility::getFileAbsFileName($targetPath))){
-			return self::addLanguageToPath(str_replace('typo3conf/ext/', 'EXT:l10n_overwrite/Resources/Private/l10n/', $sourcePath), $language);
+			return self::makeOverwritePath($sourcePath, $language);
 		}
 
 		// Write to l10n directory if extension is not in TER
 		if (!$isInTER){
-			return self::addLanguageToPath(self::makeL10nPath($sourcePath, $language), $language);
+			return self::makeL10nPath($sourcePath, $language);
 		}
 
-		// Write to EXT:l10n_overwrite
-		return self::addLanguageToPath(str_replace('typo3conf/ext/', 'EXT:l10n_overwrite/Resources/Private/l10n/', $sourcePath), $language);
+		// Overwrite
+		return self::makeOverwritePath($sourcePath, $language);
+	}
+
+	public function makeOverwritePath ($path, $language){
+		$overwritePath = 'EXT:l10n_overwrite/Resources/Private/l10n/';
+
+		$path = preg_replace('#^(EXT:|typo3conf/ext/)#', $overwritePath, $path);
+
+		$path = self::addLanguageToPath($path, $language);
+
+		return $path;
 	}
 
 	/**
@@ -140,6 +153,27 @@ class FileUtility {
 		return str_replace('/locallang.', "/$language.locallang.", $identifier);
 	}
 
+	public static function extractLanguageFromPath ($path){
+		if (preg_match('#/([a-z]{2,})\.locallang#i', $path, $matches)){
+			return $matches[1];
+		}
+		return NULL;
+	}
+
+	public static function convertToOriginalPath ($path){
+		$path = GeneralUtility::getFileAbsFileName($path);
+		$l10nDir = GeneralUtility::getFileAbsFileName(ExtConf::get('storageFolder'));
+		$path = str_replace($l10nDir, '', $path);
+
+		$path = preg_replace('#/([a-z]{2,}\.)(locallang)#i', '/$2', $path);
+
+		return 'EXT:' . $path;
+	}
+
+	public static function makeExtPath ($path){
+		return 'EXT:' . preg_replace('#^.+?/ext/#', '', $path);
+	}
+
 	/**
 	 * [makeL10nPath description]
 	 * @param  string $identifier [description]
@@ -149,7 +183,10 @@ class FileUtility {
 	 */
 	public static function makeL10nPath ($identifier, $language){
 		if (strpos($identifier, 'typo3conf/ext/') === 0){
-			return str_replace('typo3conf/ext/', "typo3conf/l10n/$language/", $identifier);
+			return self::addLanguageToPath(str_replace('typo3conf/ext/', "typo3conf/l10n/$language/", $identifier), $language);
+		}
+		if (strpos($identifier, 'EXT:') === 0){
+			return self::addLanguageToPath(str_replace('EXT:', "typo3conf/l10n/$language/", $identifier), $language);
 		}
 		throw new \InvalidArgumentException("Could not make l10n path from $identifier!", 1421611864);
 	}
@@ -162,6 +199,9 @@ class FileUtility {
 	 */
 	public static function extractExtKey ($identifier){
 		if (preg_match('#^typo3conf[/\\\\]{1,}ext[/\\\\]{1,}([^/\\\\]+)[/\\\\]{1,}#i', $identifier, $matches)){
+			return $matches[1];
+		}
+		if (preg_match('#^EXT:([^/\\\\]+)[/\\\\]{1,}#i', $identifier, $matches)){
 			return $matches[1];
 		}
 		return NULL;
@@ -201,6 +241,10 @@ class FileUtility {
 	 */
 	public static function getRelativePath ($path){
 		return str_replace(PATH_site, '', $path);
+	}
+
+	public static function trailingSlash ($path){
+		return rtrim($path, '/') . '/';
 	}
 
 	// public static function getTranslations ($file, $language, $charset = 'utf8'){

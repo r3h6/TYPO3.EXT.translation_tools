@@ -37,6 +37,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * @author R3 H6 <r3h6@outlook.com>
  */
 class XliffTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
+
+	const FAKE_PAGE_UID = 1;
+
 	/**
 	 * @var \MONOGON\TranslationTools\Domain\Model\File\Xliff
 	 */
@@ -47,19 +50,35 @@ class XliffTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 */
 	protected $objectManager = NULL;
 
+	protected $phpUnitFramework = NULL;
+
 	protected static $locallangFile = 'typo3conf/ext/translation_tools/Tests/Resources/Private/Language/locallang.xlf';
 
 
 	protected function setUp() {
+		$this->phpUnitFramework = new \Tx_Phpunit_Framework('table_prefix');
+		$this->phpUnitFramework->createFakeFrontEnd(self::FAKE_PAGE_UID);
+
+
+		// $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Extbase\\Service\\EnvironmentService'] = array(
+		// 	'className' => 'MONOGON\\TranslationTools\\Mock\\Service\\EnvironmentService'
+		// );
+
+
 		$this->objectManager = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
 		$this->subject = $this->objectManager->get('MONOGON\\TranslationTools\\Domain\\Model\\File\\Xliff', self::$locallangFile);
+
 
 		//$this->inject($this->subject, 'view', new \TYPO3\CMS\Fluid\View\StandaloneView());
 	}
 
 	protected function tearDown() {
-		unset($this->subject);
-		unset($this->objectManager);
+		// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($this->subject);
+		// $this->phpUnitFramework->cleanUp();
+		// unset($this->phpUnitFramework);
+		// unset($this->subject);
+		// unset($this->objectManager);
+		// parent::tearDown();
 	}
 
 	// protected function getLocallangPath ($fileName){
@@ -113,6 +132,7 @@ class XliffTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function parseDe (){
+
 		// $identifier = $this->getLocallangPath('de.locallang.xlf');
 		// $identifier = $this->getLocallangPath('foobar.xlf');
 		// $this->subject->setIdentifier($identifier)
