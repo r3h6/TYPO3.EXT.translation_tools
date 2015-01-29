@@ -5,17 +5,17 @@
 			<generator>LFEditor</generator>
 		</header>
 		<body>
-		<trans-unit id="tx_translationtools_domain_model_test" approved="yes" xml:space="preserve">
-			<source>Test</source>
-			<target>Test</target>
+		<trans-unit id="test.a" xml:space="preserve">
+			<source>Test A</source>
+			<target>Test A DE</target>
 		</trans-unit>
-		<trans-unit id="tx_translationtools_domain_model_test.telephone" approved="yes" xml:space="preserve">
-			<source>Telephon</source>
-			<target>Telefon</target>
+		<trans-unit id="test.b" xml:space="preserve">
+			<source>Test B</source>
+			<target>Test B DE</target>
 		</trans-unit>
-		<trans-unit id="tx_translationtools_domain_model_test.title" approved="yes" xml:space="preserve">
-			<source>Title</source>
-			<target>Titel</target>
+		<trans-unit id="test.c" xml:space="preserve">
+			<source>Test C</source>
+			<target>Test C DE</target>
 		</trans-unit>
 		</body>
 	</file>

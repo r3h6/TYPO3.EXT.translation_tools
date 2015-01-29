@@ -35,6 +35,7 @@ use MONOGON\TranslationTools\Utility\FileUtility;
 abstract class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
 	const EXT_KEY = 'translation_tools';
+	const ERROR_MODE_EXCEPTION = 2;
 
 
 	protected $translations = array();
@@ -50,6 +51,12 @@ abstract class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
 	protected $charset = 'utf8';
 
+	/**
+	 * [$localizationFactory description]
+	 * @var \MONOGON\TranslationTools\Localization\LocalizationFactory
+	 * @inject
+	 */
+	protected $localizationFactory = NULL;
 
 	/**
 	 * translationRepository
@@ -74,7 +81,8 @@ abstract class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	protected $configurationManager;
 
 	public function __construct ($identifier = NULL){
-		$this->identifier = $identifier;
+		// $this->identifier = $identifier;
+		$this->setIdentifier($identifier);
 	}
 
 	/**
@@ -131,10 +139,10 @@ abstract class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 * @param string $targetLanguage
 	 * @return object $this
 	 */
-	public function setTargetLanguage($targetLanguage){
-		$this->targetLanguage = $targetLanguage;
-		return $this;
-	}
+	// public function setTargetLanguage($targetLanguage){
+	// 	$this->targetLanguage = $targetLanguage;
+	// 	return $this;
+	// }
 
 	/**
 	 * Returns the identifier
@@ -153,6 +161,9 @@ abstract class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 */
 	public function setIdentifier($identifier){
 		$this->identifier = $identifier;
+
+		$this->targetLanguage = FileUtility::extractLanguageFromPath($identifier);
+
 		return $this;
 	}
 
@@ -166,7 +177,6 @@ abstract class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	}
 
 	public function getTranslations (){
-		$this->parse();
 		return $this->translations;
 	}
 
@@ -174,11 +184,11 @@ abstract class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
 	}
 	// abstract protected function parse ();
-	protected function parse (){
+	public function parse (){
 		$sourceLanguage = 'default';
 		//$translationRepository = GeneralUtility::makeInstance('MONOGON\\TranslationTools\\Domain\\Repository\\TranslationRepository');
-		$localizationFactory = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Localization\\LocalizationFactory');
-		$parsedData = $localizationFactory->getParsedData($this->identifier, $this->targetLanguage, $this->charset, 2);
+		// $localizationFactory = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Localization\\LocalizationFactory');
+		$parsedData = $this->localizationFactory->getParsedData($this->identifier, $this->targetLanguage, $this->charset, self::ERROR_MODE_EXCEPTION);
 		foreach ($parsedData[$sourceLanguage] as $id => $value) {
 			$target = isset($parsedData[$this->targetLanguage][$id][0]['target']) ? $parsedData[$this->targetLanguage][$id][0]['target'] : NULL;
 			$source = $parsedData[$sourceLanguage][$id][0]['source'];
@@ -230,7 +240,7 @@ abstract class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	}
 
 	public function getAbsolutePath (){
-		return GeneralUtility::getFileAbsFileName($this->identifier, FALSE);
+		return GeneralUtility::getFileAbsFileName($this->identifier);
 	}
 
 	public function exists (){

@@ -13,7 +13,7 @@
     <f:form.select property="file" options="{mgn:form.options.files()}" size="1" class="form-control" title="{f:translate(key: 'tx_addresscollection_domain_model_address.addressgroup')}" prependOptionValue="" prependOptionLabel="" />
   </div>
   <div class="form-group">
-    <f:form.select class="form-control" multiple="multiple" property="languages" options="{mgn:form.options.systemLanguages()}" optionValueField="flag" optionLabelField="title" prependOptionValue="" prependOptionLabel="" />
+    <f:form.select class="form-control" multiple="multiple" property="languages" options="{mgn:form.options.systemLanguages()}" />
   </div>
   <div class="form-group">
     <f:form.textfield property="id" class="form-control" title="" placeholder="id" />
@@ -27,7 +27,6 @@
 <table class="translations table table-striped" >
   <tr>
     <th>ID</th>
-    <th>Source</th>
     <f:if condition="{demand.languages}">
       <f:for each="{demand.languages}" as="language">
         <th>{language}</th>
@@ -38,7 +37,6 @@
   <f:for each="{translations}" as="translation">
     <tr data-file="{translation._file}" data-id="{translation._id}">
       <td title="{translation._file}">{translation._id}</td>
-      <td>{translation._source}</td>
       <f:if condition="{demand.languages}">
         <f:for each="{demand.languages}" as="language">
           <mgn:translation.unit translation="{translation}" language="{language}">

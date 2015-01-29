@@ -150,6 +150,9 @@ class FileUtility {
 	 * @return string
 	 */
 	public static function addLanguageToPath ($identifier, $language){
+		if ($language == 'default'){
+			return $identifier;
+		}
 		return str_replace('/locallang.', "/$language.locallang.", $identifier);
 	}
 

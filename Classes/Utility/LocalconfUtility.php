@@ -55,8 +55,12 @@ class LocalconfUtility {
 
 				$path = FileUtility::convertToOriginalPath($file);
 				$overridePath = FileUtility::makeExtPath($file);
+				if ($language){
+					$overwrite .= "\$GLOBALS['TYPO3_CONF_VARS']['SYS']['locallangXMLOverride']['$language']['$path'][] = '$overridePath';\n";
+				} else {
+					$overwrite .= "\$GLOBALS['TYPO3_CONF_VARS']['SYS']['locallangXMLOverride']['$path'][] = '$overridePath';\n";
+				}
 
-				$overwrite .= "\$GLOBALS['TYPO3_CONF_VARS']['SYS']['locallangXMLOverride']['$language']['$path'][] = '$overridePath';\n";
 
 			}
 			$overwrite .= self::OVERWRITE_TOKEN_END . "\n";
@@ -79,8 +83,6 @@ class LocalconfUtility {
 				GeneralUtility::writeFile($localconfPath, $content);
 
 			}
-
-			\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($files); exit;
 		}
 	}
 }

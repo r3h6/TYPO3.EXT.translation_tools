@@ -41,7 +41,15 @@ class SystemLanguagesViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\Abstrac
 	 * @return array Files
 	 */
 	public function render (){
-		return $this->systemLanguageRepository->findAll();
+		$options = array(
+			'default' => 'Default',
+		);
+		$systemLanguages = $this->systemLanguageRepository->findAll();
+		foreach ($systemLanguages as $systemLanguage) {
+			$options[$systemLanguage->getFlag()] = $systemLanguage->getTitle();
+		}
+
+		return $options;
 	}
 
 }

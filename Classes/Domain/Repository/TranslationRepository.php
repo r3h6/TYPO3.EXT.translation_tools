@@ -5,6 +5,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use MONOGON\TranslationTools\Configuration\PhpIni;
 use MONOGON\TranslationTools\Exception\ExecutionTimeException;
 use MONOGON\TranslationTools\Utility\FileUtility;
+use MONOGON\TranslationTools\Utility\LocalconfUtility;
 /***************************************************************
  *
  *  Copyright notice
@@ -129,10 +130,15 @@ class TranslationRepository {
 		$identifier = FileUtility::determineLanguageFile($translation->getFile(), $translation->getTargetLanguage());
 
 		$file = $this->fileRepository->makeInstance($identifier);
-		$file->addTranslation($translation)
-		->setSourceLanguage($translation->getSourceLanguage())
-		->setTargetLanguage($translation->getTargetLanguage());
+		$file->parse();
+		$file->addTranslation($translation);
+		// ->setSourceLanguage($translation->getSourceLanguage())
+		// ->setTargetLanguage($translation->getTargetLanguage());
+
+		\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($file);
+
 		$this->fileRepository->save($file);
+		LocalconfUtility::update();
 	}
 
 	/**

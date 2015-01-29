@@ -1,5 +1,5 @@
 <?php
-namespace MONOGON\TranslationTools\Domain\Model\File;
+namespace MONOGON\TranslationTools\Domain\Model;
 
 /***************************************************************
  *
@@ -26,10 +26,13 @@ namespace MONOGON\TranslationTools\Domain\Model\File;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-/**
- * Xml
- */
-class Xml extends \MONOGON\TranslationTools\Domain\Model\File {
+use \TYPO3\CMS\Core\Utility\GeneralUtility;;
 
+/**
+ * FileXliff
+ */
+class FileXliff extends \MONOGON\TranslationTools\Domain\Model\File {
+
+	protected $format = 'xlf';
 
 }

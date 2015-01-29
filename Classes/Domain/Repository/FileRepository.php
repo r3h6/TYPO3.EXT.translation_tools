@@ -46,9 +46,9 @@ class FileRepository {
 	public function makeInstance ($identifier){
 		$extension = pathinfo($identifier, PATHINFO_EXTENSION);
 		switch ($extension) {
-			case 'xlf': $class = 'MONOGON\\TranslationTools\\Domain\\Model\\File\\Xliff'; break;
-			case 'xml': $class = 'MONOGON\\TranslationTools\\Domain\\Model\\File\\Xml'; break;
-			case 'txt': $class = 'MONOGON\\TranslationTools\\Domain\\Model\\File\\TypoScript'; break;
+			case 'xlf': $class = 'MONOGON\\TranslationTools\\Domain\\Model\\FileXliff'; break;
+			case 'xml': $class = 'MONOGON\\TranslationTools\\Domain\\Model\\FileXml'; break;
+			// case 'txt': $class = 'MONOGON\\TranslationTools\\Domain\\Model\\File\\TypoScript'; break;
 			default: throw new \InvalidArgumentException ("Could not find a class for $identifier", 1421615253);
 		}
 		return $this->objectManager->get($class, $identifier);

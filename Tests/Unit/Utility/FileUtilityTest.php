@@ -82,6 +82,15 @@ class FileUtilityTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	/**
 	 * @test
 	 */
+	public function addLanguageToPathDefault (){
+		$language = 'default';
+		$identifier = 'EXT:news/Resources/Private/Language/locallang.xlf';
+		$this->assertEquals($identifier, FileUtility::addLanguageToPath($identifier, $language));
+	}
+
+	/**
+	 * @test
+	 */
 	public function determineLanguageFileForNewsGerman (){
 		$language = 'de';
 		$identifier = 'typo3conf/ext/news/Resources/Private/Language/locallang.xml';
@@ -120,6 +129,17 @@ class FileUtilityTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 
 
 		$identifier = 'EXT:translation_tools/Tests/Resources/Private/Language/locallang.xlf';
+		$this->assertEquals($expected, FileUtility::determineLanguageFile($identifier, $language));
+	}
+
+	/**
+	 * @test
+	 */
+	public function determineLanguageFileForTestsDefault (){
+		$language = 'default';
+		$expected = $this->l10nOverwriteDir . "translation_tools/Tests/Resources/Private/Language/locallang.xlf";
+
+		$identifier = 'typo3conf/ext/translation_tools/Tests/Resources/Private/Language/locallang.xlf';
 		$this->assertEquals($expected, FileUtility::determineLanguageFile($identifier, $language));
 	}
 
