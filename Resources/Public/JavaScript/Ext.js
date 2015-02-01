@@ -3,19 +3,20 @@
 		var $el = $(this);
 		if ($el.hasClass('edit')) return null;
 
-		var targetLanguage = $el.attr('data-targetLanguage');
-		var id = $el.closest('[data-id]').attr('data-id');
-		var file = $el.closest('[data-file]').attr('data-file');
-
+		var targetLanguage = $el.data('target-language');
+		var id = $el.closest('[data-id]').data('id');
+		var file = $el.closest('[data-file]').data('file');
+		var source = $el.data('source');
 		var text = $el.text();
 		var $tpl = $($('#EditableTemplate').html());
 		// console.log($tpl);
 		$el.addClass('edit').html($tpl);
 
-		$tpl.find('.js-target').val(text).focus();
-		$tpl.find('.js-id').val(id);
-		$tpl.find('.js-file').val(file);
-		$tpl.find('.js-target-language').val(targetLanguage);
+		$tpl.find('[data-property="target"]').val(text).focus();
+		$tpl.find('[data-property="source"]').val(source);
+		$tpl.find('[data-property="id"]').val(id);
+		$tpl.find('[data-property="file"]').val(file);
+		$tpl.find('[data-property="target-language"]').val(targetLanguage);
 
 
 	};

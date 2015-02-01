@@ -27,7 +27,6 @@ namespace MONOGON\TranslationTools\Tests\Unit\Repository;
  ***************************************************************/
 
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
-use \MONOGON\TranslationTools\Utility\FileUtility;
 
 /**
  * Test case for class \MONOGON\TranslationTools\Domain\Model\Translation.
@@ -37,10 +36,10 @@ use \MONOGON\TranslationTools\Utility\FileUtility;
  *
  * @author R3 H6 <r3h6@outlook.com>
  */
-class FileRepositoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
+class TranslationRepositoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 
 	/**
-	 * @var \MONOGON\TranslationTools\Domain\Repository\FileRepository
+	 * @var \MONOGON\TranslationTools\Domain\Repository\TranslationRepository
 	 */
 	protected $subject = NULL;
 
@@ -49,11 +48,11 @@ class FileRepositoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 */
 	protected $objectManager = NULL;
 
-	protected static $locallangFile = 'typo3conf/ext/translation_tools/Tests/Resources/Private/Language/locallang.xlf';
+	protected static $locallangTranslation = 'typo3conf/ext/translation_tools/Tests/Resources/Private/Language/locallang.xlf';
 
 	protected function setUp() {
 		$this->objectManager = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
-		$this->subject = $this->objectManager->get('MONOGON\\TranslationTools\\Domain\\Repository\\FileRepository');
+		$this->subject = $this->objectManager->get('MONOGON\\TranslationTools\\Domain\\Repository\\TranslationRepository');
 	}
 
 	protected function tearDown() {
@@ -64,56 +63,27 @@ class FileRepositoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function makeInstanceXliff() {
-		$identifier = 'path/to/somewhere/locallang.xlf';
-		$this->assertInstanceOf(
-			'MONOGON\\TranslationTools\\Domain\\Model\\FileXliff',
-			$this->subject->makeInstance($identifier)
-		);
-	}
+	public function findDemandedDefault (){
+		$mockDemand = $this->getMock('MONOGON\\TranslationTools\\Domain\\Model\\Dto\\Demand');
+		$mockDemand->method('getFile')->willReturn('EXT:translation_tools/Tests/Resources/Private/Language/locallang.xlf');
+		$mockDemand->method('getLanguages')->willReturn(array('default'));
+		// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($mockDemand); exit;
+		$result = $this->subject->findDemanded($mockDemand);
 
-	/**
-	 * @test
-	 */
-	public function makeInstanceXml() {
-		$identifier = 'path/to/somewhere/locallang.xml';
-		$this->assertInstanceOf(
-			'MONOGON\\TranslationTools\\Domain\\Model\\FileXml',
-			$this->subject->makeInstance($identifier)
-		);
-	}
+		$this->assertCount(3, $result);
+		foreach ($result as $value){
+			$this->assertArrayHasKey('_id', $value);
+			$this->assertArrayHasKey('_file', $value);
+			$this->assertArrayHasKey('_source', $value);
+			$this->assertArrayHasKey('default', $value);
 
-	/**
-	 * @test
-	 * @expectedException \InvalidArgumentException
-	 */
-	public function makeInstanceException() {
-		$identifier = 'path/to/somewhere/setup.foo';
-		$this->subject->makeInstance($identifier);
-	}
+			$this->assertInstanceOf('MONOGON\\TranslationTools\\Domain\\Model\\Translation', $value['default']);
+		}
 
-	/**
-	 * @test
-	 */
-	public function makeInstanceCheckConstructor() {
-		$identifier = 'path/to/somewhere/locallang.xlf';
-		$file = $this->subject->makeInstance($identifier);
 		$this->assertSame(
-			$identifier,
-			$file->getIdentifier()
+			'Test A',
+			reset($result)['default']->getTarget()
 		);
-	}
-
-	/**
-	 * @test
-	 */
-	public function backup (){
-		$expected = PATH_site . FileUtility::makeBackupPath(self::$locallangFile);
-		$file = $this->subject->makeInstance(self::$locallangFile);
-		$this->subject->backup($file);
-		$this->assertFileExists($expected);
-		unlink($expected);
-		$this->assertFileNotExists($expected);
 	}
 
 }

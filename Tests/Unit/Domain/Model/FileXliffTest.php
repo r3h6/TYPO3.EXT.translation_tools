@@ -77,7 +77,7 @@ class FileXliffTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		$expected =
 '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="" datatype="plaintext" original="messages" date="' . date('c') . '" product-name="translation_tools">
+	<file source-language="en" datatype="plaintext" original="messages" date="' . date('c') . '" product-name="translation_tools">
 		<header>
 			<generator>TranslationTools</generator>
 		</header>
@@ -110,7 +110,7 @@ class FileXliffTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		$translations = $this->subject->getTranslations();
 		$this->assertCount(3, $translations);
 		$this->assertContainsOnlyInstancesOf('MONOGON\\TranslationTools\\Domain\\Model\\Translation', $translations);
-		$this->assertSame('Test B', $translations[1]->getSource());
+		$this->assertSame('Test A', reset($translations)->getSource());
 	}
 
 	/**
@@ -123,6 +123,6 @@ class FileXliffTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($translations); exit;
 		$this->assertCount(3, $translations);
 		$this->assertContainsOnlyInstancesOf('MONOGON\\TranslationTools\\Domain\\Model\\Translation', $translations);
-		$this->assertSame('Test B DE', $translations[1]->getTarget());
+		$this->assertSame('Test A DE', reset($translations)->getTarget());
 	}
 }

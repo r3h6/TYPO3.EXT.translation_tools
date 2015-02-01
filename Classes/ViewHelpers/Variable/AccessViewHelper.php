@@ -1,6 +1,5 @@
 <?php
-namespace MONOGON\TranslationTools\Localization;
-
+namespace MONOGON\TranslationTools\ViewHelpers\Variable;
 
 /***************************************************************
  *
@@ -28,24 +27,34 @@ namespace MONOGON\TranslationTools\Localization;
  ***************************************************************/
 
 /**
- * LocalizationFactory
+ * AccessViewHelper
  */
-class LocalizationFactory extends \TYPO3\CMS\Core\Localization\LocalizationFactory {
-
-	const ERROR_MODE_EXCEPTION = 2;
+class AccessViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
-	 * TYPO3\CMS\Core\Cache\Frontend\VariableFrontend
-	 * @var \MONOGON\TranslationTools\Mock\Cache\Frontend\MockVariable
-	 */
-	protected $cacheInstance;
-
-	/**
-	 * Initialize cache instance to be ready to use
 	 *
-	 * @return void
+	 * @param mixed $var
+	 * @param string $propertyName
+	 * @param string $as
+	 * @return string
 	 */
-	protected function initializeCache() {
-		$this->cacheInstance = new \MONOGON\TranslationTools\Mock\Cache\Frontend\MockVariable();
+	public function render ($var, $propertyName, $as){
+		$property = NULL;
+		if (is_array($var) && isset($var[$propertyName])){
+			$property =  $var[$propertyName];
+		}
+
+		$getter = 'get' . ucfirst($propertyName);
+		if (is_object($var) && method_exists($object, $getter)){
+			$property = $var->$getter();
+		}
+
+		$templateVariableContainer = $this->renderingContext->getTemplateVariableContainer();
+		$templateVariableContainer->add($as, $property);
+		$output = $this->renderChildren();
+		$templateVariableContainer->remove($as);
+
+		return $output;
 	}
+
 }

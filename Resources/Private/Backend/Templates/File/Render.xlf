@@ -7,9 +7,14 @@
 		<body>
 			<f:for each="{translations}" as="translation">
 			<trans-unit id="{translation.id}" xml:space="preserve">
-				<source><f:format.htmlspecialchars>{translation.source}</f:format.htmlspecialchars></source>
-				<f:if condition="{translation.target}">
-				<target><f:format.htmlspecialchars>{translation.target}</f:format.htmlspecialchars></target>
+				<f:if condition="{targetLanguage} == ''">
+					<f:then>
+						<source><f:format.htmlspecialchars>{translation.target}</f:format.htmlspecialchars></source>
+					</f:then>
+					<f:else>
+						<source><f:format.htmlspecialchars>{translation.source}</f:format.htmlspecialchars></source>
+						<target><f:format.htmlspecialchars>{translation.target}</f:format.htmlspecialchars></target>
+					</f:else>
 				</f:if>
 			</trans-unit>
 			</f:for>

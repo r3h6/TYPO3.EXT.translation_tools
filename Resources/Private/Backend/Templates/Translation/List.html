@@ -39,9 +39,9 @@
       <td title="{translation._file}">{translation._id}</td>
       <f:if condition="{demand.languages}">
         <f:for each="{demand.languages}" as="language">
-          <mgn:translation.unit translation="{translation}" language="{language}">
-            <td class="editable" data-targetLanguage="{unit.targetLanguage}">{unit.target}</td>
-          </mgn:translation.unit>
+          <mgn:variable.access var="{translation}" propertyName="{language}" as="unit">
+            <td class="editable" data-source="{unit.source}" data-target-language="{language}">{unit.target}</td>
+          </mgn:variable.access>
         </f:for>
       </f:if>
     </tr>
@@ -50,10 +50,11 @@
 
 <script id="EditableTemplate" type="text/template">
 <f:form name="translation" action="update">
-  <f:form.hidden class="js-id" property="id" />
-  <f:form.hidden class="js-file" property="file" />
-  <f:form.hidden class="js-target-language" property="targetLanguage" />
-  <f:form.textarea class="js-target" property="target"></f:form.textarea>
+  <f:form.hidden additionalAttributes="{data-property: 'id'}" property="id" />
+  <f:form.hidden additionalAttributes="{data-property: 'file'}" property="file" />
+  <f:form.hidden additionalAttributes="{data-property: 'target-language'}" property="targetLanguage" />
+  <f:form.hidden additionalAttributes="{data-property: 'source'}" property="source" />
+  <f:form.textarea additionalAttributes="{data-property: 'target'}" property="target"></f:form.textarea>
   <f:form.submit value="Save" />
 </f:form>
 </script>

@@ -6,6 +6,7 @@ use MONOGON\TranslationTools\Configuration\PhpIni;
 use MONOGON\TranslationTools\Exception\ExecutionTimeException;
 use MONOGON\TranslationTools\Utility\FileUtility;
 use MONOGON\TranslationTools\Utility\LocalconfUtility;
+use MONOGON\TranslationTools\Localization\LocalizationFactory;
 /***************************************************************
  *
  *  Copyright notice
@@ -36,7 +37,7 @@ use MONOGON\TranslationTools\Utility\LocalconfUtility;
  */
 class TranslationRepository {
 
-	const ERROR_MODE_EXCEPTION = 2;
+	// const ERROR_MODE_EXCEPTION = 2;
 
 	protected $model = 'MONOGON\\TranslationTools\\Domain\\Model\\Translation';
 
@@ -89,8 +90,7 @@ class TranslationRepository {
 				throw new ExecutionTimeException('Error Processing Request', 1420919679);
 			}
 			foreach ($languages as $language) {
-				$parsedData = $this->localizationFactory->getParsedData($file, $language, $charset, self::ERROR_MODE_EXCEPTION);
-
+				$parsedData = $this->localizationFactory->getParsedData($file, $language, $charset, LocalizationFactory::ERROR_MODE_EXCEPTION);
 				foreach ($parsedData[$sourceLanguage] as $id => $value) {
 					$target = isset($parsedData[$language][$id][0]['target']) ? $parsedData[$language][$id][0]['target'] : NULL;
 					$source = $parsedData[$sourceLanguage][$id][0]['source'];
@@ -135,7 +135,7 @@ class TranslationRepository {
 		// ->setSourceLanguage($translation->getSourceLanguage())
 		// ->setTargetLanguage($translation->getTargetLanguage());
 
-		\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($file);
+		// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($file);
 
 		$this->fileRepository->save($file);
 		LocalconfUtility::update();

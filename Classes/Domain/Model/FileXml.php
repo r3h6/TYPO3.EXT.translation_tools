@@ -1,12 +1,11 @@
 <?php
-namespace MONOGON\TranslationTools\Localization;
-
+namespace MONOGON\TranslationTools\Domain\Model;
 
 /***************************************************************
  *
  *  Copyright notice
  *
- *  (c) 2014 R3 H6 <r3h6@outlook.com>
+ *  (c) 2015 R3 H6 <r3h6@outlook.com>
  *
  *  All rights reserved
  *
@@ -27,25 +26,13 @@ namespace MONOGON\TranslationTools\Localization;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use \TYPO3\CMS\Core\Utility\GeneralUtility;;
+
 /**
- * LocalizationFactory
+ * FileXml
  */
-class LocalizationFactory extends \TYPO3\CMS\Core\Localization\LocalizationFactory {
+class FileXml extends \MONOGON\TranslationTools\Domain\Model\File {
 
-	const ERROR_MODE_EXCEPTION = 2;
+	protected $format = 'xml';
 
-	/**
-	 * TYPO3\CMS\Core\Cache\Frontend\VariableFrontend
-	 * @var \MONOGON\TranslationTools\Mock\Cache\Frontend\MockVariable
-	 */
-	protected $cacheInstance;
-
-	/**
-	 * Initialize cache instance to be ready to use
-	 *
-	 * @return void
-	 */
-	protected function initializeCache() {
-		$this->cacheInstance = new \MONOGON\TranslationTools\Mock\Cache\Frontend\MockVariable();
-	}
 }

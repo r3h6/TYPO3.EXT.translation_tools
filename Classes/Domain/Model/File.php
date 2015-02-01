@@ -28,6 +28,7 @@ namespace MONOGON\TranslationTools\Domain\Model;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use MONOGON\TranslationTools\Utility\FileUtility;
+use MONOGON\TranslationTools\Localization\LocalizationFactory;
 
 /**
  * File
@@ -35,19 +36,19 @@ use MONOGON\TranslationTools\Utility\FileUtility;
 abstract class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
 	const EXT_KEY = 'translation_tools';
-	const ERROR_MODE_EXCEPTION = 2;
+	// const ERROR_MODE_EXCEPTION = 2;
 
 
 	protected $translations = array();
 
-	protected $identifier;
+	protected $identifier = '';
 
-	protected $content;
+	protected $content = '';
 
 	protected $format = NULL;
 
-	protected $targetLanguage;
-	protected $sourceLanguage;
+	protected $targetLanguage = '';
+	protected $sourceLanguage = 'en';
 
 	protected $charset = 'utf8';
 
@@ -162,7 +163,10 @@ abstract class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	public function setIdentifier($identifier){
 		$this->identifier = $identifier;
 
-		$this->targetLanguage = FileUtility::extractLanguageFromPath($identifier);
+		$language = FileUtility::extractLanguageFromPath($identifier);
+		if ($language){
+			$this->targetLanguage = $language;
+		}
 
 		return $this;
 	}
@@ -172,7 +176,7 @@ abstract class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	}
 
 	public function addTranslation (\MONOGON\TranslationTools\Domain\Model\Translation $translation){
-		$this->translations[] = $translation;
+		$this->translations[$translation->getId()] = $translation;
 		return $this;
 	}
 
@@ -188,11 +192,11 @@ abstract class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 		$sourceLanguage = 'default';
 		//$translationRepository = GeneralUtility::makeInstance('MONOGON\\TranslationTools\\Domain\\Repository\\TranslationRepository');
 		// $localizationFactory = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Localization\\LocalizationFactory');
-		$parsedData = $this->localizationFactory->getParsedData($this->identifier, $this->targetLanguage, $this->charset, self::ERROR_MODE_EXCEPTION);
+		$parsedData = $this->localizationFactory->getParsedData($this->identifier, $this->targetLanguage, $this->charset, LocalizationFactory::ERROR_MODE_EXCEPTION);
 		foreach ($parsedData[$sourceLanguage] as $id => $value) {
 			$target = isset($parsedData[$this->targetLanguage][$id][0]['target']) ? $parsedData[$this->targetLanguage][$id][0]['target'] : NULL;
 			$source = $parsedData[$sourceLanguage][$id][0]['source'];
-			$this->translations[] = $this->translationRepository->createTranslation(array(
+			$this->translations[$id] = $this->translationRepository->createTranslation(array(
 				'source' => $source,
 				'target' => $target,
 				'id' => $id,
@@ -204,6 +208,7 @@ abstract class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	}
 
 	public function render (){
+		ksort($this->translations);
 		$this->view->assign('sourceLanguage', $this->sourceLanguage);
 		$this->view->assign('targetLanguage', $this->targetLanguage);
 		$this->view->assign('translations', $this->translations);
