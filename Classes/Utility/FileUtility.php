@@ -250,10 +250,25 @@ class FileUtility {
 		return rtrim($path, '/') . '/';
 	}
 
-	// public static function getTranslations ($file, $language, $charset = 'utf8'){
-	// 	if (!self::$localizationFactory){
-	// 		self::$localizationFactory = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Localization\\LocalizationFactory');
-	// 	}
-	// 	$parsedData = self::$localizationFactory->getParsedData($file, $language, $charset, self::ERROR_MODE_EXCEPTION);
-	// }
+
+	public static function findTranslations ($path){
+		$path = GeneralUtility::getFileAbsFileName($path);
+		$content = @file_get_contents($path);
+
+		// XML
+		preg_match_all('#<f:translate.+?(/>|</f:translate>)#i', $content, $matches);
+		foreach ($matches[0] as $match) {
+			$properties = array();
+			if (preg_match('#(id|key)="([^"]*)"#i', $match, $id)){
+				$properties['id'] = end($id);
+				if (preg_match('#(default="([^"]*)")|(>([^<]*)<)#i', $match, $default)){
+
+					$properties['default'] = end($default);
+				}
+			}
+		}
+
+		// Inline
+		preg_match_all('#<f:translate.+?(/>|</f:translate>)#i', $content, $matches);
+	}
 }

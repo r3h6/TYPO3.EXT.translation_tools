@@ -61,6 +61,10 @@ class TranslationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCont
 		$this->view->assign('demand', $demand);
 	}
 
+	/**
+	 * [initializeUpdateAction description]
+	 * @return void
+	 */
 	protected function initializeUpdateAction() {
 		if ($this->request->hasArgument('translation')) {
 			$translation = $this->translationRepository->createTranslation($this->request->getArgument('translation'));
@@ -79,4 +83,8 @@ class TranslationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCont
 		die("Updated");
 	}
 
+
+	public function analyseDirectoryAction (){
+
+	}
 }

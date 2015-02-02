@@ -1,0 +1,17 @@
+{namespace mgn=MONOGON\TranslationTools\ViewHelpers}
+<f:layout name="Default" />
+
+
+<f:section name="content">
+
+<f:flashMessages />
+
+<f:form class="inline-form" action="list" name="demand" object="{demand}" additionalAttributes="{data-plugin: 'visualSearch'}">
+  <div class="form-group">
+    <f:form.select title="File" property="file" options="{mgn:form.options.files()}" size="1" class="form-control" prependOptionValue="" prependOptionLabel="" />
+  </div>
+  <input type="submit">
+</f:form>
+
+
+</f:section>

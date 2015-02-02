@@ -212,4 +212,12 @@ class FileUtilityTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 			FileUtility::makeOverwritePath('EXT:test/locallang.xml', 'de')
 		);
 	}
+
+	/**
+	 * @test
+	 */
+	public function findTranslations (){
+		$results = FileUtility::findTranslations('EXT:translation_tools/Tests/Resources/Private/Templates/Index.html');
+		\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($results); exit;
+	}
 }
