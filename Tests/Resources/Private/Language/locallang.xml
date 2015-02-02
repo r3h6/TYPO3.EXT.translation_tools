@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>database</type>
+		<description>Tes language file.</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="test.a">Test A</label>
+			<label index="test.b">Test B</label>
+			<label index="test.c">Test C</label>
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="test.a">Test A DE</label>
+			<label index="test.b">Test B DE</label>
+			<label index="test.c">Test C DE</label>
+		</languageKey>
+	</data>
+</T3locallang>

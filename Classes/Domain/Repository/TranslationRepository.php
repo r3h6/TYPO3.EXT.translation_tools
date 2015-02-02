@@ -69,8 +69,11 @@ class TranslationRepository {
 	/**
 	 * @param \MONOGON\TranslationTools\Domain\Model\Dto\Demand $demand
 	 */
-	public function findDemanded(\MONOGON\TranslationTools\Domain\Model\Dto\Demand $demand) {
+	public function findDemanded(\MONOGON\TranslationTools\Domain\Model\Dto\Demand $demand = NULL) {
 		$translations = array();
+		if (!$demand){
+			return $translations;
+		}
 		// Load files¦
 		if ($file = $demand->getFile()) {
 			// $files = array($this->fileRepository->findByIdentifier($file));
@@ -128,6 +131,9 @@ class TranslationRepository {
 	 */
 	public function update($translation) {
 		$identifier = FileUtility::determineLanguageFile($translation->getFile(), $translation->getTargetLanguage());
+
+		//$identifier = str_replace('.xml', '.xlf', $identifier);
+
 
 		$file = $this->fileRepository->makeInstance($identifier);
 		$file->parse();

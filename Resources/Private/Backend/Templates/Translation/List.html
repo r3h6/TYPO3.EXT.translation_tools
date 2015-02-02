@@ -4,49 +4,50 @@
 
 <f:section name="content">
 
-<h1>Listing for Translation</h1>
-
 <f:flashMessages />
 
-<f:form class="inline-form" action="list" name="demand" object="{demand}">
+<f:form class="inline-form" action="list" name="demand" object="{demand}" additionalAttributes="{data-plugin: 'visualSearch'}">
   <div class="form-group">
-    <f:form.select property="file" options="{mgn:form.options.files()}" size="1" class="form-control" title="{f:translate(key: 'tx_addresscollection_domain_model_address.addressgroup')}" prependOptionValue="" prependOptionLabel="" />
+    <f:form.select title="File" property="file" options="{mgn:form.options.files()}" size="1" class="form-control" prependOptionValue="" prependOptionLabel="" />
   </div>
   <div class="form-group">
-    <f:form.select class="form-control" multiple="multiple" property="languages" options="{mgn:form.options.systemLanguages()}" />
+    <f:form.select title="Language" class="form-control" multiple="multiple" property="languages" options="{mgn:form.options.systemLanguages()}" />
   </div>
   <div class="form-group">
-    <f:form.textfield property="id" class="form-control" title="" placeholder="id" />
+    <f:form.textfield title="ID" property="id" class="form-control" placeholder="id" />
   </div>
   <div class="form-group">
-    <f:form.textfield property="label" class="form-control" title="" placeholder="label" />
+    <f:form.textfield title="Label" property="label" class="form-control" placeholder="label" />
   </div>
   <input type="submit">
 </f:form>
 
-<table class="translations table table-striped" >
-  <tr>
-    <th>ID</th>
-    <f:if condition="{demand.languages}">
-      <f:for each="{demand.languages}" as="language">
-        <th>{language}</th>
-      </f:for>
-    </f:if>
-  </tr>
 
-  <f:for each="{translations}" as="translation">
-    <tr data-file="{translation._file}" data-id="{translation._id}">
-      <td title="{translation._file}">{translation._id}</td>
+<f:if condition="{translations}">
+  <table class="translations table table-striped" >
+    <tr>
+      <th>ID</th>
       <f:if condition="{demand.languages}">
         <f:for each="{demand.languages}" as="language">
-          <mgn:variable.access var="{translation}" propertyName="{language}" as="unit">
-            <td class="editable" data-source="{unit.source}" data-target-language="{language}">{unit.target}</td>
-          </mgn:variable.access>
+          <th>{language}</th>
         </f:for>
       </f:if>
     </tr>
-  </f:for>
-</table>
+
+    <f:for each="{translations}" as="translation">
+      <tr data-file="{translation._file}" data-id="{translation._id}">
+        <td title="{translation._file}">{translation._id}</td>
+        <f:if condition="{demand.languages}">
+          <f:for each="{demand.languages}" as="language">
+            <mgn:variable.access var="{translation}" propertyName="{language}" as="unit">
+              <td class="editable" data-source="{unit.source}" data-target-language="{language}">{unit.target}</td>
+            </mgn:variable.access>
+          </f:for>
+        </f:if>
+      </tr>
+    </f:for>
+  </table>
+</f:if>
 
 <script id="EditableTemplate" type="text/template">
 <f:form name="translation" action="update">

@@ -47,14 +47,15 @@ class TranslationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCont
 	 * @return void
 	 */
 	public function listAction(\MONOGON\TranslationTools\Domain\Model\Dto\Demand $demand = NULL) {
-		if ($demand === NULL) {
-			$demand = $this->objectManager->get('MONOGON\\TranslationTools\\Domain\\Model\\Dto\\Demand');
-		}
+
 		try {
 			$translations = $this->translationRepository->findDemanded($demand);
 		} catch (ExecutionTimeException $exception) {
 			$translations = NULL;
 			$this->addFlashMessage($exception->getMessage());
+		}
+		if ($demand === NULL) {
+			$demand = $this->objectManager->get('MONOGON\\TranslationTools\\Domain\\Model\\Dto\\Demand');
 		}
 		$this->view->assign('translations', $translations);
 		$this->view->assign('demand', $demand);
