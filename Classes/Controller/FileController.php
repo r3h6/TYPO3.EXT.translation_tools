@@ -1,11 +1,11 @@
 <?php
-namespace MONOGON\TranslationTools\ViewHelpers\Form\Options;
+namespace MONOGON\TranslationTools\Controller;
 
 /***************************************************************
  *
  *  Copyright notice
  *
- *  (c) 2014 R3 H6 <r3h6@outlook.com>
+ *  (c) 2015 R3 H6 <r3h6@outlook.com>
  *
  *  All rights reserved
  *
@@ -26,36 +26,26 @@ namespace MONOGON\TranslationTools\ViewHelpers\Form\Options;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use \TYPO3\CMS\Core\Utility\GeneralUtility;
-use MONOGON\TranslationTools\Configuration\ExtConf;
-
 /**
- * TranslationController
+ * FileController
  */
-class SystemLanguagesViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
+class FileController extends ActionController {
 
 	/**
-	 * @var MONOGON\TranslationTools\Domain\Repository\SystemLanguageRepository
+	 * translationRepository
+	 *
+	 * @var \MONOGON\TranslationTools\Domain\Repository\FileRepository
 	 * @inject
 	 */
-	protected $systemLanguageRepository = NULL;
+	protected $fileRepository = NULL;
 
 	/**
-	 * @return array Files
+	 * [analyseDirectoryAction description]
+	 * @param  string $path [description]
+	 * @return [type]       [description]
 	 */
-	public function render (){
+	public function analyseDirectoryAction ($path){
+		$translation = $this->fileRepository->analyseTranslations($path);
 
-		$defaultLanguage = GeneralUtility::trimExplode(':', ExtConf::get('defaultLanguage'));
-
-		$options = array();
-		$options[reset($defaultLanguage)] = end($defaultLanguage);
-
-		$systemLanguages = $this->systemLanguageRepository->findAll();
-		foreach ($systemLanguages as $systemLanguage) {
-			$options[$systemLanguage->getFlag()] = $systemLanguage->getTitle();
-		}
-
-		return $options;
 	}
-
 }

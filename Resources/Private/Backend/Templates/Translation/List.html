@@ -1,12 +1,12 @@
 {namespace mgn=MONOGON\TranslationTools\ViewHelpers}
-<f:layout name="Default" />
+<f:layout name="{layout}" />
 
 
 <f:section name="content">
 
 <f:flashMessages />
 
-<f:form class="inline-form" action="list" name="demand" object="{demand}" additionalAttributes="{data-plugin: 'visualSearch'}">
+<f:form class="inline-form" action="list" name="demand" object="{demand}" additionalAttributes="{data-plugin: 'visualSearch ajaxForm', data-target: '.results'}">
   <div class="form-group">
     <f:form.select title="File" property="file" options="{mgn:form.options.files()}" size="1" class="form-control" prependOptionValue="" prependOptionLabel="" />
   </div>
@@ -22,32 +22,8 @@
   <input type="submit">
 </f:form>
 
+<div class="results"></div>
 
-<f:if condition="{translations}">
-  <table class="translations table table-striped" >
-    <tr>
-      <th>ID</th>
-      <f:if condition="{demand.languages}">
-        <f:for each="{demand.languages}" as="language">
-          <th>{language}</th>
-        </f:for>
-      </f:if>
-    </tr>
-
-    <f:for each="{translations}" as="translation">
-      <tr data-file="{translation._file}" data-id="{translation._id}">
-        <td title="{translation._file}">{translation._id}</td>
-        <f:if condition="{demand.languages}">
-          <f:for each="{demand.languages}" as="language">
-            <mgn:variable.access var="{translation}" propertyName="{language}" as="unit">
-              <td class="editable" data-source="{unit.source}" data-target-language="{language}">{unit.target}</td>
-            </mgn:variable.access>
-          </f:for>
-        </f:if>
-      </tr>
-    </f:for>
-  </table>
-</f:if>
 
 <script id="EditableTemplate" type="text/template">
 <f:form name="translation" action="update">
@@ -59,5 +35,41 @@
   <f:form.submit value="Save" />
 </f:form>
 </script>
+
+</f:section>
+
+
+<f:section name="ajax">
+
+<f:if condition="{translations}">
+  <f:then>
+    <table class="translations table table-striped" >
+      <tr>
+        <th>ID</th>
+        <f:if condition="{demand.languages}">
+          <f:for each="{demand.languages}" as="language">
+            <th>{language}</th>
+          </f:for>
+        </f:if>
+      </tr>
+
+      <f:for each="{translations}" as="translation">
+        <tr data-file="{translation._file}" data-id="{translation._id}">
+          <td title="{translation._file}">{translation._id}</td>
+          <f:if condition="{demand.languages}">
+            <f:for each="{demand.languages}" as="language">
+              <mgn:variable.access var="{translation}" propertyName="{language}" as="unit">
+                <td class="editable" data-source="{unit.source}" data-target-language="{language}">{unit.target}</td>
+              </mgn:variable.access>
+            </f:for>
+          </f:if>
+        </tr>
+      </f:for>
+    </table>
+  </f:then>
+  <f:else>
+    <f:translate key="results.none">No results.</f:translate>
+  </f:else>
+</f:if>
 
 </f:section>

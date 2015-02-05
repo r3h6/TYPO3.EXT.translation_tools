@@ -30,7 +30,7 @@ use MONOGON\TranslationTools\Exception\ExecutionTimeException;
 /**
  * TranslationController
  */
-class TranslationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
+class TranslationController extends ActionController {
 
 	/**
 	 * translationRepository
@@ -81,10 +81,5 @@ class TranslationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCont
 	public function updateAction(\MONOGON\TranslationTools\Domain\Model\Translation $translation) {
 		$this->translationRepository->update($translation);
 		die("Updated");
-	}
-
-
-	public function analyseDirectoryAction (){
-
 	}
 }

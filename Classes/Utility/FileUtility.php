@@ -255,20 +255,59 @@ class FileUtility {
 		$path = GeneralUtility::getFileAbsFileName($path);
 		$content = @file_get_contents($path);
 
-		// XML
-		preg_match_all('#<f:translate.+?(/>|</f:translate>)#i', $content, $matches);
-		foreach ($matches[0] as $match) {
-			$properties = array();
-			if (preg_match('#(id|key)="([^"]*)"#i', $match, $id)){
-				$properties['id'] = end($id);
-				if (preg_match('#(default="([^"]*)")|(>([^<]*)<)#i', $match, $default)){
+		$translations = array();
 
-					$properties['default'] = end($default);
+
+		// if (pathinfo($path, PATHINFO_EXTENSION) === 'php'){
+		// 	preg_match_all('#translate\([^\)]+\)#')
+		// }
+
+		// Tag
+		preg_match_all('#<f:translate.+?(/>|</f:translate>)#i', $content, $matches);
+		if (isset($matches[0])){
+			foreach ($matches[0] as $match) {
+				$properties = array();
+				if (preg_match(self::REGEX_ATTRIBUTE_KEY, $match, $id)){
+					$properties['id'] = end($id);
+					if (preg_match(self::REGEX_ATTRIBUTE_DEFAULT, $match, $default)){
+						$properties['default'] = end($default);
+					}
+				}
+				if (!empty($properties)){
+					$translations[] = $properties;
 				}
 			}
 		}
 
 		// Inline
-		preg_match_all('#<f:translate.+?(/>|</f:translate>)#i', $content, $matches);
+		preg_match_all(\TYPO3\CMS\Fluid\Core\Parser\TemplateParser::$SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER, $content, $matches);
+		if (isset($matches[0])){
+			foreach ($matches[0] as $match){
+				$properties = array();
+				if (preg_match(self::REGEX_SHORTSYNTAX_ATTRIBUTE_KEY, $match, $id)){
+					$properties['id'] = end($id);
+					if (preg_match(self::REGEX_SHORTSYNTAX_ATTRIBUTE_DEFAULT, $match, $default)){
+						$properties['default'] = end($default);
+					}
+				}
+				if (!empty($properties)){
+					$translations[] = $properties;
+				}
+			}
+		}
+
+
+		return $translations;
+		// $objectManager = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
+
+		// $dataMapper = $objectManager->get('TYPO3\\CMS\\Extbase\\Property\\PropertyMapper');
+		// return $dataMapper->map('MONOGON\\TranslationTools\\Domain\\Model\\Translation', $translations);
+		// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($translations);
+		// exit;
 	}
+
+	const REGEX_ATTRIBUTE_KEY = '#(id|key)="([^"]*)"#i';
+	const REGEX_ATTRIBUTE_DEFAULT = '#(default="([^"]*)")|(>([^<]*)<)#i';
+	const REGEX_SHORTSYNTAX_ATTRIBUTE_KEY = '#(id|key)\s*:\s*\'([^\']+)\'#i';
+	const REGEX_SHORTSYNTAX_ATTRIBUTE_DEFAULT = '#default\s*:\s*\'([^\']+)\'#i';
 }

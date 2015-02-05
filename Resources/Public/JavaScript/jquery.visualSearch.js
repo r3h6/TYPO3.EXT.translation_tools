@@ -88,6 +88,6 @@
 	};
 
 	$(document).ready(function() {
-		$('form[data-plugin="visualSearch"]').visualSearch();
+		$('form[data-plugin~="visualSearch"]').visualSearch();
 	});
 }(jQuery, VS));

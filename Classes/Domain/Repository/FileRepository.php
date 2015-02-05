@@ -74,4 +74,15 @@ class FileRepository {
 			$file->copy($backupPath);
 		}
 	}
+
+	public function analyseTranslations ($path){
+		$path = GeneralUtility::getFileAbsFileName($path);
+		$files = GeneralUtility::getAllFilesAndFoldersInPath(array(), $path, 'xhtml,html,xml,json,txt,md,vcf,vcard,php', FALSE, 99, 'Tests|Locallang|Configuration');
+
+		foreach ($files as $file){
+
+		}
+
+		return $files;
+	}
 }

@@ -116,4 +116,12 @@ class FileRepositoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		$this->assertFileNotExists($expected);
 	}
 
+	/**
+	 * @test
+	 */
+	public function analyseTranslations (){
+		$files = $this->subject->analyseTranslations('EXT:translation_tools/Tests/');
+		\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($files);
+		exit;
+	}
 }

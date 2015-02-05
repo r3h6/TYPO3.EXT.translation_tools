@@ -32,6 +32,12 @@
 			$(this).editable();
 		});
 
+		$('form[data-plugin~="ajaxForm"]').on('complete.ajaxForm', function (event){
+			console.log(event);
+		}).on('complete', function (){
+			console.log("complete");
+		});
+
 	});
 }(jQuery));
 

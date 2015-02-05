@@ -69,23 +69,30 @@ class ext_update {
 	protected function installDepencies (){
 		$title = 'Install depencies';
 		try {
+
 			$extKey = 'l10n_overwrite';
-			$extPath = ExtensionManagementUtility::extPath(self::EXT_KEY);
 
-			$file = $extPath . 'Resources/Private/Install/' . $extKey . '.zip';
-			$this->fileHandlingUtility->unzipExtensionFromFile($file, $extKey);
+			if ($this->installUtility->isLoaded($extKey)){
+				$this->messageArray[] = array(FlashMessage::NOTICE, $title, "Extension $extKey already installed.");
+			} else {
 
-			// if (!$this->installUtility->isAvailable($extKey)){
-			// 	throw new Exception("Extension $extKey is not available", 1421441255);
-			// }
+				$extPath = ExtensionManagementUtility::extPath(self::EXT_KEY);
 
-			$this->installUtility->install($extKey);
+				$file = $extPath . 'Resources/Private/Install/' . $extKey . '.zip';
+				$this->fileHandlingUtility->unzipExtensionFromFile($file, $extKey);
 
-			if (!$this->installUtility->isLoaded($extKey)){
-				throw new Exception("Extension $extKey is not loaded", 1421441294);
+				// if (!$this->installUtility->isAvailable($extKey)){
+				// 	throw new Exception("Extension $extKey is not available", 1421441255);
+				// }
+
+				$this->installUtility->install($extKey);
+
+				if (!$this->installUtility->isLoaded($extKey)){
+					throw new Exception("Extension $extKey is not loaded", 1421441294);
+				}
+
+				$this->messageArray[] = array(FlashMessage::OK, $title, "Extension $extKey successfully installed.");
 			}
-
-			$this->messageArray[] = array(FlashMessage::OK, $title, "Extension $extKey successfully installed.");
 		} catch (\Exception $exception){
 			$this->messageArray[] = array(FlashMessage::ERROR, $title, sprintf("Could not install $extKey because %s!", $exception->getMessage()));
 		}

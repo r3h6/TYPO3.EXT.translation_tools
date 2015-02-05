@@ -1,11 +1,11 @@
 <?php
-namespace MONOGON\TranslationTools\ViewHelpers\Form\Options;
+namespace MONOGON\TranslationTools\Controller;
 
 /***************************************************************
  *
  *  Copyright notice
  *
- *  (c) 2014 R3 H6 <r3h6@outlook.com>
+ *  (c) 2015 R3 H6 <r3h6@outlook.com>
  *
  *  All rights reserved
  *
@@ -26,36 +26,14 @@ namespace MONOGON\TranslationTools\ViewHelpers\Form\Options;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use \TYPO3\CMS\Core\Utility\GeneralUtility;
-use MONOGON\TranslationTools\Configuration\ExtConf;
-
 /**
- * TranslationController
+ * ActionController
  */
-class SystemLanguagesViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
+abstract class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
 
-	/**
-	 * @var MONOGON\TranslationTools\Domain\Repository\SystemLanguageRepository
-	 * @inject
-	 */
-	protected $systemLanguageRepository = NULL;
-
-	/**
-	 * @return array Files
-	 */
-	public function render (){
-
-		$defaultLanguage = GeneralUtility::trimExplode(':', ExtConf::get('defaultLanguage'));
-
-		$options = array();
-		$options[reset($defaultLanguage)] = end($defaultLanguage);
-
-		$systemLanguages = $this->systemLanguageRepository->findAll();
-		foreach ($systemLanguages as $systemLanguage) {
-			$options[$systemLanguage->getFlag()] = $systemLanguage->getTitle();
-		}
-
-		return $options;
+	protected function initializeView ($view){
+		$isAjax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+		$view->assign('layout', ($isAjax) ? 'Ajax': 'Default');
+		$view->assign('isAjax', $isAjax);
 	}
-
 }
