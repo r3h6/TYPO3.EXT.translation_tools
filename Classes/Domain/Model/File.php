@@ -47,7 +47,7 @@ abstract class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
 	protected $format = NULL;
 
-	protected $targetLanguage = '';
+	protected $targetLanguage = 'default';
 	protected $sourceLanguage = 'en';
 
 	protected $charset = 'utf8';
@@ -193,6 +193,7 @@ abstract class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 		//$translationRepository = GeneralUtility::makeInstance('MONOGON\\TranslationTools\\Domain\\Repository\\TranslationRepository');
 		// $localizationFactory = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Localization\\LocalizationFactory');
 		$parsedData = $this->localizationFactory->getParsedData($this->identifier, $this->targetLanguage, $this->charset, LocalizationFactory::ERROR_MODE_EXCEPTION);
+
 		foreach ($parsedData[$sourceLanguage] as $id => $value) {
 			$target = isset($parsedData[$this->targetLanguage][$id][0]['target']) ? $parsedData[$this->targetLanguage][$id][0]['target'] : NULL;
 			$source = $parsedData[$sourceLanguage][$id][0]['source'];

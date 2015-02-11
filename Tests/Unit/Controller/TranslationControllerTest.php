@@ -44,11 +44,71 @@ class TranslationControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		unset($this->subject);
 	}
 
+
+	// public function incomplete (){
+	// 	$this->markTestIncomplete('This test has not been implemented yet.');
+	// }
+	//
+
 	/**
 	 * @test
 	 */
-	public function incomplete (){
-		$this->markTestIncomplete('This test has not been implemented yet.');
+	public function differenceAction (){
+
+		$ll = 'EXT:mock/locallang.xlf';
+		$path = 'EXT:translation_tools/Tests';
+
+		$requiredTranslations = array(
+			$this->getMockTranslation($ll, 'mock.1'),
+			$this->getMockTranslation($ll, 'mock.2'),
+			$this->getMockTranslation($ll, 'mock.3'),
+		);
+
+		$translationRepository = $this->getMock('MONOGON\\TranslationTools\\Domain\\Repository\\TranslationRepository', array('findInSourceCode', 'findInLocallangFiles'), array(''), '', FALSE);
+
+		$translationRepository
+			->expects($this->once())
+			->method('findInSourceCode')
+			->with($this->equalTo($path))
+			->will($this->returnValue($requiredTranslations));
+
+		$translationRepository
+			->expects($this->once())
+			->method('findInLocallangFiles')
+			->with($this->equalTo(array($ll)))
+			->will($this->returnValue($requiredTranslations));
+
+		$this->inject($this->subject, 'translationRepository', $translationRepository);
+
+
+		$view = $this->getMock('TYPO3\\CMS\\Extbase\\Mvc\\View\\ViewInterface');
+		$view
+			->expects($this->at(0))
+			->method('assign')
+			->with('missingTranslations', array());
+
+		$view
+			->expects($this->at(1))
+			->method('assign')
+			->with('unusedTranslations', array());
+
+
+		$this->inject($this->subject, 'view', $view);
+
+		$this->subject->differenceAction($path);
+	}
+
+	protected function getMockTranslation ($file, $id){
+		// $id = 'mock' . rand(0, 99);
+		// $file = 'EXT:mock/locallang.xlf';
+
+		$translation = $this->getMock('MONOGON\\TranslationTools\\Domain\\Repository\\TranslationRepository', array('getFile', 'getId', 'getHashKey'));
+
+		$translation->method('getFile')->will($this->returnValue($file));
+		$translation->method('getId')->will($this->returnValue($id));
+		$translation->method('getHashKey')->will($this->returnValue(md5($file . ':' . $id)));
+
+		return $translation;
 	}
 
 

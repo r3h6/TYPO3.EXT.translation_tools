@@ -131,20 +131,42 @@ class TranslationRepository {
 	 */
 	public function update($translation) {
 		$identifier = FileUtility::determineLanguageFile($translation->getFile(), $translation->getTargetLanguage());
-
-		//$identifier = str_replace('.xml', '.xlf', $identifier);
-
-
 		$file = $this->fileRepository->makeInstance($identifier);
 		$file->parse();
 		$file->addTranslation($translation);
-		// ->setSourceLanguage($translation->getSourceLanguage())
-		// ->setTargetLanguage($translation->getTargetLanguage());
-
-		// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($file);
-
 		$this->fileRepository->save($file);
 		LocalconfUtility::update();
+	}
+
+	/**
+	 * [findInSourceCode description]
+	 * @param  string $path [description]
+	 * @return array       [description]
+	 */
+	public function findInSourceCode ($path){
+		$path = GeneralUtility::getFileAbsFileName($path);
+		$files = GeneralUtility::getAllFilesAndFoldersInPath(array(), $path, 'xhtml,html,xml,json,txt,md,vcf,vcard,php', FALSE, 99, 'Tests|Locallang|Configuration');
+
+		$translations = array();
+		foreach ($files as $file){
+			//$translations = array_merge($translations, TranslationUtility::extractFromFile($file));
+			foreach (TranslationUtility::extractFromFile($file) as $translation) {
+				$translations[$translation->getHashKey()] = $translation;
+			}
+		}
+		return $translations;
+	}
+
+	public function findInLocallangFiles ($locallangFiles){
+		$translations = array();
+		foreach ($locallangFiles as $path){
+			$file = $this->fileRepository->makeInstance($path);
+			$file->parse();
+			foreach ($file->getTranslations() as $translation) {
+				$translations[$translation->getHashKey()] = $translation;
+			}
+		}
+		return $translations;
 	}
 
 	/**

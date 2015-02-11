@@ -1,31 +1,31 @@
 <code title="Translate key">
 <f:translate key="key1" />
 <f:translate key="key2">Default</f:translate>
-<f:translate htmlEscape="false" key="key2">Default</f:translate>
+<f:translate htmlEscape="false" key="key3">Default</f:translate>
 </code>
 <output>
 value of key "key1" in the current website language
 </output>
 
 <code title="Keep HTML tags">
-<f:translate key="htmlKey" htmlEscape="false" />
-<f:translate htmlEscape="false" key="htmlKey" />
-<f:translate default="Default" key="htmlKey" />
-<f:translate key="htmlKey" default="Default" />
+<f:translate key="htmlKey1" htmlEscape="false" />
+<f:translate htmlEscape="false" key="htmlKey2" />
+<f:translate default="Default3" key="htmlKey3" />
+<f:translate key="htmlKey4" default="Default4" />
 </code>
 <output>
 value of key "htmlKey" in the current website language, no htmlspecialchars applied
 </output>
 
 <code title="Translate key from custom locallang file">
-<f:translate key="LLL:EXT:myext/Resources/Private/Language/locallang.xlf:key1" />
+<f:translate key="LLL:EXT:myext/Resources/Private/Language/locallang.xlf:custom_locallang_file" />
 </code>
 <output>
 value of key "key1" in the current website language
 </output>
 
 <code title="Inline notation with arguments and default value">
-{f:translate(key: 'argumentsKey', arguments: {0: 'dog', 1: 'fox'}, default: 'default value')}
+{f:translate(key: 'inline_with_args', arguments: {0: 'dog', 1: 'fox'}, default: 'Default Inline With Arguments')}
 </code>
 <output>
 value of key "argumentsKey" in the current website language
@@ -42,8 +42,8 @@ the locallang file of extension "some_extension_name" will be used
 </output>
 
 <code title="Translate id as in TYPO3 Flow">
-<f:translate id="key1" />
+<f:translate id="id1" />
 </code>
 <output>
-value of id "key1" in the current website language
+value of id "id1" in the current website language
 </output>

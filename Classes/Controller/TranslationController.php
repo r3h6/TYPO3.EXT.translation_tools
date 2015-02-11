@@ -2,6 +2,7 @@
 namespace MONOGON\TranslationTools\Controller;
 
 use MONOGON\TranslationTools\Exception\ExecutionTimeException;
+use MONOGON\TranslationTools\Utility\TranslationUtility;
 /***************************************************************
  *
  *  Copyright notice
@@ -30,7 +31,7 @@ use MONOGON\TranslationTools\Exception\ExecutionTimeException;
 /**
  * TranslationController
  */
-class TranslationController extends ActionController {
+class TranslationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
 
 	/**
 	 * translationRepository
@@ -39,6 +40,12 @@ class TranslationController extends ActionController {
 	 * @inject
 	 */
 	protected $translationRepository = NULL;
+
+	protected function initializeView ($view){
+		$isAjax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+		$view->assign('layout', ($isAjax) ? 'Ajax': 'Default');
+		$view->assign('isAjax', $isAjax);
+	}
 
 	/**
 	 * action list
@@ -81,5 +88,24 @@ class TranslationController extends ActionController {
 	public function updateAction(\MONOGON\TranslationTools\Domain\Model\Translation $translation) {
 		$this->translationRepository->update($translation);
 		die("Updated");
+	}
+
+	/**
+	 * [differenceAction description]
+	 * @param  string $path [description]
+	 * @return [type]       [description]
+	 */
+	public function differenceAction ($path){
+		$requiredTranslations = $this->translationRepository->findInSourceCode($path);
+
+		$locallangFiles = TranslationUtility::getLocallangFiles($requiredTranslations);
+
+		$availableTranslations = $this->translationRepository->findInLocallangFiles($locallangFiles);
+
+		$missingTranslations = array_diff_key($requiredTranslations, $availableTranslations);
+		$unusedTranslations = array_diff_key($availableTranslations, $requiredTranslations);
+
+		$this->view->assign('missingTranslations', $missingTranslations);
+		$this->view->assign('unusedTranslations', $unusedTranslations);
 	}
 }

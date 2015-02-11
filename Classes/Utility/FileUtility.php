@@ -36,6 +36,7 @@ use MONOGON\TranslationTools\Configuration\ExtConf;
  */
 class FileUtility {
 
+
 	// private static $localizationFactory;
 
 	public static function getLocallangFiles ($cached = TRUE){
@@ -46,22 +47,25 @@ class FileUtility {
 		}
 
 		if (!is_array($files)){
-			$files = self::searchLocallangFiles();
+			$files = static::_getLocallangFiles();
 			$BE_USER->setAndSaveSessionData('tx_translationtools:files', $files);
 		}
 		return $files;
 	}
 
-	protected static function searchLocallangFiles (){
+	protected static function _getLocallangFiles (){
 		// Initialize:
-		$extLocations = explode(',', 'typo3/sysext/,typo3/ext/,typo3conf/ext/');
-		$extLocations = explode(',', 'typo3conf/ext/');
+		// $extLocations = explode(',', 'typo3/sysext/,typo3/ext/,typo3conf/ext/');
+		// $extLocations = explode(',', 'typo3conf/ext/');
+		$extLocations = GeneralUtility::trimExplode(',', ExtConf::get('locallangDirectories'));
+
 		$files = array();
 
 		// Traverse extension locations:
 		foreach($extLocations as $path) {
-			if (is_dir(PATH_site . $path)) {
-				$files = GeneralUtility::getAllFilesAndFoldersInPath($files, PATH_site . $path, 'xml,xlf', FALSE, 99, 'Tests');
+			$path = GeneralUtility::getFileAbsFileName($path);
+			if (is_dir($path)) {
+				$files = GeneralUtility::getAllFilesAndFoldersInPath($files, $path, 'xml,xlf', FALSE, 99, 'Tests');
 			}
 		}
 
@@ -73,7 +77,7 @@ class FileUtility {
 			if (strpos(basename($value), 'locallang') !== 0) {
 				unset($files[$key]);
 			} else {
-				$files[$key] = self::makeExtPath($value);
+				$files[$key] = static::makeExtPath($value);
 			}
 		}
 
@@ -92,11 +96,11 @@ class FileUtility {
 	 * @return [type]             [description]
 	 */
 	public static function determineLanguageFile ($sourcePath, $language){
-		$targetPath = self::addLanguageToPath($sourcePath, $language);
+		$targetPath = static::addLanguageToPath($sourcePath, $language);
 
 		$objectManager = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
 		// $extConfManager = $objectManager->get('MONOGON\\TranslationTools\\Configuration\\ExtConfManager');
-		$extKey = self::extractExtKey($sourcePath);
+		$extKey = static::extractExtKey($sourcePath);
 
 		// Check write permission for extension directory
 		$allowWriteToExtension = ExtConf::get('getAllowWriteToExtension');
@@ -107,7 +111,7 @@ class FileUtility {
 		// Check write permission for l10n directory
 		$allowWriteToL10nDir = ExtConf::get('getAllowWriteToL10nDir');
 		if (in_array($extKey, $allowWriteToL10nDir)){
-			return self::makeL10nPath($sourcePath, $language);
+			return static::makeL10nPath($sourcePath, $language);
 		}
 
 		// Write to TypoScript file if configured this way
@@ -121,24 +125,24 @@ class FileUtility {
 
 		// Overwrite
 		if (file_exists(GeneralUtility::getFileAbsFileName($targetPath))){
-			return self::makeOverwritePath($sourcePath, $language);
+			return static::makeOverwritePath($sourcePath, $language);
 		}
 
 		// Write to l10n directory if extension is not in TER
 		if (!$isInTER){
-			return self::makeL10nPath($sourcePath, $language);
+			return static::makeL10nPath($sourcePath, $language);
 		}
 
 		// Overwrite
-		return self::makeOverwritePath($sourcePath, $language);
+		return static::makeOverwritePath($sourcePath, $language);
 	}
 
-	public function makeOverwritePath ($path, $language){
+	public static function makeOverwritePath ($path, $language){
 		$overwritePath = 'EXT:l10n_overwrite/Resources/Private/l10n/';
 
 		$path = preg_replace('#^(EXT:|typo3conf/ext/)#', $overwritePath, $path);
 
-		$path = self::addLanguageToPath($path, $language);
+		$path = static::addLanguageToPath($path, $language);
 
 		return $path;
 	}
@@ -173,38 +177,45 @@ class FileUtility {
 		return 'EXT:' . $path;
 	}
 
+	/**
+	 * Returns a TYPO3 extension path starting with EXT:
+	 *
+	 * @param  [type] $path [description]
+	 * @return [type]       [description]
+	 */
 	public static function makeExtPath ($path){
 		return 'EXT:' . preg_replace('#^.+?/ext/#', '', $path);
 	}
 
 	/**
 	 * [makeL10nPath description]
-	 * @param  string $identifier [description]
+	 * @param  string $path [description]
 	 * @param  string $language   [description]
 	 * @return string             [description]
 	 * @throws InvalidArgumentException
 	 */
-	public static function makeL10nPath ($identifier, $language){
-		if (strpos($identifier, 'typo3conf/ext/') === 0){
-			return self::addLanguageToPath(str_replace('typo3conf/ext/', "typo3conf/l10n/$language/", $identifier), $language);
+	public static function makeL10nPath ($path, $language){
+		if (strpos($path, 'typo3conf/ext/') === 0){
+			return static::addLanguageToPath(str_replace('typo3conf/ext/', "typo3conf/l10n/$language/", $path), $language);
 		}
-		if (strpos($identifier, 'EXT:') === 0){
-			return self::addLanguageToPath(str_replace('EXT:', "typo3conf/l10n/$language/", $identifier), $language);
+		if (strpos($path, 'EXT:') === 0){
+			return static::addLanguageToPath(str_replace('EXT:', "typo3conf/l10n/$language/", $path), $language);
 		}
-		throw new \InvalidArgumentException("Could not make l10n path from $identifier!", 1421611864);
+		throw new \InvalidArgumentException("Could not make l10n path from $path!", 1421611864);
 	}
 
 	/**
 	 * [extractExtKey description]
 	 *
-	 * @param  string $identifier [description]
+	 * @param  string $path [description]
 	 * @return string|NULL             [description]
 	 */
-	public static function extractExtKey ($identifier){
-		if (preg_match('#^typo3conf[/\\\\]{1,}ext[/\\\\]{1,}([^/\\\\]+)[/\\\\]{1,}#i', $identifier, $matches)){
+	public static function extractExtKey ($path){
+		$path = static::getRelativePath($path);
+		if (preg_match('#^typo3conf[/\\\\]{1}ext[/\\\\]{1}([^/\\\\]+)[/\\\\]{1}#i', $path, $matches)){
 			return $matches[1];
 		}
-		if (preg_match('#^EXT:([^/\\\\]+)[/\\\\]{1,}#i', $identifier, $matches)){
+		if (preg_match('#^EXT:([^/\\\\]+)[/\\\\$]{1}#i', $path, $matches)){
 			return $matches[1];
 		}
 		return NULL;
@@ -212,15 +223,15 @@ class FileUtility {
 
 	/**
 	 * [mekeBackupPath description]
-	 * @param  string $identifier [description]
+	 * @param  string $path [description]
 	 * @return string             [description]
 	 * @throws InvalidArgumentException
 	 */
-	public static function makeBackupPath ($identifier){
-		if (strpos($identifier, 'typo3conf/ext/') === 0){
-			return str_replace('typo3conf/ext/', 'uploads/tx_translationtools/', $identifier);
+	public static function makeBackupPath ($path){
+		if (strpos($path, 'typo3conf/ext/') === 0){
+			return str_replace('typo3conf/ext/', 'uploads/tx_translationtools/', $path);
 		}
-		throw new \InvalidArgumentException("Could not make backup path from $identifier!", 1421997699);
+		throw new \InvalidArgumentException("Could not make backup path from $path!", 1421997699);
 	}
 
 	/**
@@ -238,7 +249,8 @@ class FileUtility {
 	}
 
 	/**
-	 * [getRelativePath description]
+	 * Returns relative path to PATH_site.
+	 *
 	 * @param  string $path [description]
 	 * @return string       [description]
 	 */
@@ -246,68 +258,17 @@ class FileUtility {
 		return str_replace(PATH_site, '', $path);
 	}
 
+	/**
+	 * Adds a trailing slash to path.
+	 *
+	 * @param  string $path [description]
+	 * @return string       [description]
+	 */
 	public static function trailingSlash ($path){
 		return rtrim($path, '/') . '/';
 	}
 
 
-	public static function findTranslations ($path){
-		$path = GeneralUtility::getFileAbsFileName($path);
-		$content = @file_get_contents($path);
-
-		$translations = array();
 
 
-		// if (pathinfo($path, PATHINFO_EXTENSION) === 'php'){
-		// 	preg_match_all('#translate\([^\)]+\)#')
-		// }
-
-		// Tag
-		preg_match_all('#<f:translate.+?(/>|</f:translate>)#i', $content, $matches);
-		if (isset($matches[0])){
-			foreach ($matches[0] as $match) {
-				$properties = array();
-				if (preg_match(self::REGEX_ATTRIBUTE_KEY, $match, $id)){
-					$properties['id'] = end($id);
-					if (preg_match(self::REGEX_ATTRIBUTE_DEFAULT, $match, $default)){
-						$properties['default'] = end($default);
-					}
-				}
-				if (!empty($properties)){
-					$translations[] = $properties;
-				}
-			}
-		}
-
-		// Inline
-		preg_match_all(\TYPO3\CMS\Fluid\Core\Parser\TemplateParser::$SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER, $content, $matches);
-		if (isset($matches[0])){
-			foreach ($matches[0] as $match){
-				$properties = array();
-				if (preg_match(self::REGEX_SHORTSYNTAX_ATTRIBUTE_KEY, $match, $id)){
-					$properties['id'] = end($id);
-					if (preg_match(self::REGEX_SHORTSYNTAX_ATTRIBUTE_DEFAULT, $match, $default)){
-						$properties['default'] = end($default);
-					}
-				}
-				if (!empty($properties)){
-					$translations[] = $properties;
-				}
-			}
-		}
-
-
-		return $translations;
-		// $objectManager = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
-
-		// $dataMapper = $objectManager->get('TYPO3\\CMS\\Extbase\\Property\\PropertyMapper');
-		// return $dataMapper->map('MONOGON\\TranslationTools\\Domain\\Model\\Translation', $translations);
-		// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($translations);
-		// exit;
-	}
-
-	const REGEX_ATTRIBUTE_KEY = '#(id|key)="([^"]*)"#i';
-	const REGEX_ATTRIBUTE_DEFAULT = '#(default="([^"]*)")|(>([^<]*)<)#i';
-	const REGEX_SHORTSYNTAX_ATTRIBUTE_KEY = '#(id|key)\s*:\s*\'([^\']+)\'#i';
-	const REGEX_SHORTSYNTAX_ATTRIBUTE_DEFAULT = '#default\s*:\s*\'([^\']+)\'#i';
 }

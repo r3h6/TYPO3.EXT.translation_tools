@@ -28,6 +28,7 @@ namespace MONOGON\TranslationTools\Domain\Repository;
 
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
 use MONOGON\TranslationTools\Utility\FileUtility;
+use MONOGON\TranslationTools\Utility\TranslationUtility;
 
 
 /**
@@ -75,14 +76,33 @@ class FileRepository {
 		}
 	}
 
-	public function analyseTranslations ($path){
-		$path = GeneralUtility::getFileAbsFileName($path);
-		$files = GeneralUtility::getAllFilesAndFoldersInPath(array(), $path, 'xhtml,html,xml,json,txt,md,vcf,vcard,php', FALSE, 99, 'Tests|Locallang|Configuration');
+	// public function analyseTranslations ($path){
+	// 	$path = GeneralUtility::getFileAbsFileName($path);
+	// 	$files = GeneralUtility::getAllFilesAndFoldersInPath(array(), $path, 'xhtml,html,xml,json,txt,md,vcf,vcard,php', FALSE, 99, 'Tests|Locallang|Configuration');
 
-		foreach ($files as $file){
+	// 	$requiredTranslations = array();
+	// 	foreach ($files as $file){
+	// 		$requiredTranslations = array_merge($requiredTranslations, TranslationUtility::extractFromFile($file));
+	// 	}
 
-		}
+	// 	$locallangFiles = array();
+	// 	foreach ($requiredTranslations as $translation){
+	// 		if (!in_array($translation->getFile(), $locallangFiles)){
+	// 			$locallangFiles[] = $translation->getFile();
+	// 		}
+	// 	}
 
-		return $files;
-	}
+	// 	$availableTranslations = array();
+	// 	foreach ($locallangFiles as $identifier) {
+	// 		$file = $this->makeInstance($identifier);
+	// 		$file->parse();
+	// 		foreach ($file->getTranslations() as $translation){
+	// 			$availableTranslations[] = $translation;
+	// 		}
+
+	// 	}
+
+
+	// 	return $requiredTranslations;
+	// }
 }

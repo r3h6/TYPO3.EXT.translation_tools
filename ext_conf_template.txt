@@ -1,5 +1,5 @@
-# cat=basic//; type=string; label= Locallang directories: Comma seperated list of directories to search for locallang files.
-locallangDirectories = fileadmin,typo3conf/ext,typo3conf/l10n,typo3/sysext
+# cat=basic//; type=string; label= Locallang directories: Comma seperated list of directories to search for locallang files. (fileadmin,typo3conf/ext,typo3conf/l10n,typo3/sysext)
+locallangDirectories = typo3conf/ext
 
 # cat=basic//; type=string; label= Allow write to extensions: Comma seperated list of extensions keys where the locallang is directly written into the extension directory.
 allowWriteToExtension =
