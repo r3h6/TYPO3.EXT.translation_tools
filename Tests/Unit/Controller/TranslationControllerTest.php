@@ -24,6 +24,7 @@ namespace MONOGON\TranslationTools\Tests\Unit\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+
 /**
  * Test case for class MONOGON\TranslationTools\Controller\TranslationController.
  *
@@ -45,25 +46,139 @@ class TranslationControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	}
 
 
-	// public function incomplete (){
-	// 	$this->markTestIncomplete('This test has not been implemented yet.');
-	// }
-	//
+	/**
+	 * @test
+	 */
+	public function listAction (){
+		// Prepare mock value
+		$demand = NULL;
+		$translations = array();
+
+		// Prepare mock repository
+		$translationRepository = $this->getMock('MONOGON\\TranslationTools\\Domain\\Repository\\TranslationRepository', array('findDemanded'), array(''), '', FALSE);
+
+		$translationRepository
+			->expects($this->once())
+			->method('findDemanded')
+			->with($demand)
+			->will($this->returnValue($translations));
+
+		$this->inject($this->subject, 'translationRepository', $translationRepository);
+
+		// Prepare mock object manager and demand
+		$demand = $this->getMock('MONOGON\\TranslationTools\\Domain\\Model\\Dto\\Demand');
+		$objectManager = $this->getMockObjectManager($demand);
+		$this->inject($this->subject, 'objectManager', $objectManager);
+
+		// Prepare mock view
+		$view = $this->getMock('TYPO3\\CMS\\Extbase\\Mvc\\View\\ViewInterface');
+		$view
+			->expects($this->at(0))
+			->method('assign')
+			->with('translations', $this->equalTo($translations));
+
+		$view
+			->expects($this->at(1))
+			->method('assign')
+			->with('demand', $this->equalTo($demand));
+
+		$this->inject($this->subject, 'view', $view);
+
+		// Test action
+		$this->subject->listAction();
+	}
+
+	/**
+	 * @test
+	 */
+	public function listActionTranslationRepositoryThrowsExecutionTimeException (){
+		// Prepare mock value
+		$demand = NULL;
+		$translations = NULL;
+
+		$executionTimeException = $this->getMock('MONOGON\\TranslationTools\\Exception\\ExecutionTimeException');
+		$executionTimeException
+			->method('getMessage')
+			->will($this->returnValue('ExecutionTimeException'));
+
+		// Prepare mock repository
+		$translationRepository = $this->getMock('MONOGON\\TranslationTools\\Domain\\Repository\\TranslationRepository', array('findDemanded'), array(''), '', FALSE);
+
+		$translationRepository
+			->expects($this->once())
+			->method('findDemanded')
+			->with($demand)
+			->will($this->throwException($executionTimeException));
+
+		$this->inject($this->subject, 'translationRepository', $translationRepository);
+
+		// Prepare object manager and flash message
+		// $controllerContext = $this->getMock('TYPO3\\CMS\\Extbase\\Mvc\\Controller\\ControllerContext');
+
+		// $flashMessageQueue = $this->getMock('TYPO3\\CMS\\Core\\Messaging\\FlashMessageQueue', array('enqueue'), array(''), '', FALSE);
+		// $flashMessageQueue
+		// 	->expects($this->once())
+		// 	->method('enqueue');
+
+		// $controllerContext
+		// 	->expects($this->once())
+		// 	->method('getFlashMessageQueue')
+		// 	->will($this->returnValue($flashMessageQueue));
+
+		//$this->inject($this->subject, 'controllerContext', $controllerContext);
+
+		// Prepare mock object manager and demand
+		$demand = $this->getMock('MONOGON\\TranslationTools\\Domain\\Model\\Dto\\Demand');
+		$objectManager = $this->getMockObjectManager($demand);
+		$this->inject($this->subject, 'objectManager', $objectManager);
+
+		// Prepare mock view
+		$view = $this->getMock('TYPO3\\CMS\\Extbase\\Mvc\\View\\ViewInterface');
+		$view
+			->expects($this->at(0))
+			->method('assign')
+			->with('translations', $this->equalTo($translations));
+
+		$view
+			->expects($this->at(1))
+			->method('assign')
+			->with('demand', $this->equalTo($demand));
+
+		$this->inject($this->subject, 'view', $view);
+
+		// Test action
+		$this->subject->listAction();
+	}
 
 	/**
 	 * @test
 	 */
 	public function differenceAction (){
-
+		// Prepare mock values
 		$ll = 'EXT:mock/locallang.xlf';
 		$path = 'EXT:translation_tools/Tests';
 
 		$requiredTranslations = array(
-			$this->getMockTranslation($ll, 'mock.1'),
-			$this->getMockTranslation($ll, 'mock.2'),
-			$this->getMockTranslation($ll, 'mock.3'),
+			'a' => $this->getMockTranslation($ll, 'mock.a'),
+			'b' => $this->getMockTranslation($ll, 'mock.b'),
+			'c' => $this->getMockTranslation($ll, 'mock.c'),
 		);
 
+		$availableTranslations = array(
+			'a' => $this->getMockTranslation($ll, 'mock.a'),
+			'd' => $this->getMockTranslation($ll, 'mock.d'),
+		);
+
+		$missingTranslations = array(
+			'b' => $this->getMockTranslation($ll, 'mock.b'),
+			'c' => $this->getMockTranslation($ll, 'mock.c'),
+		);
+
+		$unusedTranslations = array(
+			'd' => $this->getMockTranslation($ll, 'mock.d'),
+		);
+
+		// Prepare mock repository
 		$translationRepository = $this->getMock('MONOGON\\TranslationTools\\Domain\\Repository\\TranslationRepository', array('findInSourceCode', 'findInLocallangFiles'), array(''), '', FALSE);
 
 		$translationRepository
@@ -76,32 +191,29 @@ class TranslationControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 			->expects($this->once())
 			->method('findInLocallangFiles')
 			->with($this->equalTo(array($ll)))
-			->will($this->returnValue($requiredTranslations));
+			->will($this->returnValue($availableTranslations));
 
 		$this->inject($this->subject, 'translationRepository', $translationRepository);
 
-
+		// Prepare mock view
 		$view = $this->getMock('TYPO3\\CMS\\Extbase\\Mvc\\View\\ViewInterface');
 		$view
 			->expects($this->at(0))
 			->method('assign')
-			->with('missingTranslations', array());
+			->with('missingTranslations', $this->equalTo($missingTranslations));
 
 		$view
 			->expects($this->at(1))
 			->method('assign')
-			->with('unusedTranslations', array());
-
+			->with('unusedTranslations', $this->equalTo($unusedTranslations));
 
 		$this->inject($this->subject, 'view', $view);
 
+		// Test action
 		$this->subject->differenceAction($path);
 	}
 
 	protected function getMockTranslation ($file, $id){
-		// $id = 'mock' . rand(0, 99);
-		// $file = 'EXT:mock/locallang.xlf';
-
 		$translation = $this->getMock('MONOGON\\TranslationTools\\Domain\\Repository\\TranslationRepository', array('getFile', 'getId', 'getHashKey'));
 
 		$translation->method('getFile')->will($this->returnValue($file));
@@ -111,30 +223,14 @@ class TranslationControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		return $translation;
 	}
 
-
-	public function listActionFetchesAllTranslationsFromRepositoryAndAssignsThemToView() {
-
-		$allTranslations = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage', array(), array(), '', FALSE);
-
-		$translationRepository = $this->getMock('MONOGON\\TranslationTools\\Domain\\Repository\\TranslationRepository', array('findAll'), array(), '', FALSE);
-		$translationRepository->expects($this->once())->method('findAll')->will($this->returnValue($allTranslations));
-		$this->inject($this->subject, 'translationRepository', $translationRepository);
-
-		$view = $this->getMock('TYPO3\\CMS\\Extbase\\Mvc\\View\\ViewInterface');
-		$view->expects($this->once())->method('assign')->with('translations', $allTranslations);
-		$this->inject($this->subject, 'view', $view);
-
-		$this->subject->listAction();
+	protected function getMockObjectManager (){
+		$mockObjects =func_get_args();
+		$objectManager = $this->getMock('TYPO3\\CMS\\Extbase\\Object\\ObjectManager', array('get'));
+		$objectManager->method('get')->will(
+			call_user_func_array(array($this, 'returnValue'), $mockObjects)
+		);
+		return $objectManager;
 	}
 
 
-	public function updateActionUpdatesTheGivenTranslationInTranslationRepository() {
-		$translation = new \MONOGON\TranslationTools\Domain\Model\Translation();
-
-		$translationRepository = $this->getMock('MONOGON\\TranslationTools\\Domain\\Repository\\TranslationRepository', array('update'), array(), '', FALSE);
-		$translationRepository->expects($this->once())->method('update')->with($translation);
-		$this->inject($this->subject, 'translationRepository', $translationRepository);
-
-		$this->subject->updateAction($translation);
-	}
 }
