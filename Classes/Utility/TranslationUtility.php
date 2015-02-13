@@ -64,6 +64,11 @@ class TranslationUtility {
 		return $locallangFiles;
 	}
 
+	public static function getDefaultLocallang ($path){
+
+		return FileUtility::trailingSlash($path) . 'Resources/Private/Language/locallang.xlf';
+	}
+
 	public static function extractFromFile ($path){
 		$path = GeneralUtility::getFileAbsFileName($path);
 		$content = @file_get_contents($path);

@@ -35,7 +35,7 @@ if (TYPO3_MODE === 'BE') {
 		'admin',	// Submodule key
 		'',						// Position
 		array(
-			'Translation' => 'list',
+			'Translation' => 'difference',
 
 		),
 		array(

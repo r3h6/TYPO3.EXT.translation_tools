@@ -37,8 +37,11 @@ use MONOGON\TranslationTools\Configuration\ExtConf;
 class FileUtility {
 
 
-	// private static $localizationFactory;
-
+	/**
+	 * [getLocallangFiles description]
+	 * @param  boolean $cached [description]
+	 * @return array          [description]
+	 */
 	public static function getLocallangFiles ($cached = TRUE){
 		global $BE_USER;
 
@@ -54,18 +57,14 @@ class FileUtility {
 	}
 
 	protected static function _getLocallangFiles (){
-		// Initialize:
-		// $extLocations = explode(',', 'typo3/sysext/,typo3/ext/,typo3conf/ext/');
-		// $extLocations = explode(',', 'typo3conf/ext/');
 		$extLocations = GeneralUtility::trimExplode(',', ExtConf::get('locallangDirectories'));
-
 		$files = array();
 
 		// Traverse extension locations:
 		foreach($extLocations as $path) {
-			$path = GeneralUtility::getFileAbsFileName($path);
+			$path = GeneralUtility::getFileAbsFileName(static::trailingSlash($path));
 			if (is_dir($path)) {
-				$files = GeneralUtility::getAllFilesAndFoldersInPath($files, $path, 'xml,xlf', FALSE, 99, 'Tests');
+				$files = GeneralUtility::getAllFilesAndFoldersInPath(array(), $path, 'xml,xlf', FALSE, 99, 'Tests');
 			}
 		}
 
@@ -82,6 +81,15 @@ class FileUtility {
 		}
 
 		return $files;
+	}
+
+	public static function getExtensionDirectories (){
+		$path = GeneralUtility::getFileAbsFileName('typo3conf/ext/');
+		$directories = GeneralUtility::get_dirs($path);
+		foreach ($directories as $key => $directory) {
+			$directories[$key] = 'typo3conf/ext/' . $directory;
+		}
+		return $directories;
 	}
 
 	/**

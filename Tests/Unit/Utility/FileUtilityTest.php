@@ -56,12 +56,31 @@ class FileUtilityTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 			'allowWriteToExtension' => '',
 			'getAllowWriteToL10nDir' => '',
 			'allowWriteToExtension' => '0',
+			'locallangDirectories' => 'EXT:translation_tools/Tests/',
 		));
 	}
 
 	protected function tearDown() {
 		$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][self::EXT_KEY] = $this->extConf;
 	}
+
+	/**
+	 * @test
+	 */
+	public function getLocallangFilesUncached (){
+		$files = FileUtility::getLocallangFiles(FALSE);
+	}
+
+	/**
+	 * @test
+	 */
+	public function getExtensionDirectories (){
+		$files = FileUtility::getExtensionDirectories();
+
+		\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($files);
+		exit;
+	}
+
 
 	/**
 	 * @test

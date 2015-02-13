@@ -143,7 +143,7 @@
             },
             {
                 "actions": {
-                    "controllerActionCombinations": "Translation=>list"
+                    "controllerActionCombinations": "Translation=>difference"
                 },
                 "description": "Translation admin",
                 "key": "admin",

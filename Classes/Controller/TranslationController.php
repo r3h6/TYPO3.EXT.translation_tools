@@ -61,6 +61,7 @@ class TranslationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCont
 			$translations = NULL;
 			$this->addFlashMessage($exception->getMessage());
 		}
+
 		if ($demand === NULL) {
 			$demand = $this->objectManager->get('MONOGON\\TranslationTools\\Domain\\Model\\Dto\\Demand');
 		}
@@ -95,16 +96,20 @@ class TranslationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCont
 	 * @param  string $path [description]
 	 * @return [type]       [description]
 	 */
-	public function differenceAction ($path){
-		$requiredTranslations = $this->translationRepository->findInSourceCode($path);
+	public function differenceAction ($path = NULL){
+		$missingTranslations = array();
+		$unusedTranslations = array();
+		if ($path){
+			$requiredTranslations = $this->translationRepository->findInSourceCode($path);
 
-		$locallangFiles = TranslationUtility::getLocallangFiles($requiredTranslations);
+			$locallangFiles = TranslationUtility::getLocallangFiles($requiredTranslations);
+			$locallangFiles[] = TranslationUtility::getDefaultLocallang($path);
 
-		$availableTranslations = $this->translationRepository->findInLocallangFiles($locallangFiles);
+			$availableTranslations = $this->translationRepository->findInLocallangFiles($locallangFiles);
 
-		$missingTranslations = array_diff_key($requiredTranslations, $availableTranslations);
-		$unusedTranslations = array_diff_key($availableTranslations, $requiredTranslations);
-
+			$missingTranslations = array_diff_key($requiredTranslations, $availableTranslations);
+			$unusedTranslations = array_diff_key($availableTranslations, $requiredTranslations);
+		}
 		$this->view->assign('missingTranslations', $missingTranslations);
 		$this->view->assign('unusedTranslations', $unusedTranslations);
 	}

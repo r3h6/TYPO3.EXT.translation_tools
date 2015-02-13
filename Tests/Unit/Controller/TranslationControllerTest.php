@@ -24,6 +24,7 @@ namespace MONOGON\TranslationTools\Tests\Unit\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use MONOGON\TranslationTools\Exception\ExecutionTimeException;
 
 /**
  * Test case for class MONOGON\TranslationTools\Controller\TranslationController.
@@ -55,7 +56,7 @@ class TranslationControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		$translations = array();
 
 		// Prepare mock repository
-		$translationRepository = $this->getMock('MONOGON\\TranslationTools\\Domain\\Repository\\TranslationRepository', array('findDemanded'), array(''), '', FALSE);
+		$translationRepository = $this->getMock('MONOGON\\TranslationTools\\Domain\\Repository\\TranslationRepository', array('findDemanded'), array(), '', FALSE);
 
 		$translationRepository
 			->expects($this->once())
@@ -96,36 +97,22 @@ class TranslationControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		$demand = NULL;
 		$translations = NULL;
 
-		$executionTimeException = $this->getMock('MONOGON\\TranslationTools\\Exception\\ExecutionTimeException');
-		$executionTimeException
-			->method('getMessage')
-			->will($this->returnValue('ExecutionTimeException'));
-
 		// Prepare mock repository
-		$translationRepository = $this->getMock('MONOGON\\TranslationTools\\Domain\\Repository\\TranslationRepository', array('findDemanded'), array(''), '', FALSE);
+		$translationRepository = $this->getMock('MONOGON\\TranslationTools\\Domain\\Repository\\TranslationRepository', array('findDemanded'), array(), '', FALSE);
 
 		$translationRepository
 			->expects($this->once())
 			->method('findDemanded')
 			->with($demand)
-			->will($this->throwException($executionTimeException));
+			->will($this->throwException(new ExecutionTimeException('Mock it!')));
 
 		$this->inject($this->subject, 'translationRepository', $translationRepository);
 
-		// Prepare object manager and flash message
-		// $controllerContext = $this->getMock('TYPO3\\CMS\\Extbase\\Mvc\\Controller\\ControllerContext');
-
-		// $flashMessageQueue = $this->getMock('TYPO3\\CMS\\Core\\Messaging\\FlashMessageQueue', array('enqueue'), array(''), '', FALSE);
-		// $flashMessageQueue
-		// 	->expects($this->once())
-		// 	->method('enqueue');
-
-		// $controllerContext
-		// 	->expects($this->once())
-		// 	->method('getFlashMessageQueue')
-		// 	->will($this->returnValue($flashMessageQueue));
-
-		//$this->inject($this->subject, 'controllerContext', $controllerContext);
+		// Prepare flash message
+		$this->subject
+			->expects($this->once())
+			->method('addFlashMessage')
+			->with('Mock it!');
 
 		// Prepare mock object manager and demand
 		$demand = $this->getMock('MONOGON\\TranslationTools\\Domain\\Model\\Dto\\Demand');
@@ -179,7 +166,7 @@ class TranslationControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		);
 
 		// Prepare mock repository
-		$translationRepository = $this->getMock('MONOGON\\TranslationTools\\Domain\\Repository\\TranslationRepository', array('findInSourceCode', 'findInLocallangFiles'), array(''), '', FALSE);
+		$translationRepository = $this->getMock('MONOGON\\TranslationTools\\Domain\\Repository\\TranslationRepository', array('findInSourceCode', 'findInLocallangFiles'), array(), '', FALSE);
 
 		$translationRepository
 			->expects($this->once())
@@ -216,9 +203,15 @@ class TranslationControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	protected function getMockTranslation ($file, $id){
 		$translation = $this->getMock('MONOGON\\TranslationTools\\Domain\\Repository\\TranslationRepository', array('getFile', 'getId', 'getHashKey'));
 
-		$translation->method('getFile')->will($this->returnValue($file));
-		$translation->method('getId')->will($this->returnValue($id));
-		$translation->method('getHashKey')->will($this->returnValue(md5($file . ':' . $id)));
+		$translation
+			->method('getFile')
+			->will($this->returnValue($file));
+		$translation
+			->method('getId')
+			->will($this->returnValue($id));
+		$translation
+			->method('getHashKey')
+			->will($this->returnValue(md5($file . ':' . $id)));
 
 		return $translation;
 	}
@@ -226,9 +219,9 @@ class TranslationControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	protected function getMockObjectManager (){
 		$mockObjects =func_get_args();
 		$objectManager = $this->getMock('TYPO3\\CMS\\Extbase\\Object\\ObjectManager', array('get'));
-		$objectManager->method('get')->will(
-			call_user_func_array(array($this, 'returnValue'), $mockObjects)
-		);
+		$objectManager
+			->method('get')
+			->will(call_user_func_array(array($this, 'returnValue'), $mockObjects));
 		return $objectManager;
 	}
 

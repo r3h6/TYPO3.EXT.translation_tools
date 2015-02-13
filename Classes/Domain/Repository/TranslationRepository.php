@@ -6,7 +6,9 @@ use MONOGON\TranslationTools\Configuration\PhpIni;
 use MONOGON\TranslationTools\Exception\ExecutionTimeException;
 use MONOGON\TranslationTools\Utility\FileUtility;
 use MONOGON\TranslationTools\Utility\LocalconfUtility;
+use MONOGON\TranslationTools\Utility\TranslationUtility;
 use MONOGON\TranslationTools\Localization\LocalizationFactory;
+
 /***************************************************************
  *
  *  Copyright notice
@@ -144,8 +146,12 @@ class TranslationRepository {
 	 * @return array       [description]
 	 */
 	public function findInSourceCode ($path){
-		$path = GeneralUtility::getFileAbsFileName($path);
+		$path = GeneralUtility::getFileAbsFileName(
+			FileUtility::trailingSlash($path)
+		);
+
 		$files = GeneralUtility::getAllFilesAndFoldersInPath(array(), $path, 'xhtml,html,xml,json,txt,md,vcf,vcard,php', FALSE, 99, 'Tests|Locallang|Configuration');
+
 
 		$translations = array();
 		foreach ($files as $file){

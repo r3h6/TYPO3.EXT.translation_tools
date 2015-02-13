@@ -1,17 +1,23 @@
 {namespace mgn=MONOGON\TranslationTools\ViewHelpers}
-<f:layout name="Default" />
+<f:layout name="{layout}" />
 
 
 <f:section name="content">
 
 <f:flashMessages />
 
-<f:form class="inline-form" action="list" name="demand" object="{demand}" additionalAttributes="{data-plugin: 'visualSearch'}">
+<f:form class="inline-form" action="list" additionalAttributes="{data-plugin: 'visual Search ajaxForm', data-target: '.results'}">
   <div class="form-group">
-    <f:form.select title="File" property="file" options="{mgn:form.options.files()}" size="1" class="form-control" prependOptionValue="" prependOptionLabel="" />
+    <f:form.select title="File" name="path" options="{mgn:form.options.extensions()}" size="1" class="form-control" prependOptionValue="" prependOptionLabel="" />
   </div>
   <input type="submit">
 </f:form>
 
+<div class="results"></div>
 
+</f:section>
+
+<f:section name="ajax">
+<f:debug title="opt title">{missingTranslations}</f:debug>
+<f:debug title="opt title">{unusedTranslations}</f:debug>
 </f:section>
