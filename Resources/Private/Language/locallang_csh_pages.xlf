@@ -3,14 +3,17 @@
 	<file source-language="en" datatype="plaintext" original="messages" date="2015-03-09T22:56:55Z" product-name="translation_tools">
 		<header/>
 		<body>
-			<trans-unit id="id.description">
-				<source>id</source>
+			<trans-unit id="title.description">
+				<source>Title</source>
 			</trans-unit>
-			<trans-unit id="file.description">
-				<source>file</source>
+			<trans-unit id="ts_config.description">
+				<source>TS Config</source>
 			</trans-unit>
-			<trans-unit id="units.description">
-				<source>Units</source>
+			<trans-unit id="site_root.description">
+				<source>Is siteroot?</source>
+			</trans-unit>
+			<trans-unit id="doktype.description">
+				<source>doktype</source>
 			</trans-unit>
 		</body>
 	</file>

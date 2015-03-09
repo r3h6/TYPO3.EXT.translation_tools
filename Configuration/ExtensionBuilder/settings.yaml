@@ -55,15 +55,15 @@ overwriteSettings:
 
   ext_icon.gif: keep
 
-  ext_localconf.php: merge
+  ext_localconf.php: keep
 
-  ext_tables.php: merge
+  ext_tables.php: keep
 
   ext_tables.sql: keep
 
-  ext_typoscript_constants.txt: merge
+  ext_typoscript_constants.txt: keep
 
-  ext_typoscript_setup.txt: merge
+  ext_typoscript_setup.txt: keep
 
 ## use static date attribute in xliff files ##
 #staticDateInXliffFiles: 2014-10-05T22:28:00Z

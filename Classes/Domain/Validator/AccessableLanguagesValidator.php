@@ -1,5 +1,5 @@
 <?php
-namespace MONOGON\TranslationTools\ViewHelpers\Form\Options;
+namespace MONOGON\TranslationTools\Domain\Validator;
 
 /***************************************************************
  *
@@ -26,39 +26,39 @@ namespace MONOGON\TranslationTools\ViewHelpers\Form\Options;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use \TYPO3\CMS\Core\Utility\GeneralUtility;
-use MONOGON\TranslationTools\Configuration\ExtConf;
-
 /**
- * TranslationController
+ * The repository for AccessableLanguagesValidator
  */
-class SystemLanguagesViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
-
+class AccessableLanguagesValidator extends \TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator {
 	/**
 	 * @var MONOGON\TranslationTools\Domain\Repository\SystemLanguageRepository
 	 * @inject
 	 */
 	protected $systemLanguageRepository = NULL;
 
-	/**
-	 * @return array Files
-	 */
-	public function render (){
+	public function isValid ($languages){
 
-		// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($GLOBALS['BE_USER']);
+		if (is_array($languages)){
+			$systemLanguages = $this->systemLanguageRepository->findAllAccessableSystemLanguages();
+			$flags = array();
+			foreach ($systemLanguages as $systemLanguage){
+				$flags[] = $systemLanguage->getFlag();
+			}
 
-		// $defaultLanguage = GeneralUtility::trimExplode(':', ExtConf::get('defaultLanguage'));
+			foreach ($languages as $language){
+				if (!in_array($language, $flags)){
+						$this->addError('Language is not allowed!', 1415391144);
+				}
+			}
 
-		// $options = array();
-		// $options[reset($defaultLanguage)] = end($defaultLanguage);
-
-		$systemLanguages = $this->systemLanguageRepository->findAllAccessableSystemLanguages();
-		// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($systemLanguages);
-		foreach ($systemLanguages as $systemLanguage) {
-			$options[$systemLanguage->getFlag()] = $systemLanguage->getTitle();
 		}
 
-		return $options;
+		// if (!is_string($value) || !$this->validPhoneNumber($value)) {
+		// 	$this->addError(
+		// 		$this->translateErrorMessage(
+		// 			'validator.phonenumber.notvalid',
+		// 			'addressCollection'
+		// 		), 1415391144);
+		// }
 	}
-
 }

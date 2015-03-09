@@ -41,9 +41,12 @@ class TranslationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCont
 	 */
 	protected $translationRepository = NULL;
 
-	protected function initializeView ($view){
-		$isAjax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
-		$view->assign('layout', ($isAjax) ? 'Ajax': 'Default');
+	/**
+	 * @param $view
+	 */
+	protected function initializeView($view) {
+		$isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+		$view->assign('layout', $isAjax ? 'Ajax' : 'Default');
 		$view->assign('isAjax', $isAjax);
 	}
 
@@ -54,14 +57,12 @@ class TranslationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCont
 	 * @return void
 	 */
 	public function listAction(\MONOGON\TranslationTools\Domain\Model\Dto\Demand $demand = NULL) {
-
 		try {
 			$translations = $this->translationRepository->findDemanded($demand);
 		} catch (ExecutionTimeException $exception) {
 			$translations = NULL;
 			$this->addFlashMessage($exception->getMessage());
 		}
-
 		if ($demand === NULL) {
 			$demand = $this->objectManager->get('MONOGON\\TranslationTools\\Domain\\Model\\Dto\\Demand');
 		}
@@ -71,6 +72,7 @@ class TranslationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCont
 
 	/**
 	 * [initializeUpdateAction description]
+	 *
 	 * @return void
 	 */
 	protected function initializeUpdateAction() {
@@ -88,29 +90,28 @@ class TranslationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCont
 	 */
 	public function updateAction(\MONOGON\TranslationTools\Domain\Model\Translation $translation) {
 		$this->translationRepository->update($translation);
-		die("Updated");
+		die('Updated');
 	}
 
 	/**
 	 * [differenceAction description]
-	 * @param  string $path [description]
+	 *
+	 * @param string $path [description]
 	 * @return [type]       [description]
 	 */
-	public function differenceAction ($path = NULL){
+	public function differenceAction($path = NULL) {
 		$missingTranslations = array();
 		$unusedTranslations = array();
-		if ($path){
+		if ($path) {
 			$requiredTranslations = $this->translationRepository->findInSourceCode($path);
-
 			$locallangFiles = TranslationUtility::getLocallangFiles($requiredTranslations);
 			$locallangFiles[] = TranslationUtility::getDefaultLocallang($path);
-
 			$availableTranslations = $this->translationRepository->findInLocallangFiles($locallangFiles);
-
 			$missingTranslations = array_diff_key($requiredTranslations, $availableTranslations);
 			$unusedTranslations = array_diff_key($availableTranslations, $requiredTranslations);
 		}
 		$this->view->assign('missingTranslations', $missingTranslations);
 		$this->view->assign('unusedTranslations', $unusedTranslations);
 	}
+
 }

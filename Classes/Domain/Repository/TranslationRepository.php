@@ -8,7 +8,6 @@ use MONOGON\TranslationTools\Utility\FileUtility;
 use MONOGON\TranslationTools\Utility\LocalconfUtility;
 use MONOGON\TranslationTools\Utility\TranslationUtility;
 use MONOGON\TranslationTools\Localization\LocalizationFactory;
-
 /***************************************************************
  *
  *  Copyright notice
@@ -40,7 +39,6 @@ use MONOGON\TranslationTools\Localization\LocalizationFactory;
 class TranslationRepository {
 
 	// const ERROR_MODE_EXCEPTION = 2;
-
 	protected $model = 'MONOGON\\TranslationTools\\Domain\\Model\\Translation';
 
 	/**
@@ -63,6 +61,7 @@ class TranslationRepository {
 	 * [$localizationFactory description]
 	 * TYPO3\CMS\Core\Localization\LocalizationFactory
 	 * \MONOGON\TranslationTools\Localization\LocalizationFactory
+	 *
 	 * @var \MONOGON\TranslationTools\Localization\LocalizationFactory
 	 * @inject
 	 */
@@ -73,7 +72,7 @@ class TranslationRepository {
 	 */
 	public function findDemanded(\MONOGON\TranslationTools\Domain\Model\Dto\Demand $demand = NULL) {
 		$translations = array();
-		if (!$demand){
+		if (!$demand) {
 			return $translations;
 		}
 		// Load files¦
@@ -83,8 +82,6 @@ class TranslationRepository {
 		} else {
 			$files = $this->fileRepository->findAllRaw();
 		}
-
-
 		//$localizationFactory = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Localization\\LocalizationFactory');
 		$sourceLanguage = 'default';
 		$languages = $demand->getLanguages();
@@ -142,19 +139,17 @@ class TranslationRepository {
 
 	/**
 	 * [findInSourceCode description]
-	 * @param  string $path [description]
+	 *
+	 * @param string $path [description]
 	 * @return array       [description]
 	 */
-	public function findInSourceCode ($path){
+	public function findInSourceCode($path) {
 		$path = GeneralUtility::getFileAbsFileName(
 			FileUtility::trailingSlash($path)
 		);
-
 		$files = GeneralUtility::getAllFilesAndFoldersInPath(array(), $path, 'xhtml,html,xml,json,txt,md,vcf,vcard,php', FALSE, 99, 'Tests|Locallang|Configuration');
-
-
 		$translations = array();
-		foreach ($files as $file){
+		foreach ($files as $file) {
 			//$translations = array_merge($translations, TranslationUtility::extractFromFile($file));
 			foreach (TranslationUtility::extractFromFile($file) as $translation) {
 				$translations[$translation->getHashKey()] = $translation;
@@ -163,9 +158,12 @@ class TranslationRepository {
 		return $translations;
 	}
 
-	public function findInLocallangFiles ($locallangFiles){
+	/**
+	 * @param $locallangFiles
+	 */
+	public function findInLocallangFiles($locallangFiles) {
 		$translations = array();
-		foreach ($locallangFiles as $path){
+		foreach ($locallangFiles as $path) {
 			$file = $this->fileRepository->makeInstance($path);
 			$file->parse();
 			foreach ($file->getTranslations() as $translation) {

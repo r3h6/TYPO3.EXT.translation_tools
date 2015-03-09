@@ -52,6 +52,7 @@ class Demand extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	/**
 	 *
 	 * @var array
+	 * @validate MONOGON\TranslationTools\Domain\Validator\AccessableLanguagesValidator
 	 */
 	protected $languages = array();
 

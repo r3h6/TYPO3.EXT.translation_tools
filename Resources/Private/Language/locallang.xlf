@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2015-01-16T21:13:54Z" product-name="translation_tools">
+	<file source-language="en" datatype="plaintext" original="messages" date="2015-03-09T22:56:55Z" product-name="translation_tools">
 		<header/>
 		<body>
 			<trans-unit id="tx_translationtools_domain_model_systemlanguage">
@@ -20,6 +20,21 @@
 			</trans-unit>
 			<trans-unit id="tx_translationtools_domain_model_translation.file">
 				<source>File</source>
+			</trans-unit>
+			<trans-unit id="tx_translationtools_domain_model_page">
+				<source>Page</source>
+			</trans-unit>
+			<trans-unit id="tx_translationtools_domain_model_page.title">
+				<source>Title</source>
+			</trans-unit>
+			<trans-unit id="tx_translationtools_domain_model_page.ts_config">
+				<source>Ts Config</source>
+			</trans-unit>
+			<trans-unit id="tx_translationtools_domain_model_page.site_root">
+				<source>Site Root</source>
+			</trans-unit>
+			<trans-unit id="tx_translationtools_domain_model_page.doktype">
+				<source>Doktype</source>
 			</trans-unit>
 			<trans-unit id="tx_translationtools_domain_model_translationunit">
 				<source>Translation Unit</source>

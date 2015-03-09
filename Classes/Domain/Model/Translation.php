@@ -195,9 +195,11 @@ class Translation extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
 	/**
 	 * [getHashKey description]
+	 *
 	 * @return string [description]
 	 */
-	public function getHashKey (){
+	public function getHashKey() {
 		return md5($this->file . ':' . $this->id);
 	}
+
 }

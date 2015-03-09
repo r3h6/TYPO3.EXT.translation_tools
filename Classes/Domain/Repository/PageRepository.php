@@ -1,5 +1,6 @@
 <?php
-namespace MONOGON\TranslationTools\Domain\Model;
+namespace MONOGON\TranslationTools\Domain\Repository;
+
 
 /***************************************************************
  *
@@ -27,65 +28,31 @@ namespace MONOGON\TranslationTools\Domain\Model;
  ***************************************************************/
 
 /**
- * System Languages
+ * The repository for Pages
  */
-class SystemLanguage extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
-
-	/**
-	 * Title
-	 *
-	 * @var string
-	 * @validate NotEmpty
-	 */
-	protected $title = '';
-
-	/**
-	 * Flag
-	 *
-	 * @var string
-	 * @validate NotEmpty
-	 */
-	protected $flag = '';
+class PageRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
 
 	public function initializeObject (){
-		$this->uid = 0;
+		/** @var $querySettings \TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings */
+		$querySettings = $this->objectManager->get('TYPO3\\CMS\\Extbase\\Persistence\\Generic\\Typo3QuerySettings');
+		$querySettings->setRespectStoragePage(FALSE);
+		$querySettings->setRespectSysLanguage(FALSE);
+		$this->setDefaultQuerySettings($querySettings);
 	}
 
-	/**
-	 * Returns the title
-	 *
-	 * @return string $title
-	 */
-	public function getTitle() {
-		return $this->title;
-	}
-
-	/**
-	 * Sets the title
-	 *
-	 * @param string $title
-	 * @return void
-	 */
-	public function setTitle($title) {
-		$this->title = $title;
-	}
-
-	/**
-	 * Returns the flag
-	 *
-	 * @return string $flag
-	 */
-	public function getFlag() {
-		return $this->flag;
-	}
-
-	/**
-	 * Sets the flag
-	 *
-	 * @param string $flag
-	 * @return void
-	 */
-	public function setFlag($flag) {
-		$this->flag = $flag;
+	public function findRootPages (){
+		$query = $this->createQuery();
+		$query->matching(
+			$query->logicalAnd(
+				$query->logicalOr(
+					$query->equals('siteRoot', TRUE),
+					$query->equals('pid', 0)
+				),
+				$query->logicalNot(
+					$query->in('doktype', array(\MONOGON\TranslationTools\Domain\Model\Page::DOKTYPE_SYSFOLDER))
+				)
+			)
+		);
+		return $query->execute();
 	}
 }
