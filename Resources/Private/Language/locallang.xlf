@@ -45,6 +45,9 @@
 			<trans-unit id="tx_translationtools_domain_model_systemlanguage.iso_code">
 				<source>Iso Code</source>
 			</trans-unit>
+			<trans-unit id="translation_demand.file">
+				<source>File</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>
