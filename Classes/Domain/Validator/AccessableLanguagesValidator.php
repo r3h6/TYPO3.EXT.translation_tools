@@ -37,10 +37,10 @@ class AccessableLanguagesValidator extends \TYPO3\CMS\Extbase\Validation\Validat
 	protected $systemLanguageRepository = NULL;
 
 	public function isValid ($languages){
-
-		if (is_array($languages)){
+// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($languages);
+		if (is_array($languages) && !empty($languages)){
 			$systemLanguages = $this->systemLanguageRepository->findAllAccessableSystemLanguages();
-			$flags = array();
+			$flags = array('default');
 			foreach ($systemLanguages as $systemLanguage){
 				$flags[] = $systemLanguage->getFlag();
 			}

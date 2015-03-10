@@ -85,12 +85,12 @@ class TranslationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCont
 	/**
 	 * action update
 	 *
-	 * @param \MONOGON\TranslationTools\Domain\Model\Translation $Translation
+	 * @param \MONOGON\TranslationTools\Domain\Model\Translation $translation
 	 * @return void
 	 */
 	public function updateAction(\MONOGON\TranslationTools\Domain\Model\Translation $translation) {
 		$this->translationRepository->update($translation);
-		die('Updated');
+		$this->addFlashMessage('Updated!');
 	}
 
 	/**

@@ -31,6 +31,9 @@ namespace MONOGON\TranslationTools\Domain\Model\Dto;
  */
 class Demand extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
+	const FILTER_MISSING = 'missing';
+	const FILTER_TRANSLATED = 'translated';
+
 	/**
 	 *
 	 * @var string
@@ -48,6 +51,12 @@ class Demand extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 * @var string
 	 */
 	protected $id;
+
+	/**
+	 *
+	 * @var string
+	 */
+	protected $filter;
 
 	/**
 	 *
@@ -136,6 +145,26 @@ class Demand extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 */
 	public function setLanguages($languages){
 		$this->languages = $languages;
+		return $this;
+	}
+
+	/**
+	 * Returns the filter
+	 *
+	 * @return string $filter
+	 */
+	public function getFilter(){
+		return $this->filter;
+	}
+
+	/**
+	 * Sets the filter
+	 *
+	 * @param string $filter
+	 * @return object $this
+	 */
+	public function setFilter($filter){
+		$this->filter = $filter;
 		return $this;
 	}
 }

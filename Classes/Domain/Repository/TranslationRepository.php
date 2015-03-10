@@ -8,6 +8,7 @@ use MONOGON\TranslationTools\Utility\FileUtility;
 use MONOGON\TranslationTools\Utility\LocalconfUtility;
 use MONOGON\TranslationTools\Utility\TranslationUtility;
 use MONOGON\TranslationTools\Localization\LocalizationFactory;
+use MONOGON\TranslationTools\Domain\Model\Dto\Demand;
 /***************************************************************
  *
  *  Copyright notice
@@ -87,6 +88,9 @@ class TranslationRepository {
 		$languages = $demand->getLanguages();
 		$charset = 'utf8';
 		$microTimeLimit = $GLOBALS['TYPO3_MISC']['microtime_start'] + 0.75 * PhpIni::getMaxExecutionTime();
+
+		$filtered = array();
+
 		foreach ($files as $file) {
 			if (microtime(TRUE) > $microTimeLimit) {
 				throw new ExecutionTimeException('Error Processing Request', 1420919679);
@@ -104,6 +108,7 @@ class TranslationRepository {
 						continue;
 					}
 					$key = sha1($file . $id);
+
 					if (!isset($translations[$key])) {
 						$translations[$key] = array(
 							'_id' => $id,
@@ -119,9 +124,21 @@ class TranslationRepository {
 							'sourceLanguage' => $sourceLanguage,
 							'targetLanguage' => $language
 						));
+
+					if ($demand->getFilter() == Demand::FILTER_MISSING && !$target){
+						$filtered[$key] = TRUE;
+					}
+					if ($demand->getFilter() == Demand::FILTER_TRANSLATED && $target){
+						$filtered[$key] = TRUE;
+					}
 				}
 			}
 		}
+
+		if (!empty($filtered)){
+			$translations = array_intersect_key($translations, $filtered);
+		}
+
 		return $translations;
 	}
 
