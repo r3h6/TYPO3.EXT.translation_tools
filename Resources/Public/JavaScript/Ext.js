@@ -1,60 +1,75 @@
 (function ($){
 	$.fn.editable = function (){
-		$(this).on('click', '.editable', function (event){
+		return $(this).on('click', '.editable', function (event){
 			var $el = $(this);
 			if ($el.hasClass('edit')) return null;
+			$el.addClass('edit');
 
-			var targetLanguage = $el.data('target-language');
-			var id = $el.closest('[data-id]').data('id');
-			var file = $el.closest('[data-file]').data('file');
-			var source = $el.data('source');
-			var text = $el.text();
-			var $form = $($('#EditableTemplate').html());
-			// console.log($form);
-			$el.addClass('edit').html($form);
+			var content = $el.text();
 
-			//var $form = $form.find('form');
-			var $target = $form.find('[data-property="target"]').val(text).focus();
-			$form.find('[data-property="source"]').val(source);
-			$form.find('[data-property="id"]').val(id);
-			$form.find('[data-property="file"]').val(file);
-			$form.find('[data-property="target-language"]').val(targetLanguage);
+			var $editor = $('<textarea />')
+				.val(content)
+				.css({width: '100%', height: '100%'})
+				.on('blur', function (event){
+					var value = $(this).val();
+					if (value != content){
+						$el.trigger('change.editable', [value]);
+					}
+					$el.removeClass('edit').html(value);
+				});
 
-			$target.on('blur', function (){
-				var value = $(this).val();
-				if (value != text){
-					$form.trigger('submit');
-				}
-				$el.removeClass('edit').html(value);
-			});
-
-			$form.on('submit', function (event){
-				event.preventDefault();
-				console.log(event);
-				TYPO3.Flashmessage.display(TYPO3.Severity.ok, 'test', 'my message', 5);
-			});
+			$el.html($editor);
+			$editor.focus();
 		});
-
 	};
 }(jQuery));
 
 
 
-(function ($){
 
 
-	$(document).ready(function() {
+jQuery(document).ready(function($) {
 
-		// $('.translations').on('click', '.editable', function (event){
+	function updateTranslation (el, value){
+		var $el = $(el);
 
-		// 	$(this).editable();
-		// });
+		var id = $el.closest('[data-id]').data('id');
+		var file = $el.closest('[data-file]').data('file');
+		var targetLanguage = $el.data('target-language');
+		var source = $el.data('source');
 
-		$('form[data-plugin~="ajaxForm"]').on('complete.ajaxForm', function (event){
-			console.log(event);
-			$('.translations').editable();
+		var $form = $('form[name="translation"]');
+
+		$('[data-property="id"]', $form).val(id);
+		$('[data-property="file"]', $form).val(file);
+		$('[data-property="target-language"]', $form).val(targetLanguage);
+		$('[data-property="source"]', $form).val(source);
+		$('[data-property="target"]', $form).val(value);
+
+		$.ajax({
+			url: $form.attr('action'),
+			type: $form.attr('method'),
+			dataType: 'html',
+			data: $form.serialize(),
+		})
+		.done(function(data, textStatus, jqXHR) {
+			TYPO3.Flashmessage.display(TYPO3.Severity.ok, 'Update', data, 5);
+		})
+		.fail(function(jqXHR, textStatus, errorThrown) {
+			TYPO3.Flashmessage.display(TYPO3.Severity.error, errorThrown, jqXHR.responseText, 5);
 		});
 
+	}
+
+	$('form[data-plugin~="ajaxForm"]').on('complete.ajaxForm', function (event){
+		$('.translations')
+			.editable()
+			.on('change.editable', '.editable', function (event, value){
+				if (value){
+					updateTranslation(event.target, value);
+				}
+			});
 	});
-}(jQuery));
+
+});
 

@@ -53,6 +53,9 @@ overwriteSettings:
       Language: merge
       Backend: keep
 
+  Tests:
+    Unit: keep
+
   ext_icon.gif: keep
 
   ext_localconf.php: keep

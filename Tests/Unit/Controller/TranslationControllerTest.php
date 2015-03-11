@@ -4,7 +4,7 @@ namespace MONOGON\TranslationTools\Tests\Unit\Controller;
  *  Copyright notice
  *
  *  (c) 2015 R3 H6 <r3h6@outlook.com>
- *  			
+ *
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -47,16 +47,38 @@ class TranslationControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function listActionFetchesAllTranslationsFromRepositoryAndAssignsThemToView() {
+	public function listAction () {
 
-		$allTranslations = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage', array(), array(), '', FALSE);
+		$translations = array();
+		$demand = 'Demand!';
 
-		$translationRepository = $this->getMock('MONOGON\\TranslationTools\\Domain\\Repository\\TranslationRepository', array('findAll'), array(), '', FALSE);
-		$translationRepository->expects($this->once())->method('findAll')->will($this->returnValue($allTranslations));
+		$translationRepository = $this->getMock('MONOGON\\TranslationTools\\Domain\\Repository\\TranslationRepository', array('findDemanded'), array(), '', FALSE);
+		$translationRepository
+			->expects($this->once())
+			->method('findDemanded')
+			->will($this->returnValue($translations));
+
 		$this->inject($this->subject, 'translationRepository', $translationRepository);
 
+		$objectManager = $this->getMock('TYPO3\\CMS\\Extbase\\Object\\ObjectManager', array('get'), array(), '', FALSE);
+		$objectManager
+			->expects($this->any())
+			->method('get')
+			->will($this->returnValue($demand));
+
+		$this->inject($this->subject, 'objectManager', $objectManager);
+
 		$view = $this->getMock('TYPO3\\CMS\\Extbase\\Mvc\\View\\ViewInterface');
-		$view->expects($this->once())->method('assign')->with('translations', $allTranslations);
+		$view
+			->expects($this->at(0))
+			->method('assign')
+			->with('translations', $translations);
+		$view
+			->expects($this->at(1))
+			->method('assign')
+			->with('demand', $demand);
+
+
 		$this->inject($this->subject, 'view', $view);
 
 		$this->subject->listAction();
@@ -65,11 +87,15 @@ class TranslationControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function updateActionUpdatesTheGivenTranslationInTranslationRepository() {
+	public function updateAction () {
 		$translation = new \MONOGON\TranslationTools\Domain\Model\Translation();
 
 		$translationRepository = $this->getMock('MONOGON\\TranslationTools\\Domain\\Repository\\TranslationRepository', array('update'), array(), '', FALSE);
-		$translationRepository->expects($this->once())->method('update')->with($translation);
+		$translationRepository
+			->expects($this->once())
+			->method('update')
+			->with($translation);
+
 		$this->inject($this->subject, 'translationRepository', $translationRepository);
 
 		$this->subject->updateAction($translation);

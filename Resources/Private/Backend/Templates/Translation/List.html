@@ -28,15 +28,13 @@
 <div class="results"></div>
 
 
-<script id="EditableTemplate" type="text/template">
-<f:form name="translation" action="update">
+<f:form class="hidden" name="translation" action="update">
   <f:form.hidden additionalAttributes="{data-property: 'id'}" property="id" />
   <f:form.hidden additionalAttributes="{data-property: 'file'}" property="file" />
   <f:form.hidden additionalAttributes="{data-property: 'target-language'}" property="targetLanguage" />
   <f:form.hidden additionalAttributes="{data-property: 'source'}" property="source" />
-  <f:form.textarea additionalAttributes="{data-property: 'target'}" property="target"></f:form.textarea>
+  <f:form.hidden additionalAttributes="{data-property: 'target'}" property="target" />
 </f:form>
-</script>
 
 </f:section>
 

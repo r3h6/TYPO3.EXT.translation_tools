@@ -98,7 +98,7 @@ class TranslationRepositoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function findInLocallangFiles (){
-		$translations = $this->subject->findInLocallangFile(array('EXT:translation_tools/Tests/Resources/Private/Language/locallang.xlf'));
+		$translations = $this->subject->findInLocallangFiles(array('EXT:translation_tools/Tests/Resources/Private/Language/locallang.xlf'));
 		$this->assertContainsOnly('MONOGON\TranslationTools\Domain\Model\Translation', $translations);
 	}
 }

@@ -31,7 +31,7 @@ use MONOGON\TranslationTools\Utility\TranslationUtility;
 /**
  * TranslationController
  */
-class TranslationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
+class TranslationController extends ActionController {
 
 	/**
 	 * translationRepository
@@ -45,9 +45,8 @@ class TranslationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCont
 	 * @param $view
 	 */
 	protected function initializeView($view) {
-		$isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
-		$view->assign('layout', $isAjax ? 'Ajax' : 'Default');
-		$view->assign('isAjax', $isAjax);
+		$view->assign('layout', $this->isAjax ? 'Ajax' : 'Default');
+		$view->assign('isAjax', $this->isAjax);
 	}
 
 	/**
@@ -90,7 +89,8 @@ class TranslationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionCont
 	 */
 	public function updateAction(\MONOGON\TranslationTools\Domain\Model\Translation $translation) {
 		$this->translationRepository->update($translation);
-		$this->addFlashMessage('Updated!');
+
+		$this->addFlashMessage('Successfully updated constant ' . $translation->getId());
 	}
 
 	/**
