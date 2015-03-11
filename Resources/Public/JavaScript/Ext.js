@@ -5,7 +5,7 @@
 			if ($el.hasClass('edit')) return null;
 			$el.addClass('edit');
 
-			var content = $el.text();
+			var content = $el.html();
 
 			var $editor = $('<textarea />')
 				.val(content)
@@ -16,6 +16,26 @@
 						$el.trigger('change.editable', [value]);
 					}
 					$el.removeClass('edit').html(value);
+				})
+				.on('keydown', function (event){
+					var index = $el.parent().children().index($el);
+					switch(event.which){
+						case 37: // left
+							$el.prev().trigger('click');
+							break;
+
+						case 38: // up
+							$el.closest('tr').prev().children(':eq(' + index + ')').trigger('click');
+							break;
+
+						case 39: // right
+							$el.next().trigger('click');
+							break;
+
+						case 40: // down
+							$el.closest('tr').next().children(':eq(' + index + ')').trigger('click');
+							break;
+					}
 				});
 
 			$el.html($editor);

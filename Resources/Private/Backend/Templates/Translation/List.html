@@ -46,7 +46,7 @@
 
 <f:if condition="{translations}">
   <f:then>
-    <table class="translations table table-striped" >
+    <table class="translations table table-bordered" >
       <tr>
         <th width="25%">ID</th>
         <f:if condition="{demand.languages}">
@@ -62,7 +62,7 @@
           <f:if condition="{demand.languages}">
             <f:for each="{demand.languages}" as="language">
               <mgn:variable.access var="{translation}" propertyName="{language}" as="unit">
-                <td class="editable" data-source="{unit.source}" data-target-language="{language}">{unit.target}</td>
+                <td class="editable" data-source="{unit.source}" data-target-language="{language}"><f:format.raw>{unit.target}</f:format.raw></td>
               </mgn:variable.access>
             </f:for>
           </f:if>

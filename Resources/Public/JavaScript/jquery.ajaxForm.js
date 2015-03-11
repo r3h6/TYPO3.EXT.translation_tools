@@ -28,6 +28,9 @@
 	AjaxForm.prototype.submit = function (request){
 		console.log('submit');
 
+		var $loader = $('<div class="ajax-loader" />');
+
+
 		var request = {
 			url: this.$el.attr('data-action'),
 			type: this.$el.attr('method'),
@@ -42,6 +45,8 @@
 				});
 				this.$el.removeClass('loading');
 				this.$el.trigger('complete.ajaxForm');
+				$loader.remove();
+				$(this.options.target).removeClass('loading');
 			},
 			success: function(data, textStatus, xhr) {
 				console.log('success');
@@ -59,8 +64,7 @@
 			this.freeze();
 		}
 
-		//$('<div class="ajax-loader" />');
-
+		$(this.options.target).addClass('loading').append($loader);
 
 		this.$el.addClass('loading');
 		this.xhr = jQuery.ajax(request);

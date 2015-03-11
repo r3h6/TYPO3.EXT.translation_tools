@@ -31,7 +31,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use MONOGON\TranslationTools\Configuration\ExtConf;
 
 /**
- * TcaUtility
+ * LocalconfUtility
  */
 class LocalconfUtility {
 
