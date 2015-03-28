@@ -1,5 +1,5 @@
 <?php
-namespace MONOGON\TranslationTools\ViewHelpers\Translation;
+namespace MONOGON\TranslationTools\ViewHelpers\Utility\File;
 
 /***************************************************************
  *
@@ -27,18 +27,18 @@ namespace MONOGON\TranslationTools\ViewHelpers\Translation;
  ***************************************************************/
 
 /**
- *
+ * DetermineLanguageFileViewHelper
  */
-class FlattenViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
+class DetermineLanguageFileViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
-	 *
-	 * @param array $translationGroup
-	 * @param \MONOGON\TranslationTools\Domain\Model\Dto\Demand $data
-	 * @return type
+	 * [render description]
+	 * @param  string $sourcePath [description]
+	 * @param  string $language   [description]
+	 * @return string             [description]
 	 */
-	public function render ($translationGroup = NULL, $demand = NULL){
-		$firstTranslation = reset($translationGroup);
+	public function render ($sourcePath, $language){
+		return \MONOGON\TranslationTools\Utility\FileUtility::determineLanguageFile($sourcePath, $language);
 	}
 
 }

@@ -31,6 +31,7 @@ namespace MONOGON\TranslationTools\Domain\Model\Dto;
  */
 class Demand extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
+	const FILTER_NONE = 'none';
 	const FILTER_MISSING = 'missing';
 	const FILTER_TRANSLATED = 'translated';
 
@@ -56,7 +57,7 @@ class Demand extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 *
 	 * @var string
 	 */
-	protected $filter;
+	protected $filter = Demand::FILTER_NONE;
 
 	/**
 	 *

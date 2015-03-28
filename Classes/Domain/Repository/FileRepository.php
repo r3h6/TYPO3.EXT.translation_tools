@@ -44,7 +44,7 @@ class FileRepository {
 	 */
 	protected $objectManager;
 
-	public function makeInstance ($identifier){
+	protected function makeInstance ($identifier){
 		$extension = pathinfo($identifier, PATHINFO_EXTENSION);
 		switch ($extension) {
 			case 'xlf': $class = 'MONOGON\\TranslationTools\\Domain\\Model\\FileXliff'; break;
@@ -74,6 +74,13 @@ class FileRepository {
 			FileUtility::createDirectory(dirname($backupPath));
 			$file->copy($backupPath);
 		}
+	}
+
+	public function findSourceCodeFiles ($path){
+		$path = GeneralUtility::getFileAbsFileName(
+			FileUtility::trailingSlash($path)
+		);
+		return GeneralUtility::getAllFilesAndFoldersInPath(array(), $path, 'xhtml,html,xml,json,txt,md,vcf,vcard,php', FALSE, 99, 'Tests|Locallang|Configuration');
 	}
 
 	// public function analyseTranslations ($path){

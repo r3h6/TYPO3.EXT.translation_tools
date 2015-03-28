@@ -57,12 +57,16 @@
       </tr>
 
       <f:for each="{translations}" as="translation">
-        <tr data-file="{translation._file}" data-id="{translation._id}">
-          <td title="{translation._file}">{translation._id}</td>
+        <tr>
+          <td title="{translation.file}">{translation.id}</td>
           <f:if condition="{demand.languages}">
             <f:for each="{demand.languages}" as="language">
-              <mgn:variable.access var="{translation}" propertyName="{language}" as="unit">
-                <td class="editable" data-source="{unit.source}" data-target-language="{language}"><f:format.raw>{unit.target}</f:format.raw></td>
+              <mgn:variable.access var="{translation.units}" propertyName="{language}" as="unit">
+                <td class="editable"
+                  data-id="{unit.id}"
+                  data-file="{mgn:utility.file.determineLanguageFile()}"
+                  data-source="{f:if(condition: unit.source, then: unit.source, else: translation.source)}"
+                  data-target-language="{language}"><f:format.raw>{unit.target}</f:format.raw></td>
               </mgn:variable.access>
             </f:for>
           </f:if>

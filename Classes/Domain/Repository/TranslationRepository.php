@@ -69,10 +69,19 @@ class TranslationRepository {
 	protected $localizationFactory = NULL;
 
 	/**
+	 * [$signalSlotDispatcher description]
+	 * @var TYPO3\CMS\Extbase\SignalSlot\Dispatcher
+	 * @inject
+	 */
+	protected $signalSlotDispatcher = NULL;
+
+	/**
 	 * @param \MONOGON\TranslationTools\Domain\Model\Dto\Demand $demand
 	 */
 	public function findDemanded(\MONOGON\TranslationTools\Domain\Model\Dto\Demand $demand = NULL) {
-		$translations = array();
+		// $translations = array();
+		$translations = GeneralUtility::makeInstance('MONOGON\\TranslationTools\\Persistence\\TranslationResult');
+
 		if (!$demand) {
 			return $translations;
 		}
@@ -89,11 +98,11 @@ class TranslationRepository {
 		$charset = 'utf8';
 		$microTimeLimit = $GLOBALS['TYPO3_MISC']['microtime_start'] + 0.75 * PhpIni::getMaxExecutionTime();
 
-		$filtered = array();
+		// $filtered = array();
 
 		foreach ($files as $file) {
 			if (microtime(TRUE) > $microTimeLimit) {
-				throw new ExecutionTimeException('Error Processing Request', 1420919679);
+				throw new ExecutionTimeException('Running out of time...', 1420919679);
 			}
 			foreach ($languages as $language) {
 				$parsedData = $this->localizationFactory->getParsedData($file, $language, $charset, LocalizationFactory::ERROR_MODE_EXCEPTION);
@@ -107,37 +116,64 @@ class TranslationRepository {
 					if ($demand->getId() && stripos($id, $demand->getId()) === FALSE) {
 						continue;
 					}
-					$key = sha1($file . $id);
+					// $key = sha1($file . $id);
 
-					if (!isset($translations[$key])) {
-						$translations[$key] = array(
-							'_id' => $id,
-							'_file' => $file,
-							'_source' => $source
-						);
-					}
-					$translations[$key][$language] = $this->createTranslation(array(
-							'source' => $source,
-							'target' => $target,
-							'id' => $id,
-							'file' => $file,
-							'sourceLanguage' => $sourceLanguage,
-							'targetLanguage' => $language
-						));
+					// if (!isset($translations[$key])) {
+					// 	$translations[$key] = array(
+					// 		'_id' => $id,
+					// 		'_file' => $file,
+					// 		'_source' => $source
+					// 	);
+					// }
+					// $translations[$key][$language] = $this->createTranslation(array(
+					// 		'source' => $source,
+					// 		'target' => $target,
+					// 		'id' => $id,
+					// 		'file' => FileUtility::determineLanguageFile($file, $language),
+					// 		'sourceLanguage' => $sourceLanguage,
+					// 		'targetLanguage' => $language
+					// 	));
 
-					if ($demand->getFilter() == Demand::FILTER_MISSING && !$target){
-						$filtered[$key] = TRUE;
+					// if ($demand->getFilter() == Demand::FILTER_MISSING && !$target){
+					// 	$filtered[$key] = TRUE;
+					// }
+					// if ($demand->getFilter() == Demand::FILTER_TRANSLATED && $target){
+					// 	$filtered[$key] = TRUE;
+					// }
+
+
+
+					$translation = $this->createTranslation(array(
+						'source' => $source,
+						'target' => $target,
+						'id' => $id,
+						// 'file' => FileUtility::determineLanguageFile($file, $language),
+						'file' => $file,
+						'sourceLanguage' => $sourceLanguage,
+						'targetLanguage' => $language
+					));
+
+					if ($demand->getFilter() === Demand::FILTER_NONE){
+						$translations->addTranslation($translation);
+						continue;
 					}
-					if ($demand->getFilter() == Demand::FILTER_TRANSLATED && $target){
-						$filtered[$key] = TRUE;
+					if ($demand->getFilter() === Demand::FILTER_MISSING && !$target){
+						$translations->addTranslation($translation);
+						continue;
 					}
+					if ($demand->getFilter() === Demand::FILTER_TRANSLATED && $target){
+						$translations->addTranslation($translation);
+						continue;
+					}
+
 				}
 			}
 		}
 
-		if (!empty($filtered)){
-			$translations = array_intersect_key($translations, $filtered);
-		}
+		// $translations->applyWhiteList();
+		// if (!empty($filtered)){
+		// 	$translations = array_intersect_key($translations, $filtered);
+		// }
 
 		return $translations;
 	}
@@ -145,13 +181,14 @@ class TranslationRepository {
 	/**
 	 * @param $translation
 	 */
-	public function update($translation) {
-		$identifier = FileUtility::determineLanguageFile($translation->getFile(), $translation->getTargetLanguage());
-		$file = $this->fileRepository->makeInstance($identifier);
+	public function update(\MONOGON\TranslationTools\Domain\Model\Translation $translation) {
+		// $identifier = FileUtility::determineLanguageFile($translation->getFile(), $translation->getTargetLanguage());
+		$file = $this->fileRepository->findByIdentifier($tranlation->getFile());
 		$file->parse();
 		$file->addTranslation($translation);
 		$this->fileRepository->save($file);
-		LocalconfUtility::update();
+		// LocalconfUtility::update();
+		$this->emitAfterUpdateSignal($translation);
 	}
 
 	/**
@@ -161,10 +198,11 @@ class TranslationRepository {
 	 * @return array       [description]
 	 */
 	public function findInSourceCode($path) {
-		$path = GeneralUtility::getFileAbsFileName(
-			FileUtility::trailingSlash($path)
-		);
-		$files = GeneralUtility::getAllFilesAndFoldersInPath(array(), $path, 'xhtml,html,xml,json,txt,md,vcf,vcard,php', FALSE, 99, 'Tests|Locallang|Configuration');
+
+		// @todo move to fileRepository
+		//$files = GeneralUtility::getAllFilesAndFoldersInPath(array(), $path, 'xhtml,html,xml,json,txt,md,vcf,vcard,php', FALSE, 99, 'Tests|Locallang|Configuration');
+		$files = $this->fileRepository->findInSourceCode($path);
+
 		$translations = array();
 		foreach ($files as $file) {
 			//$translations = array_merge($translations, TranslationUtility::extractFromFile($file));
@@ -195,6 +233,10 @@ class TranslationRepository {
 	 */
 	public function createTranslation($properties) {
 		return $this->propertyMapper->convert($properties, $this->model);
+	}
+
+	protected function emitAfterUpdateSignal (\MONOGON\TranslationTools\Domain\Model\Translation $translation){
+		$this->signalSlotDispatcher->dispatch(__CLASS__, 'afterUpdate', array($translation));
 	}
 
 }

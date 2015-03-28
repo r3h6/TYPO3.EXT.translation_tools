@@ -17,7 +17,47 @@
 
 </f:section>
 
-<f:section name="ajax">
+
 <f:debug title="opt title">{missingTranslations}</f:debug>
 <f:debug title="opt title">{unusedTranslations}</f:debug>
+<f:section name="ajax">
+
+<f:if condition="{missingTranslations}">
+  <f:then>
+    <h3><f:translate key="title.missing_translations">Missing</f:translate></h3>
+    <table class="translations table table-bordered" >
+      <tr>
+        <th width="25%">ID</th>
+        <th>Source</th>
+      </tr>
+
+      <f:for each="{missingTranslations}" as="translation">
+        <tr>
+          <td title="{translation.file}">{translation.id}</td>
+          <td>{translation.source}</td>
+        </tr>
+      </f:for>
+    </table>
+  </f:then>
+</f:if>
+
+<f:if condition="{unusedTranslations}">
+  <f:then>
+    <h3><f:translate key="title.unused_translations">Unused translations</f:translate></h3>
+    <table class="translations table table-bordered" >
+      <tr>
+        <th width="25%">ID</th>
+        <th>Source</th>
+      </tr>
+
+      <f:for each="{unusedTranslations}" as="translation">
+        <tr>
+          <td title="{translation.file}">{translation.id}</td>
+          <td>{translation.source}</td>
+        </tr>
+      </f:for>
+    </table>
+  </f:then>
+</f:if>
+
 </f:section>

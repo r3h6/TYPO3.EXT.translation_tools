@@ -34,8 +34,6 @@ class SystemLanguageRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 
 
 	public function findAllAccessableSystemLanguages() {
-		// $pages = $this->pageRepository->findRootPages();
-		// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($pages->getTsConfig('mod.SHARED.defaultLanguageLabel'));
 		$systemLanguages = $this->getDefaultSystemLanguages();
 		$systemLanguages = array_merge($systemLanguages, $this->findAll()->toArray());
 
@@ -53,9 +51,7 @@ class SystemLanguageRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 		foreach ($defaultLanguages as $defaultLanguage){
 			$properties = GeneralUtility::trimExplode(':', $defaultLanguage);
 
-
 			$systemLanguage = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('MONOGON\\TranslationTools\\Domain\\Model\\SystemLanguage');
-			// $systemLanguage->setUid(0);
 			$systemLanguage->setFlag($properties[0]);
 			$systemLanguage->setTitle($properties[1]);
 

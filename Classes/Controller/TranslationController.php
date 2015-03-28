@@ -74,12 +74,12 @@ class TranslationController extends ActionController {
 	 *
 	 * @return void
 	 */
-	protected function initializeUpdateAction() {
-		if ($this->request->hasArgument('translation')) {
-			$translation = $this->translationRepository->createTranslation($this->request->getArgument('translation'));
-			$this->request->setArgument('translation', $translation);
-		}
-	}
+	// protected function initializeUpdateAction() {
+	// 	if ($this->request->hasArgument('translation')) {
+	// 		$translation = $this->translationRepository->createTranslation($this->request->getArgument('translation'));
+	// 		$this->request->setArgument('translation', $translation);
+	// 	}
+	// }
 
 	/**
 	 * action update
