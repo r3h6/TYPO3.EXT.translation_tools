@@ -28,6 +28,8 @@ use MONOGON\TranslationTools\Utility\TranslationUtility;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use MONOGON\TranslationTools\Property\TypeConverter\FileUploadConverter;
+
 /**
  * TranslationController
  */
@@ -126,6 +128,15 @@ class TranslationController extends ActionController {
 		}
 		$this->view->assign('missingTranslations', $missingTranslations);
 		$this->view->assign('unusedTranslations', $unusedTranslations);
+	}
+
+	public function initializeImportAction (){
+		$this->arguments['upload']->getPropertyMappingConfiguration()->forProperty('file')->setTypeConverterOptions(
+			'MONOGON\\TranslationTools\\Property\\TypeConverter\\FileUploadConverter',
+			array(
+
+			)
+		);
 	}
 
 	/**
