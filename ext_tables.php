@@ -16,32 +16,13 @@ if (TYPO3_MODE === 'BE') {
 		'tools',	// Submodule key
 		'',						// Position
 		array(
-			'Translation' => 'list, update',
+			'Translation' => 'list, update, difference, import',
 
 		),
 		array(
 			'access' => 'user,group',
 			'icon'   => 'EXT:' . $_EXTKEY . '/ext_icon.gif',
 			'labels' => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_tools.xlf',
-		)
-	);
-
-	/**
-	 * Registers a Backend Module
-	 */
-	\TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
-		'MONOGON.' . $_EXTKEY,
-		'tools',	 // Make module a submodule of 'tools'
-		'admin',	// Submodule key
-		'',						// Position
-		array(
-			'Translation' => 'difference',
-
-		),
-		array(
-			'access' => 'user,group',
-			'icon'   => 'EXT:' . $_EXTKEY . '/ext_icon.gif',
-			'labels' => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_admin.xlf',
 		)
 	);
 

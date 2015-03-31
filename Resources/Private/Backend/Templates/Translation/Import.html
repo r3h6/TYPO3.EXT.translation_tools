@@ -1,0 +1,17 @@
+{namespace mgn=MONOGON\TranslationTools\ViewHelpers}
+<f:layout name="Default" />
+
+
+<f:section name="content">
+
+<f:flashMessages />
+
+<f:form class="inline-form" action="import" name="upload" object="{upload}" enctype="multipart/form-data">
+  <div class="form-group">
+    <f:form.upload property="file" />
+  </div>
+  <input type="submit">
+</f:form>
+
+{file}
+</f:section>

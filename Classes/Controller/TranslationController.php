@@ -42,6 +42,13 @@ class TranslationController extends ActionController {
 	protected $translationRepository = NULL;
 
 	/**
+	 * [$sessionService description]
+	 * @var \MONOGON\TranslationTools\Service\SessionService
+	 * @inject
+	 */
+	protected $sessionService = NULL;
+
+	/**
 	 * @param $view
 	 */
 	protected function initializeView($view) {
@@ -56,6 +63,11 @@ class TranslationController extends ActionController {
 	 * @return void
 	 */
 	public function listAction(\MONOGON\TranslationTools\Domain\Model\Dto\Demand $demand = NULL) {
+
+		// if (!$demand){
+		// 	$demand = $this->sessionService->get('demand');
+		// }
+
 		try {
 			$translations = $this->translationRepository->findDemanded($demand);
 		} catch (ExecutionTimeException $exception) {
@@ -67,6 +79,8 @@ class TranslationController extends ActionController {
 		}
 		$this->view->assign('translations', $translations);
 		$this->view->assign('demand', $demand);
+
+		// $this->sessionService->set('demand', $demand);
 	}
 
 	/**
@@ -112,6 +126,15 @@ class TranslationController extends ActionController {
 		}
 		$this->view->assign('missingTranslations', $missingTranslations);
 		$this->view->assign('unusedTranslations', $unusedTranslations);
+	}
+
+	/**
+	 * [importAction description]
+	 * @param  \MONOGON\TranslationTools\Domain\Model\Dto\Upload $upload
+	 * @return void
+	 */
+	public function importAction (\MONOGON\TranslationTools\Domain\Model\Dto\Upload $upload = NULL){
+		$this->view->assign('upload', $upload);
 	}
 
 }

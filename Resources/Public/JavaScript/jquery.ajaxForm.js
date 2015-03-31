@@ -56,6 +56,7 @@
 			error: function(xhr, textStatus, errorThrown) {
 				console.log('error');
 				console.log(errorThrown);
+				$(this.options.target).html(xhr.responseText);
 				this.$el.trigger('error.ajaxForm');
 			}
 		};

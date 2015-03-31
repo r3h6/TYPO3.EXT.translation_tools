@@ -25,15 +25,20 @@
   <input type="submit">
 </f:form>
 
-<div class="results"></div>
+<div class="results">
+  <f:if condition="{translations}">
+    <f:render section="ajax" arguments="{_all}" />
+  </f:if>
+</div>
 
+<f:link.action format="csv" class="btn btn-default btn-csv">Download CSV</f:link.action>
 
 <f:form class="hidden" name="translation" action="update">
-  <f:form.hidden additionalAttributes="{data-property: 'id'}" property="id" />
-  <f:form.hidden additionalAttributes="{data-property: 'file'}" property="file" />
-  <f:form.hidden additionalAttributes="{data-property: 'target-language'}" property="targetLanguage" />
-  <f:form.hidden additionalAttributes="{data-property: 'source'}" property="source" />
-  <f:form.hidden additionalAttributes="{data-property: 'target'}" property="target" />
+  <f:form.hidden property="id" />
+  <f:form.hidden property="file" />
+  <f:form.hidden property="targetLanguage" />
+  <f:form.hidden property="source" />
+  <f:form.hidden property="target" />
 </f:form>
 
 </f:section>
@@ -56,23 +61,24 @@
         </f:if>
       </tr>
 
-      <f:for each="{translations}" as="translation">
+      <f:for each="{translations}" as="translationGroup">
         <tr>
-          <td title="{translation.file}">{translation.id}</td>
+          <td title="{translationGroup.file}">{translationGroup.id}</td>
           <f:if condition="{demand.languages}">
             <f:for each="{demand.languages}" as="language">
-              <mgn:variable.access var="{translation.units}" propertyName="{language}" as="unit">
+              <mgn:variable.access var="{translationGroup}" propertyName="{language}" as="translation">
                 <td class="editable"
-                  data-id="{unit.id}"
-                  data-file="{mgn:utility.file.determineLanguageFile()}"
-                  data-source="{f:if(condition: unit.source, then: unit.source, else: translation.source)}"
-                  data-target-language="{language}"><f:format.raw>{unit.target}</f:format.raw></td>
+                  data-id="{translation.id}"
+                  data-file="{mgn:utility.file.determineLanguageFile(sourcePath: translation.file, language: language)}"
+                  data-source="{translation.source}"
+                  data-target-language="{translation.targetLanguage}"><f:format.raw>{translation.target}</f:format.raw></td>
               </mgn:variable.access>
             </f:for>
           </f:if>
         </tr>
       </f:for>
     </table>
+
   </f:then>
   <f:else>
     <f:translate key="results.none">No results.</f:translate>

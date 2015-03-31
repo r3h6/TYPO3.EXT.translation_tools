@@ -33,23 +33,53 @@ use MONOGON\TranslationTools\Localization\LocalizationFactory;
 /**
  * File
  */
-abstract class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
+class File {
 
+	/**
+	 * Extension key
+	 */
 	const EXT_KEY = 'translation_tools';
-	// const ERROR_MODE_EXCEPTION = 2;
 
-
+	/**
+	 * Translations
+	 * @var array
+	 */
 	protected $translations = array();
 
+	/**
+	 * Identifier
+	 * @var string
+	 */
 	protected $identifier = '';
 
+	/**
+	 * Content
+	 * @var string
+	 */
 	protected $content = '';
 
+	/**
+	 * Format
+	 * @var null
+	 */
 	protected $format = NULL;
 
-	protected $targetLanguage = 'default';
+	/**
+	 * Target language
+	 * @var string
+	 */
+	protected $targetLanguage = '';
+
+	/**
+	 * Source language
+	 * @var string
+	 */
 	protected $sourceLanguage = 'en';
 
+	/**
+	 * Charset
+	 * @var string
+	 */
 	protected $charset = 'utf8';
 
 	/**
@@ -93,16 +123,40 @@ abstract class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 */
 	public function initializeObject (){
 
+
+
+		// $this->parse();
+		// $extbaseFrameworkConfiguration = $this->configurationManager->getConfiguration(\TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT);
+		// $templateRootPath = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($extbaseFrameworkConfiguration['view']['templateRootPath']);
+		// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($extbaseFrameworkConfiguration, __CLASS__); exit;
+
+	}
+
+	/**
+	 * Returns the format
+	 *
+	 * @return string $format
+	 */
+	public function getFormat(){
+		return $this->format;
+	}
+
+	/**
+	 * Sets the format
+	 *
+	 * @param string $format
+	 * @return object $this
+	 */
+	public function setFormat($format){
+		$this->format = $format;
+
 		$extPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath(self::EXT_KEY);
 		$templateRootPath = $extPath . 'Resources/Private/Backend/Templates/File/Render.' . $this->format;
 
 		$this->view->setTemplatePathAndFilename($templateRootPath);
 		$this->view->setFormat($this->format);
 
-		// $extbaseFrameworkConfiguration = $this->configurationManager->getConfiguration(\TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT);
-		// $templateRootPath = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($extbaseFrameworkConfiguration['view']['templateRootPath']);
-		// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($extbaseFrameworkConfiguration, __CLASS__); exit;
-
+		return $this;
 	}
 
 	/**
@@ -194,8 +248,10 @@ abstract class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 		// $localizationFactory = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Localization\\LocalizationFactory');
 		$parsedData = $this->localizationFactory->getParsedData($this->identifier, $this->targetLanguage, $this->charset, LocalizationFactory::ERROR_MODE_EXCEPTION);
 
+		$targetLanguage = ($this->targetLanguage) ? $this->targetLanguage: 'default';
+
 		foreach ($parsedData[$sourceLanguage] as $id => $value) {
-			$target = isset($parsedData[$this->targetLanguage][$id][0]['target']) ? $parsedData[$this->targetLanguage][$id][0]['target'] : NULL;
+			$target = isset($parsedData[$targetLanguage][$id][0]['target']) ? $parsedData[$targetLanguage][$id][0]['target'] : NULL;
 			$source = $parsedData[$sourceLanguage][$id][0]['source'];
 			$this->translations[$id] = $this->translationRepository->createTranslation(array(
 				'source' => $source,
@@ -203,7 +259,7 @@ abstract class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 				'id' => $id,
 				'file' => $this->identifier,
 				'sourceLanguage' => $this->sourceLanguage,
-				'targetLanguage' => $this->targetLanguage
+				'targetLanguage' => $targetLanguage
 			));
 		}
 	}
@@ -232,9 +288,9 @@ abstract class File {//extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 			throw new \Exception("Not allowed to overwrite file '$path'!", 1421790718);
 		}
 
-		if (!$this->content){
-			$this->render();
-		}
+		// if (!$this->content){
+		$this->render();
+		// }
 
 		FileUtility::createDirectory(dirname($path));
 

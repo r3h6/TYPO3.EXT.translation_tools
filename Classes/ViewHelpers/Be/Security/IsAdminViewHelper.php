@@ -1,11 +1,11 @@
 <?php
-namespace MONOGON\TranslationTools\Domain\Model;
+namespace MONOGON\TranslationTools\ViewHelpers\Be\Security;
 
 /***************************************************************
  *
  *  Copyright notice
  *
- *  (c) 2015 R3 H6 <r3h6@outlook.com>
+ *  (c) 2014 R3 H6 <r3h6@outlook.com>
  *
  *  All rights reserved
  *
@@ -26,13 +26,13 @@ namespace MONOGON\TranslationTools\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use \TYPO3\CMS\Core\Utility\GeneralUtility;;
-
 /**
- * FileXml
+ * IsAdminViewHelper
  */
-class FileXml extends \MONOGON\TranslationTools\Domain\Model\File {
+class IsAdminViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
 
-	protected $format = 'xml';
+	public function render (){
+		return $GLOBALS['BE_USER']->isAdmin();
+	}
 
 }

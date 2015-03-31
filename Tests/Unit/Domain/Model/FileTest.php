@@ -29,17 +29,17 @@ namespace MONOGON\TranslationTools\Tests\Unit\Domain\Model;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Test case for class \MONOGON\TranslationTools\Domain\Model\FileXliff.
+ * Test case for class \MONOGON\TranslationTools\Domain\Model\File.
  *
  * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  * @author R3 H6 <r3h6@outlook.com>
  */
-class FileXliffTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
+class FileTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 
 	/**
-	 * @var \MONOGON\TranslationTools\Domain\Model\FileXliff
+	 * @var \MONOGON\TranslationTools\Domain\Model\File
 	 */
 	protected $subject = NULL;
 
@@ -50,20 +50,34 @@ class FileXliffTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 
 
 	protected function setUp() {
-		$this->objectManager = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
-		$this->subject = $this->objectManager->get('MONOGON\\TranslationTools\\Domain\\Model\\FileXliff', 'EXT:translation_tools/Tests/Resources/Private/Language/locallang.xlf');
+		// $this->objectManager = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
+		// $this->subject = $this->objectManager->get('MONOGON\\TranslationTools\\Domain\\Model\\File', 'EXT:translation_tools/Tests/Resources/Private/Language/locallang.xlf');
+
+		$this->subject = $this->getMock('MONOGON\\TranslationTools\\Domain\\Model\\File', array(), array(), '', FALSE);
 	}
 
 	protected function tearDown() {
 		unset($this->subject);
-		unset($this->objectManager);
-		parent::tearDown();
+		// unset($this->objectManager);
+		// parent::tearDown();
+	}
+
+	public function setIdentifier (){
+
+		$identifier = 'EXT:translation_tools/Tests/Resources/Private/Language/de.locallang.xlf';
+		$this->subject->setIdentifier($identifier);
+
+		$this->assertAttributeEquals($identifier, 'identifier', $this->subject);
+		$this->assertAttributeEquals('de', 'targetLanguage', $this->subject);
+
 	}
 
 	/**
 	 * @test
 	 */
 	public function exists (){
+		$identifier = 'EXT:translation_tools/Tests/Resources/Private/Language/de.locallang.xlf';
+		$this->subject->setIdentifier($identifier);
 		$this->assertSame(
 			TRUE,
 			$this->subject->exists()

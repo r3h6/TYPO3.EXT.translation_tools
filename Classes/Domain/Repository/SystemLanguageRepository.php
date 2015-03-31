@@ -34,7 +34,7 @@ class SystemLanguageRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 
 
 	public function findAllAccessableSystemLanguages() {
-		$systemLanguages = $this->getDefaultSystemLanguages();
+		$systemLanguages = array($this->getDefaultSystemLanguage());
 		$systemLanguages = array_merge($systemLanguages, $this->findAll()->toArray());
 
 		foreach ($systemLanguages as $key => $systemLanguage){
@@ -45,19 +45,27 @@ class SystemLanguageRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 		return $systemLanguages;
 	}
 
-	public function getDefaultSystemLanguages() {
-		$systemLanguages = array();
-		$defaultLanguages = GeneralUtility::trimExplode(';', ExtConf::get('defaultLanguage'));
-		foreach ($defaultLanguages as $defaultLanguage){
-			$properties = GeneralUtility::trimExplode(':', $defaultLanguage);
-
-			$systemLanguage = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('MONOGON\\TranslationTools\\Domain\\Model\\SystemLanguage');
-			$systemLanguage->setFlag($properties[0]);
-			$systemLanguage->setTitle($properties[1]);
-
-			$systemLanguages[] = $systemLanguage;
-		}
-		return $systemLanguages;
+	public function getDefaultSystemLanguage (){
+		$defaultLanguage = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('MONOGON\\TranslationTools\\Domain\\Model\\SystemLanguage');
+		// $defaultLanguage->setUid(0);
+		$defaultLanguage->setFlag('default');
+		$defaultLanguage->setTitle('Default');
+		return $defaultLanguage;
 	}
+
+	// public function getDefaultSystemLanguages() {
+	// 	$systemLanguages = array();
+	// 	$defaultLanguages = GeneralUtility::trimExplode(';', ExtConf::get('defaultLanguage'));
+	// 	foreach ($defaultLanguages as $defaultLanguage){
+	// 		$properties = GeneralUtility::trimExplode(':', $defaultLanguage);
+
+	// 		$systemLanguage = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('MONOGON\\TranslationTools\\Domain\\Model\\SystemLanguage');
+	// 		$systemLanguage->setFlag($properties[0]);
+	// 		$systemLanguage->setTitle($properties[1]);
+
+	// 		$systemLanguages[] = $systemLanguage;
+	// 	}
+	// 	return $systemLanguages;
+	// }
 
 }

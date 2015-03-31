@@ -39,7 +39,7 @@ class TranslationResult implements \Countable, \Iterator, \ArrayAccess {
 	public function __construct() {
 		// $this->offset = 0;
 		$this->data = array();
-		$this->whiteList = array();
+		// $this->whiteList = array();
 	}
 
 	public function addTranslation (\MONOGON\TranslationTools\Domain\Model\Translation $translation){
@@ -48,15 +48,18 @@ class TranslationResult implements \Countable, \Iterator, \ArrayAccess {
 
 		if (!isset($this->data[$offset])){
 			$this->data[$offset] = array(
-				'units' => array(),
+				// 'units' => array(),
 				'file' => $translation->getFile(),
 				'id' => $translation->getId(),
 			);
 		}
 
+		$language = 'default';
+		if ($translation->getTargetLanguage()){
+			$language = $translation->getTargetLanguage();
+		}
 
-
-		$this->data[$offset]['units'][$translation->getTargetLanguage()] = $translation;
+		$this->data[$offset][$language] = $translation;
 	}
 
 	// public function addToWhiteList(\MONOGON\TranslationTools\Domain\Model\Translation $translation){
@@ -66,7 +69,7 @@ class TranslationResult implements \Countable, \Iterator, \ArrayAccess {
 
 	public function rewind() {
 		//$this->offset = 0;
-		rewind($this->data);
+		reset($this->data);
 	}
 
 	public function current() {
@@ -89,7 +92,7 @@ class TranslationResult implements \Countable, \Iterator, \ArrayAccess {
 
 	public function offsetSet($offset, $value) {
 		if (is_null($offset)) {
-			$this->[] = $value;
+			$this->data[] = $value;
 		} else {
 			$this->data[$offset] = $value;
 		}

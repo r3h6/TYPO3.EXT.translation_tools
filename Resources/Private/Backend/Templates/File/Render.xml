@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <T3locallang>
 	<data type="array">
-		<languageKey index="{f:if(condition: '{targetLanguage} == \'\'', then: 'default', else: '{targetLanguage}')}" type="array">
+		<languageKey index="{f:if(condition: '{targetLanguage}', then: '{targetLanguage}', else: 'default')}" type="array">
 			<f:for each="{translations}" as="translation">
 			<label index="{translation.id}"><f:format.htmlspecialchars>{translation.target}</f:format.htmlspecialchars></label>
 			</f:for>

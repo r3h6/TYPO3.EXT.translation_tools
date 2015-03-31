@@ -52,19 +52,25 @@ jQuery(document).ready(function($) {
 
 	function updateTranslation (el, value){
 		var $el = $(el);
-
-		var id = $el.closest('[data-id]').data('id');
-		var file = $el.closest('[data-file]').data('file');
-		var targetLanguage = $el.data('target-language');
-		var source = $el.data('source');
-
 		var $form = $('form[name="translation"]');
 
-		$('[data-property="id"]', $form).val(id);
-		$('[data-property="file"]', $form).val(file);
-		$('[data-property="target-language"]', $form).val(targetLanguage);
-		$('[data-property="source"]', $form).val(source);
-		$('[data-property="target"]', $form).val(value);
+
+		var id = $el.data('id');
+		var file = $el.data('file');
+		var targetLanguage = $el.data('target-language');
+		var source = $el.data('source');
+		var target = value;
+
+		if (!targetLanguage){
+			source = value;
+			target = '';
+		}
+
+		$('[name*="[id]"]', $form).val(id);
+		$('[name*="[file]"]', $form).val(file);
+		$('[name*="[targetLanguage]"]', $form).val(targetLanguage);
+		$('[name*="[source]"]', $form).val(source);
+		$('[name*="[target]"]', $form).val(target);
 
 		$.ajax({
 			url: $form.attr('action'),
@@ -89,6 +95,16 @@ jQuery(document).ready(function($) {
 					updateTranslation(event.target, value);
 				}
 			});
+	});
+
+	$('.btn-csv').on('click', function (event){
+		event.preventDefault();
+		var data = $('form[name="demand"]').serialize();
+		console.log(data);
+
+		var uri = $(this).attr('href') + '&' + data;
+
+		window.location = uri;
 	});
 
 });

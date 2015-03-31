@@ -13,3 +13,7 @@
 	background: url("../Images/ajax-loader.gif") #FFF no-repeat top center;
 	opacity: 0.5;
 }
+
+.typo3-docheader-buttons {
+	box-sizing: content-box;
+}

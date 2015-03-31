@@ -61,59 +61,59 @@ class FileRepositoryTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		unset($this->subject);
 	}
 
-	/**
-	 * @test
-	 */
-	public function makeInstanceXliff() {
-		$identifier = 'path/to/somewhere/locallang.xlf';
-		$this->assertInstanceOf(
-			'MONOGON\\TranslationTools\\Domain\\Model\\FileXliff',
-			$this->subject->makeInstance($identifier)
-		);
-	}
+	// /**
+	//  * @test
+	//  */
+	// public function makeInstanceXliff() {
+	// 	$identifier = 'path/to/somewhere/locallang.xlf';
+	// 	$this->assertInstanceOf(
+	// 		'MONOGON\\TranslationTools\\Domain\\Model\\FileXliff',
+	// 		$this->subject->makeInstance($identifier)
+	// 	);
+	// }
 
-	/**
-	 * @test
-	 */
-	public function makeInstanceXml() {
-		$identifier = 'path/to/somewhere/locallang.xml';
-		$this->assertInstanceOf(
-			'MONOGON\\TranslationTools\\Domain\\Model\\FileXml',
-			$this->subject->makeInstance($identifier)
-		);
-	}
+	// /**
+	//  * @test
+	//  */
+	// public function makeInstanceXml() {
+	// 	$identifier = 'path/to/somewhere/locallang.xml';
+	// 	$this->assertInstanceOf(
+	// 		'MONOGON\\TranslationTools\\Domain\\Model\\FileXml',
+	// 		$this->subject->makeInstance($identifier)
+	// 	);
+	// }
 
-	/**
-	 * @test
-	 * @expectedException \InvalidArgumentException
-	 */
-	public function makeInstanceException() {
-		$identifier = 'path/to/somewhere/setup.foo';
-		$this->subject->makeInstance($identifier);
-	}
+	// /**
+	//  * @test
+	//  * @expectedException \InvalidArgumentException
+	//  */
+	// public function makeInstanceException() {
+	// 	$identifier = 'path/to/somewhere/setup.foo';
+	// 	$this->subject->makeInstance($identifier);
+	// }
 
-	/**
-	 * @test
-	 */
-	public function makeInstanceCheckConstructor() {
-		$identifier = 'path/to/somewhere/locallang.xlf';
-		$file = $this->subject->makeInstance($identifier);
-		$this->assertSame(
-			$identifier,
-			$file->getIdentifier()
-		);
-	}
+	// /**
+	//  * @test
+	//  */
+	// public function makeInstanceCheckConstructor() {
+	// 	$identifier = 'path/to/somewhere/locallang.xlf';
+	// 	$file = $this->subject->makeInstance($identifier);
+	// 	$this->assertSame(
+	// 		$identifier,
+	// 		$file->getIdentifier()
+	// 	);
+	// }
 
-	/**
-	 * @test
-	 */
-	public function backup (){
-		$expected = PATH_site . FileUtility::makeBackupPath(self::$locallangFile);
-		$file = $this->subject->makeInstance(self::$locallangFile);
-		$this->subject->backup($file);
-		$this->assertFileExists($expected);
-		unlink($expected);
-		$this->assertFileNotExists($expected);
-	}
+	// /**
+	//  * @test
+	//  */
+	// public function backup (){
+	// 	$expected = PATH_site . FileUtility::makeBackupPath(self::$locallangFile);
+	// 	$file = $this->subject->makeInstance(self::$locallangFile);
+	// 	$this->subject->backup($file);
+	// 	$this->assertFileExists($expected);
+	// 	unlink($expected);
+	// 	$this->assertFileNotExists($expected);
+	// }
 
 }

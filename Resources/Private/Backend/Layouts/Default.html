@@ -1,15 +1,17 @@
+{namespace mgn=MONOGON\TranslationTools\ViewHelpers}
 <f:be.container
 	loadJQuery="1"
 	includeJsFiles="{
-		1: '{f:uri.resource(path: \'JavaScript/Vendors/dependencies.js\')}',
-		2: '{f:uri.resource(path: \'JavaScript/Vendors/visualsearch.js\')}',
-		3: '{f:uri.resource(path: \'JavaScript/jquery.visualSearch.js\')}',
-		4: '{f:uri.resource(path: \'JavaScript/jquery.ajaxForm.js\')}',
-		5: '{f:uri.resource(path: \'JavaScript/Ext.js\')}'
+		1: '{f:uri.resource(path: \'JavaScript/Vendors/bootstrap.min.js\')}',
+		2: '{f:uri.resource(path: \'JavaScript/Vendors/dependencies.js\')}',
+		3: '{f:uri.resource(path: \'JavaScript/Vendors/visualsearch.js\')}',
+		4: '{f:uri.resource(path: \'JavaScript/jquery.visualSearch.js\')}',
+		5: '{f:uri.resource(path: \'JavaScript/jquery.ajaxForm.js\')}',
+		6: '{f:uri.resource(path: \'JavaScript/Ext.js\')}'
 	}"
 	includeCssFiles="{
-		1: '{f:uri.resource(path: \'StyleSheet/Vendors/visualsearch-datauri.css\')}',
-		2: '{f:uri.resource(path: \'StyleSheet/Vendors/bootstrap.min.css\')}'
+		1: '{f:uri.resource(path: \'StyleSheet/Vendors/bootstrap.min.css\')}',
+		2: '{f:uri.resource(path: \'StyleSheet/Vendors/visualsearch-datauri.css\')}',
 		3: '{f:uri.resource(path: \'StyleSheet/Tools.css\')}'
 	}">
 
@@ -20,12 +22,17 @@
 					<f:be.buttons.csh />
 					<f:be.menus.actionMenu>
 						<f:be.menus.actionMenuItem label="Overview" controller="" action="list" />
-
+						<f:if condition="{mgn:be.security.isAdmin()}">
+							<f:be.menus.actionMenuItem label="Diff" controller="" action="difference" />
+							<f:be.menus.actionMenuItem label="Import" controller="" action="import" />
+						</f:if>
 					</f:be.menus.actionMenu>
 				</div>
 				<div class="right">
+					<f:comment>
 					<f:be.pagePath />
 					<f:be.pageInfo />
+					</f:comment>
 				</div>
 			</div>
 			<div class="typo3-docheader-buttons">

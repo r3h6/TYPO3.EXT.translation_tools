@@ -66,6 +66,10 @@ class Demand extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 */
 	protected $languages = array();
 
+	// public function __construct(){
+	// 	$this->languages = array('default');
+	// }
+
 	/**
 	 * Returns the  file
 	 *

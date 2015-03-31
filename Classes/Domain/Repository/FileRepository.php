@@ -46,13 +46,17 @@ class FileRepository {
 
 	protected function makeInstance ($identifier){
 		$extension = pathinfo($identifier, PATHINFO_EXTENSION);
-		switch ($extension) {
-			case 'xlf': $class = 'MONOGON\\TranslationTools\\Domain\\Model\\FileXliff'; break;
-			case 'xml': $class = 'MONOGON\\TranslationTools\\Domain\\Model\\FileXml'; break;
-			// case 'txt': $class = 'MONOGON\\TranslationTools\\Domain\\Model\\File\\TypoScript'; break;
-			default: throw new \InvalidArgumentException ("Could not find a class for $identifier", 1421615253);
-		}
-		return $this->objectManager->get($class, $identifier);
+		// switch ($extension) {
+		// 	case 'xlf': $className = 'MONOGON\\TranslationTools\\Domain\\Model\\FileXliff'; break;
+		// 	case 'xml': $className = 'MONOGON\\TranslationTools\\Domain\\Model\\FileXml'; break;
+		// 	// case 'txt': $className = 'MONOGON\\TranslationTools\\Domain\\Model\\File\\TypoScript'; break;
+		// 	default: throw new \InvalidArgumentException ("Could not find a class for $identifier", 1421615253);
+		// }
+		$className = 'MONOGON\\TranslationTools\\Domain\\Model\\File';
+		$file = $this->objectManager->get($className, $identifier);
+		$file->setFormat($extension);
+		$file->parse();
+		return $file;
 	}
 
 	public function findAllRaw (){
@@ -64,11 +68,11 @@ class FileRepository {
 		return $this->makeInstance($identifier);
 	}
 
-	public function save ($file){
+	public function save (\MONOGON\TranslationTools\Domain\Model\File $file){
 		$file->save();
 	}
 
-	public function backup ($file){
+	public function backup (\MONOGON\TranslationTools\Domain\Model\File $file){
 		if ($file->exists()){
 			$backupPath = FileUtility::makeBackupPath($file->getIdentifier());
 			FileUtility::createDirectory(dirname($backupPath));

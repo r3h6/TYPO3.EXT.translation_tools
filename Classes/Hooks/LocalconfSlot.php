@@ -1,5 +1,6 @@
 <?php
-namespace MONOGON\TranslationTools\Domain\Model;
+namespace MONOGON\TranslationTools\Hooks;
+use MONOGON\TranslationTools\Utility\LocalconfUtility;
 
 /***************************************************************
  *
@@ -26,13 +27,12 @@ namespace MONOGON\TranslationTools\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use \TYPO3\CMS\Core\Utility\GeneralUtility;;
-
 /**
- * FileXliff
+ *
  */
-class FileXliff extends \MONOGON\TranslationTools\Domain\Model\File {
+class LocalconfSlot {
 
-	protected $format = 'xlf';
-
+	public function update ($translation){
+		LocalconfUtility::update();
+	}
 }

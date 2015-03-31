@@ -5,7 +5,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use MONOGON\TranslationTools\Configuration\PhpIni;
 use MONOGON\TranslationTools\Exception\ExecutionTimeException;
 use MONOGON\TranslationTools\Utility\FileUtility;
-use MONOGON\TranslationTools\Utility\LocalconfUtility;
 use MONOGON\TranslationTools\Utility\TranslationUtility;
 use MONOGON\TranslationTools\Localization\LocalizationFactory;
 use MONOGON\TranslationTools\Domain\Model\Dto\Demand;
@@ -59,10 +58,7 @@ class TranslationRepository {
 	protected $propertyMapper = NULL;
 
 	/**
-	 * [$localizationFactory description]
-	 * TYPO3\CMS\Core\Localization\LocalizationFactory
-	 * \MONOGON\TranslationTools\Localization\LocalizationFactory
-	 *
+	 * Localization factory
 	 * @var \MONOGON\TranslationTools\Localization\LocalizationFactory
 	 * @inject
 	 */
@@ -77,6 +73,7 @@ class TranslationRepository {
 
 	/**
 	 * @param \MONOGON\TranslationTools\Domain\Model\Dto\Demand $demand
+	 * @return \MONOGON\TranslationTools\Persistence\TranslationResult [description]
 	 */
 	public function findDemanded(\MONOGON\TranslationTools\Domain\Model\Dto\Demand $demand = NULL) {
 		// $translations = array();
@@ -99,13 +96,14 @@ class TranslationRepository {
 		$microTimeLimit = $GLOBALS['TYPO3_MISC']['microtime_start'] + 0.75 * PhpIni::getMaxExecutionTime();
 
 		// $filtered = array();
-
+// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($languages);
 		foreach ($files as $file) {
 			if (microtime(TRUE) > $microTimeLimit) {
 				throw new ExecutionTimeException('Running out of time...', 1420919679);
 			}
 			foreach ($languages as $language) {
 				$parsedData = $this->localizationFactory->getParsedData($file, $language, $charset, LocalizationFactory::ERROR_MODE_EXCEPTION);
+				// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($parsedData);
 				foreach ($parsedData[$sourceLanguage] as $id => $value) {
 					$target = isset($parsedData[$language][$id][0]['target']) ? $parsedData[$language][$id][0]['target'] : NULL;
 					$source = $parsedData[$sourceLanguage][$id][0]['source'];
@@ -150,7 +148,7 @@ class TranslationRepository {
 						// 'file' => FileUtility::determineLanguageFile($file, $language),
 						'file' => $file,
 						'sourceLanguage' => $sourceLanguage,
-						'targetLanguage' => $language
+						'targetLanguage' => $targetLanguage,
 					));
 
 					if ($demand->getFilter() === Demand::FILTER_NONE){
@@ -183,8 +181,8 @@ class TranslationRepository {
 	 */
 	public function update(\MONOGON\TranslationTools\Domain\Model\Translation $translation) {
 		// $identifier = FileUtility::determineLanguageFile($translation->getFile(), $translation->getTargetLanguage());
-		$file = $this->fileRepository->findByIdentifier($tranlation->getFile());
-		$file->parse();
+		$file = $this->fileRepository->findByIdentifier($translation->getFile());
+		// $file->parse();
 		$file->addTranslation($translation);
 		$this->fileRepository->save($file);
 		// LocalconfUtility::update();
@@ -219,8 +217,8 @@ class TranslationRepository {
 	public function findInLocallangFiles($locallangFiles) {
 		$translations = array();
 		foreach ($locallangFiles as $path) {
-			$file = $this->fileRepository->makeInstance($path);
-			$file->parse();
+			$file = $this->fileRepository->findByIdentifier($path);
+			// $file->parse();
 			foreach ($file->getTranslations() as $translation) {
 				$translations[$translation->getHashKey()] = $translation;
 			}
@@ -232,6 +230,11 @@ class TranslationRepository {
 	 * @param $properties
 	 */
 	public function createTranslation($properties) {
+
+		if ($properties['targetLanguage'] == $properties['sourceLanguage']){
+			unset($properties['targetLanguage']);
+		}
+
 		return $this->propertyMapper->convert($properties, $this->model);
 	}
 
