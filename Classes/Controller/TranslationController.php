@@ -130,22 +130,26 @@ class TranslationController extends ActionController {
 		$this->view->assign('unusedTranslations', $unusedTranslations);
 	}
 
-	public function initializeImportAction (){
-		$this->arguments['upload']->getPropertyMappingConfiguration()->forProperty('file')->setTypeConverterOptions(
-			'MONOGON\\TranslationTools\\Property\\TypeConverter\\FileUploadConverter',
-			array(
+	// public function initializeImportAction (){
+	// 	$this->arguments['file']->getPropertyMappingConfiguration()->setTypeConverterOptions(
+	// 		'MONOGON\\TranslationTools\\Property\\TypeConverter\\FileUploadConverter',
+	// 		array(
 
-			)
-		);
-	}
+	// 		)
+	// 	);
+	// }
 
 	/**
 	 * [importAction description]
-	 * @param  \MONOGON\TranslationTools\Domain\Model\Dto\Upload $upload
+	 * @param array $file
+	 * @validate $file \MONOGON\TranslationTools\Domain\Validator\FileUploadValidator(allowedExtensions = 'csv')
 	 * @return void
 	 */
-	public function importAction (\MONOGON\TranslationTools\Domain\Model\Dto\Upload $upload = NULL){
-		$this->view->assign('upload', $upload);
+	public function importAction ($file = NULL){
+
+		$file = $this->sessionService->get('fileUpload');
+
+		$this->view->assign('file', $file);
 	}
 
 }

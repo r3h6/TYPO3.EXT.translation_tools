@@ -6,12 +6,14 @@
 
 <f:flashMessages />
 
-<f:form class="inline-form" action="import" name="upload" object="{upload}" enctype="multipart/form-data">
+<f:render partial="FormErrors" />
+
+<f:form class="inline-form" action="import" enctype="multipart/form-data">
   <div class="form-group">
-    <f:form.upload property="file" />
+    <f:form.upload name="file" />
   </div>
   <input type="submit">
 </f:form>
 
-{file}
+{file.filePath}
 </f:section>
