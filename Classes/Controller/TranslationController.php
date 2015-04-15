@@ -51,6 +51,13 @@ class TranslationController extends ActionController {
 	protected $sessionService = NULL;
 
 	/**
+	 * [$sessionService description]
+	 * @var \MONOGON\TranslationTools\Service\ImportService
+	 * @inject
+	 */
+	protected $importService = NULL;
+
+	/**
 	 * @param $view
 	 */
 	protected function initializeView($view) {
@@ -143,13 +150,27 @@ class TranslationController extends ActionController {
 	 * [importAction description]
 	 * @param array $file
 	 * @validate $file \MONOGON\TranslationTools\Domain\Validator\FileUploadValidator(allowedExtensions = 'csv')
+	 * @param int $step;
 	 * @return void
 	 */
-	public function importAction ($file = NULL){
+	public function importAction ($file = NULL, $step = 0){
 
 		$file = $this->sessionService->get('fileUpload');
 
+		switch ($step) {
+			case 1:
+				$this->importService->preview($file['filePath']);
+				break;
+
+			default:
+				# code...
+				break;
+		}
+
+
+
 		$this->view->assign('file', $file);
+		$this->view->assign('step', $step + 1);
 	}
 
 }

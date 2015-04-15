@@ -1,10 +1,19 @@
 {namespace mgn=MONOGON\TranslationTools\ViewHelpers}
 <f:layout name="Default" />
 
-
 <f:section name="content">
+	<f:flashMessages />
 
-<f:flashMessages />
+	<f:switch expression="{step}">
+		<f:case value="0"><f:render section="step0" arguments="{_all}" /></f:case>
+		<f:case value="1"><f:render section="step1" arguments="{_all}" /></f:case>
+	</f:switch>
+</f:section>
+
+<!--
+	Step 0
+-->
+<f:section name="step0">
 
 <f:render partial="FormErrors" />
 
@@ -12,8 +21,21 @@
   <div class="form-group">
     <f:form.upload name="file" />
   </div>
-  <input type="submit">
+  <f:form.hidden name="step" value="{step}" />
+  <button type="submit">Upload</button>
 </f:form>
 
 {file.filePath}
+step {step}
+</f:section>
+
+<!--
+	Step 1
+-->
+<f:section name="step1">
+
+<f:form action="import">
+
+</f:form>
+
 </f:section>

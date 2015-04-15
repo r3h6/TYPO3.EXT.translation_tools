@@ -32,9 +32,15 @@ namespace MONOGON\TranslationTools\Service;
  */
 class SessionService {
 
+	const PERSIST_USER = 'user';
+	const PERSIST_SESSION = 'session';
+	const PERSIST_RUNTIME = 'runtime';
+
 	protected $storageKey;
 
 	protected $sessionObject;
+
+	private static $runtimeData = array();
 
 	public function __construct ($storageKey = 'tx_translationtools'){
 		$this->storageKey = $storageKey;
@@ -42,29 +48,32 @@ class SessionService {
 		$this->sessionObject = (TYPO3_MODE === 'BE') ? $GLOBALS['BE_USER']: $GLOBALS['TSFE'];
 	}
 
-	public function get ($key, $persistent = FALSE){
+	public function get ($key, $persistent = SessionService::PERSIST_SESSION){
 		$sessionData = $this->getSessionData($persistent);
 		return (isset($sessionData[$key])) ? $sessionData[$key]: NULL;
 	}
 
-	public function set ($key, $data, $persistent = FALSE){
+	public function set ($key, $data, $persistent = SessionService::PERSIST_SESSION){
 		$sessionData = $this->getSessionData($persistent);
 		$sessionData[$key] = $data;
 		$this->setSessionData($sessionData, $persistent);
 	}
 
-	public function delete ($key, $persistent = FALSE){
+	public function delete ($key, $persistent = SessionService::PERSIST_SESSION){
 		$sessionData = $this->getSessionData($persistent);
 		unset($sessionData[$key]);
 		$this->setSessionData($sessionData, $persistent);
 	}
 
-	public function deleteAll ($persistent){
+	public function deleteAll ($persistent = SessionService::PERSIST_SESSION){
 		$this->setSessionData(array(), $persistent);
 	}
 
 	protected function setSessionData (array $sessionData, $persistent){
-		if ($persistent && TYPO3_MODE === 'FE'){
+		if ($persistent === SessionService::PERSIST_RUNTIME){
+			static::$runtimeData = $sessionData;
+		}
+		else if ($persistent === SessionService::PERSIST_USER && TYPO3_MODE === 'FE'){
 			$this->sessionObject->setKey('user', $data);
 			$this->sessionObject->storeSessionData();
 		} else {
@@ -73,7 +82,10 @@ class SessionService {
 	}
 
 	protected function getSessionData ($persistent){
-		if ($persistent && TYPO3_MODE === 'FE'){
+		if ($persistent === SessionService::PERSIST_RUNTIME){
+			$sessionData = static::$runtimeData;
+		}
+		else if ($persistent === SessionService::PERSIST_USER && TYPO3_MODE === 'FE'){
 			$sessionData = $this->sessionObject->getKey('user', $this->storageKey);
 		} else {
 			$sessionData = $this->sessionObject->getSessionData($this->storageKey);
