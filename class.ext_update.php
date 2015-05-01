@@ -62,7 +62,7 @@ class ext_update {
 	 * @return	string		HTML
 	 */
 	public function main() {
-		$this->installDepencies();
+		//$this->installDepencies();
 		return $this->generateOutput();
 	}
 
