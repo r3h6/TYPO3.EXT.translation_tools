@@ -1,76 +1,138 @@
+/**
+ * jquery.ajaxForm
+ * @author R3 H6 <r3h6@outlook.com
+ * Licensed under MIT
+ */
 (function ($){
 	var AjaxForm = function (el, options){
 		this.el = el;
 		this.$el = $(el);
+		this.$buttons = null;
+		this.jqXHR = null;
 		this.options = $.extend(true, {}, $.fn.ajaxForm.defaultOptions, options);
 
-		if (this.$el.data('target')){
-			this.options.target = this.$el.data('target');
-		}
-
-		this.$el.on('submit', {ajaxForm: this}, function(event){
-			event.preventDefault();
-			console.log(event);
-			$(this).ajaxForm('submit');
+		// Register submit event
+		this.$el.on('submit', function(event){
+			var ajaxForm = $(this).data('ajaxForm');
+			if (ajaxForm.isEnabled()){
+				event.preventDefault();
+				if (!event.namespace){
+					ajaxForm.send();
+				}
+			}
 		});
-
-		this.$buttons = $('input[data-loading-text]', this.$el).on('click', function (event){
-			var $el = $(this);
-			$el.data('ajaxForm.dataLoadingText', $el.val());
-			$el.val($el.attr('data-loading-text'));
-		});
-
-		//$('input[type="submit"]')
-		console.log('new AjaxForm');
-		console.log(this);
 	}
 
-	AjaxForm.prototype.submit = function (request){
-		console.log('submit');
+	AjaxForm.VERSION  = '1.0.0';
+	AjaxForm.STATUS_ABORT = 'abort';
 
-		var $loader = $('<div class="ajax-loader" />');
+	AjaxForm.prototype.isEnabled = function (){
+		return Boolean(this.$el.data('ajaxform'));
+	}
 
+	AjaxForm.prototype.getOptions = function (){
+		var options = {};
+		for (var i in $.fn.ajaxForm.defaultOptions){
+			if (this.el.hasAttribute('data-' + i)){
+				options[i] = this.$el.data(i);
+			}
+		};
+		return $.extend(true, this.options, options);
+	}
+
+	AjaxForm.prototype.send = function (){
+		if (this.jqXHR){
+			this.jqXHR.abort();
+		}
+
+		var $loader;
+		var options = this.getOptions();
 
 		var request = {
-			url: this.$el.attr('data-action'),
-			type: this.$el.attr('method'),
-			dataType: this.options.format || 'html',
+			url: options.action || this.$el.attr('action'),
+			type: options.method || this.$el.attr('method'),
+			dataType: options.format || 'html',
 			data: this.$el.serialize(),
 			context: this,
-			complete: function(xhr, textStatus){
+			complete: function(jqXHR, textStatus){
+				// Trigger custom event.
+				var e = new $.Event('complete.ajaxForm');
+				this.$el.trigger(e, [jqXHR]);
+				if (e.isDefaultPrevented()) return;
+
+				// Unfreeze form.
 				this.unfreeze();
+
+				// Reset buttons to original state.
 				this.$buttons.each(function (){
 					var $el = $(this);
-					$el.val($el.data('ajaxForm.dataLoadingText'));
+					if ($el.is('input')){
+						$el.val($el.data('ajaxForm.text'));
+					} else {
+						$el.text($el.data('ajaxForm.text'));
+					}
 				});
-				this.$el.removeClass('loading');
-				this.$el.trigger('complete.ajaxForm');
+
+				// Remove loader.
 				$loader.remove();
-				$(this.options.target).removeClass('loading');
+
+				// Remove loading classes.
+				this.$el.removeClass('loading');
+				$(options.target).removeClass('loading');
 			},
-			success: function(data, textStatus, xhr) {
-				console.log('success');
-				$(this.options.target).html(data);
-				this.$el.trigger('success.ajaxForm');
+			success: function(data, textStatus, jqXHR) {
+				// Trigger custom event.
+				var e = new $.Event('success.ajaxForm');
+				this.$el.trigger(e, [data]);
+				if (e.isDefaultPrevented()) return;
+
+				// Update content.
+				$(options.target).html(data);
+				this.$el.trigger('updated.ajaxForm', [options.target]);
 			},
-			error: function(xhr, textStatus, errorThrown) {
-				console.log('error');
-				console.log(errorThrown);
-				$(this.options.target).html(xhr.responseText);
-				this.$el.trigger('error.ajaxForm');
+			error: function(jqXHR, textStatus, errorThrown) {
+				if (textStatus !== AjaxForm.STATUS_ABORT){
+					// Trigger custom event.
+					var e = $.Event('error.ajaxForm');
+					this.$el.trigger(e, [jqXHR, textStatus, errorThrown]);
+					if (e.isDefaultPrevented()) return;
+
+					// Update content.
+					$(options.target).html(jqXHR.responseText);
+					this.$el.trigger('updated.ajaxForm', [options.target]);
+				}
 			}
 		};
 
-		if (this.options.freeze){
+		// Trigger send event.
+		var e = $.Event('send.ajaxForm');
+		this.$el.trigger(e, [request]);
+		if (e.isDefaultPrevented()) return;
+
+		// Freeze form.
+		if (options.freeze){
 			this.freeze();
 		}
 
-		$(this.options.target).addClass('loading').append($loader);
-
+		// Create loader.
+		$loader = $('<div class="ajax-loader" />');
+		$(options.target).addClass('loading').append($loader);
 		this.$el.addClass('loading');
-		this.xhr = jQuery.ajax(request);
 
-		//this.$el.trigger('submit.ajaxForm');
+		// Replace button text with loading text.
+		this.$buttons = $('[data-loading-text]', this.$el).each(function (){
+			var $el = $(this);
+			if ($el.is('input')){
+				$el.data('ajaxForm.text', $el.val());
+				$el.val($el.data('loading-text'));
+			} else {
+				$el.data('ajaxForm.text', $el.text());
+				$el.text($el.data('loading-text'));
+			}
+		});
+
+		// Send request.
+		this.jqXHR = jQuery.ajax(request);
 	}
 
 	AjaxForm.prototype.freeze = function (){
@@ -81,33 +143,37 @@
 		$(this.options.inputSelector, this.$el).prop('disabled', false);
 	}
 
-
-	AjaxForm.VERSION  = '1.0.0';
-
 	var Plugin = function (options) {
 		return this.each(function () {
 			var $this = $(this);
-			var data  = $this.data('ajaxForm');
+			if (!$this.is('form')){
+				console.error('Element is not a form!');
+			} else {
+				var data  = $this.data('ajaxForm');
 
-			if (!data) {
-				$this.data('ajaxForm', (data = new AjaxForm(this, options)));
-			}
-			if (typeof options == 'string'){
-				data[options]();
+				if (!data) {
+					$this.data('ajaxForm', (data = new AjaxForm(this, options)));
+				}
+				if (typeof options == 'string'){
+					data[options]();
+				}
 			}
 		});
 	}
 	Plugin.defaultOptions = {
-		format: 'html',
 		inputSelector: 'input, textarea, select',
-		freeze: true
+		freeze: true,
+		action: null,
+		target: null,
+		method: null,
+		format: 'html'
 	};
 
 	$.fn.ajaxForm             = Plugin
 	$.fn.ajaxForm.Constructor = AjaxForm
 
 	$(document).ready(function() {
-		$('form[data-plugin~="ajaxForm"]').ajaxForm();
+		$('form[data-ajaxform]').ajaxForm();
 	});
 
 }(jQuery));

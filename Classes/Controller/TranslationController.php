@@ -50,12 +50,6 @@ class TranslationController extends ActionController {
 	 */
 	protected $sessionService = NULL;
 
-	/**
-	 * [$sessionService description]
-	 * @var \MONOGON\TranslationTools\Service\ImportService
-	 * @inject
-	 */
-	protected $importService = NULL;
 
 	/**
 	 * @param $view
@@ -116,61 +110,5 @@ class TranslationController extends ActionController {
 		$this->addFlashMessage('Successfully updated constant ' . $translation->getId());
 	}
 
-	/**
-	 * [differenceAction description]
-	 *
-	 * @param string $path [description]
-	 * @return [type]       [description]
-	 */
-	public function differenceAction($path = NULL) {
-		$missingTranslations = array();
-		$unusedTranslations = array();
-		if ($path) {
-			$requiredTranslations = $this->translationRepository->findInSourceCode($path);
-			$locallangFiles = TranslationUtility::getLocallangFiles($requiredTranslations);
-			$locallangFiles[] = TranslationUtility::getDefaultLocallang($path);
-			$availableTranslations = $this->translationRepository->findInLocallangFiles($locallangFiles);
-			$missingTranslations = array_diff_key($requiredTranslations, $availableTranslations);
-			$unusedTranslations = array_diff_key($availableTranslations, $requiredTranslations);
-		}
-		$this->view->assign('missingTranslations', $missingTranslations);
-		$this->view->assign('unusedTranslations', $unusedTranslations);
-	}
-
-	// public function initializeImportAction (){
-	// 	$this->arguments['file']->getPropertyMappingConfiguration()->setTypeConverterOptions(
-	// 		'MONOGON\\TranslationTools\\Property\\TypeConverter\\FileUploadConverter',
-	// 		array(
-
-	// 		)
-	// 	);
-	// }
-
-	/**
-	 * [importAction description]
-	 * @param array $file
-	 * @validate $file \MONOGON\TranslationTools\Domain\Validator\FileUploadValidator(allowedExtensions = 'csv')
-	 * @param int $step;
-	 * @return void
-	 */
-	public function importAction ($file = NULL, $step = 0){
-
-		$file = $this->sessionService->get('fileUpload');
-
-		switch ($step) {
-			case 1:
-				$this->importService->preview($file['filePath']);
-				break;
-
-			default:
-				# code...
-				break;
-		}
-
-
-
-		$this->view->assign('file', $file);
-		$this->view->assign('step', $step + 1);
-	}
 
 }

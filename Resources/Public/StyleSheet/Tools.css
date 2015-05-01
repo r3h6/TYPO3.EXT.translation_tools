@@ -17,3 +17,31 @@
 .typo3-docheader-buttons {
 	box-sizing: content-box;
 }
+
+textarea.editable-editor {
+	padding: 0;
+	margin: 0;
+	border: 0;
+	border-radius: 0;
+	outline: none;
+}
+textarea.editable-editor:focus {
+	border: 0;
+	outline: none;
+	box-shadow: none;
+	border-color: transparent;
+}
+td.editable {
+	white-space: pre-wrap;
+	position: relative;
+}
+td.editable .translation-source{
+	/*position: absolute;
+	left: 0;
+	padding: 8px;
+	width: 100%;
+	z-index: 1;*/
+	border-top: 1px dotted #CCC;
+	padding-top: 3px;
+	color: #CCC;
+}

@@ -34,6 +34,7 @@ class Demand extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	const FILTER_NONE = 'none';
 	const FILTER_MISSING = 'missing';
 	const FILTER_TRANSLATED = 'translated';
+	const FILTER_CHANGED = 'changed';
 
 	/**
 	 *
@@ -171,5 +172,13 @@ class Demand extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	public function setFilter($filter){
 		$this->filter = $filter;
 		return $this;
+	}
+
+	public function getFilterOptions (){
+		return array(
+			Demand::FILTER_TRANSLATED => 'Translated',
+			Demand::FILTER_MISSING => 'Missing',
+			Demand::FILTER_CHANGED => 'Changed',
+		);
 	}
 }

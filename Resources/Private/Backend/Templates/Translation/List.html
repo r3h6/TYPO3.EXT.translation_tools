@@ -6,7 +6,7 @@
 
 <f:flashMessages />
 
-<f:form class="inline-form" action="list" name="demand" object="{demand}" additionalAttributes="{data-plugin: 'visualSearch ajaxForm', data-target: '.results'}">
+<f:form class="inline-form" action="list" name="demand" object="{demand}" additionalAttributes="{data-ajaxform: '1', data-visualsearch: '1', data-target: '.results'}">
   <div class="form-group">
     <f:form.select title="{f:translate(key:'translation_demand.file')}" property="file" options="{mgn:form.options.files()}" size="1" class="form-control" prependOptionValue="" prependOptionLabel="" />
   </div>
@@ -20,7 +20,7 @@
     <f:form.textfield title="Label" property="label" class="form-control" placeholder="label" />
   </div>
   <div class="form-group">
-    <f:form.select title="Filter" property="filter" options="{mgn:form.options.filter()}" prependOptionValue="" />
+    <f:form.select title="Filter" property="filter" options="{demand.filterOptions}" prependOptionValue="" prependOptionLabel="" />
   </div>
   <input type="submit">
 </f:form>

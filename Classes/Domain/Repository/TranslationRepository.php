@@ -105,8 +105,13 @@ class TranslationRepository {
 				$parsedData = $this->localizationFactory->getParsedData($file, $language, $charset, LocalizationFactory::ERROR_MODE_EXCEPTION);
 				// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($parsedData);
 				foreach ($parsedData[$sourceLanguage] as $id => $value) {
+					$defaultSource = $parsedData[$sourceLanguage][$id][0]['source'];
+
 					$target = isset($parsedData[$language][$id][0]['target']) ? $parsedData[$language][$id][0]['target'] : NULL;
-					$source = $parsedData[$sourceLanguage][$id][0]['source'];
+
+					$source = isset($parsedData[$language][$id][0]['source']) ? $parsedData[$language][$id][0]['source'] : NULL;
+
+
 					// Search, filter
 					if ($demand->getLabel() && stripos("{$source},{$target}", $demand->getLabel()) === FALSE) {
 						continue;
@@ -138,31 +143,33 @@ class TranslationRepository {
 					// if ($demand->getFilter() == Demand::FILTER_TRANSLATED && $target){
 					// 	$filtered[$key] = TRUE;
 					// }
+					//
+
+
+					if ($demand->getFilter() === Demand::FILTER_MISSING && $target){
+						continue;
+					}
+					if ($demand->getFilter() === Demand::FILTER_TRANSLATED && !$target){
+						continue;
+					}
+					if ($demand->getFilter() === Demand::FILTER_CHANGED && $source !== NULL && $source === $defaultSource){
+						continue;
+					}
 
 
 
 					$translation = $this->createTranslation(array(
-						'source' => $source,
+						'source' => $defaultSource,
 						'target' => $target,
 						'id' => $id,
 						// 'file' => FileUtility::determineLanguageFile($file, $language),
 						'file' => $file,
 						'sourceLanguage' => $sourceLanguage,
-						'targetLanguage' => $targetLanguage,
+						'targetLanguage' => $language,
 					));
 
-					if ($demand->getFilter() === Demand::FILTER_NONE){
-						$translations->addTranslation($translation);
-						continue;
-					}
-					if ($demand->getFilter() === Demand::FILTER_MISSING && !$target){
-						$translations->addTranslation($translation);
-						continue;
-					}
-					if ($demand->getFilter() === Demand::FILTER_TRANSLATED && $target){
-						$translations->addTranslation($translation);
-						continue;
-					}
+					$translations->addTranslation($translation);
+
 
 				}
 			}
@@ -189,42 +196,6 @@ class TranslationRepository {
 		$this->emitAfterUpdateSignal($translation);
 	}
 
-	/**
-	 * [findInSourceCode description]
-	 *
-	 * @param string $path [description]
-	 * @return array       [description]
-	 */
-	public function findInSourceCode($path) {
-
-		// @todo move to fileRepository
-		//$files = GeneralUtility::getAllFilesAndFoldersInPath(array(), $path, 'xhtml,html,xml,json,txt,md,vcf,vcard,php', FALSE, 99, 'Tests|Locallang|Configuration');
-		$files = $this->fileRepository->findInSourceCode($path);
-
-		$translations = array();
-		foreach ($files as $file) {
-			//$translations = array_merge($translations, TranslationUtility::extractFromFile($file));
-			foreach (TranslationUtility::extractFromFile($file) as $translation) {
-				$translations[$translation->getHashKey()] = $translation;
-			}
-		}
-		return $translations;
-	}
-
-	/**
-	 * @param $locallangFiles
-	 */
-	public function findInLocallangFiles($locallangFiles) {
-		$translations = array();
-		foreach ($locallangFiles as $path) {
-			$file = $this->fileRepository->findByIdentifier($path);
-			// $file->parse();
-			foreach ($file->getTranslations() as $translation) {
-				$translations[$translation->getHashKey()] = $translation;
-			}
-		}
-		return $translations;
-	}
 
 	/**
 	 * @param $properties

@@ -1,66 +1,59 @@
 (function ($){
-	var Editable = function (el, options){
-		this.el = el;
-		this.$el = $(el);
-		this.options = $.extend(true, {}, $.fn.editable.defaultOptions, options);
-
-		//$('input[type="submit"]')
-		// console.log('new Editable');
-		// console.log(this);
-
-		// if (this.options.selector){
-			this.$el.on('click', this.options.selector, this.create);
-		// } else {
-		// 	this.$el.on('click', this.create);
-		// }
+	/**
+	 * @see https://developer.mozilla.org/en/docs/Web/API/HTMLTextAreaElement#Autogrowing_textarea_example
+	 */
+	function autoGrow (oField) {
+		if (oField.scrollHeight > oField.clientHeight) {
+			oField.style.height = oField.scrollHeight + "px";
+		}
 	}
 
-	Editable.prototype.create = function (){
-		// var w = this.$el.width();
-		// var h = this.$el.height();
+	$.fn.editable = function (){
+		return $(this).on('click', '.editable', function (event){
+			var $el = $(this);
+			if ($el.hasClass('edit')) return null;
+			$el.addClass('edit');
 
-		// this.value = this.$el.text();
-		var $el = $(this);
-		var content = $el.text();
+			var content = $el.html();
 
-		var $editor = $('<textarea />').val(content).css({width: '100%', height: '100%'});
-		$el.html($editor);
+			var $editor = $('<textarea class="editable-editor" />')
+				.val(content)
+				.css({width: '100%', height: $el.innerHeight() - 16})
+				.on('blur', function (event){
+					var value = $(this).val();
+					$el.removeClass('edit').html(value);
+					if (value != content){
+						$el.trigger('change.editable', [value]);
+					}
+				})
+				.on('focus keyup', function (event){
+					autoGrow(this);
+				})
+				.on('keyup', function (event){
+					var index = $el.parent().children().index($el);
+					switch(event.which){
+						case 37: // left
+							$el.prev().trigger('click');
+							break;
 
+						case 38: // up
+							$el.closest('tr').prev().children(':eq(' + index + ')').trigger('click');
+							break;
 
-		//this.$el.trigger('submit.editable');
-	}
+						case 39: // right
+							$el.next().trigger('click');
+							break;
 
-	Editable.prototype.destroy = function (request){
+						case 40: // down
+							$el.closest('tr').next().children(':eq(' + index + ')').trigger('click');
+							break;
+					}
+				});
 
-		//this.$el.trigger('submit.editable');
-	}
+			$el.html($editor);
+			$editor.focus();
 
-
-
-	Editable.VERSION  = '1.0.0';
-
-	var Plugin = function (options) {
-		return this.each(function () {
-			var $this = $(this);
-			var data  = $this.data('editable');
-
-			if (!data) {
-				$this.data('editable', (data = new Editable(this, options)));
-			}
-			if (typeof options == 'string'){
-				data[options]();
-			}
+			$el.trigger('init.editable', [$editor]);
 		});
-	}
-	Plugin.defaultOptions = {
-		selector: '.editable'
 	};
-
-	$.fn.editable             = Plugin
-	$.fn.editable.Constructor = Editable
-
-	// $(document).ready(function() {
-	// 	$('form[data-plugin~="editable"]').editable();
-	// });
-
 }(jQuery));

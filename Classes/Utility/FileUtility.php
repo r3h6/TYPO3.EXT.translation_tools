@@ -131,6 +131,18 @@ class FileUtility {
 		$extensionRepository = $objectManager->get('TYPO3\\CMS\\Extensionmanager\\Domain\\Repository\\ExtensionRepository');
 		$isInTER = (boolean) $extensionRepository->countByExtensionKey($extKey);
 
+		// TYPO3\CMS\Lang\Utility\Connection\Ter
+		// fetchTranslationStatus($extensionKey, $mirrorUrl)
+
+		// \TYPO3\CMS\Extensionmanager\Utility\Repository\Helper
+		// protected function getMirrorUrl($extensionKey) {
+	// 	$mirrorUrl = $this->repositoryHelper->getMirrors()->getMirrorUrl();
+
+	// 	$mirrorUrl = $this->emitPostProcessMirrorUrlSignal($extensionKey, $mirrorUrl);
+
+	// 	return $mirrorUrl;
+	// }
+
 		// Overwrite
 		if (file_exists(GeneralUtility::getFileAbsFileName($targetPath))){
 			return static::makeOverwritePath($sourcePath, $language);
