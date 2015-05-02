@@ -5,10 +5,11 @@
 		1: '{f:uri.resource(path: \'JavaScript/Vendors/bootstrap.min.js\')}',
 		2: '{f:uri.resource(path: \'JavaScript/Vendors/dependencies.js\')}',
 		3: '{f:uri.resource(path: \'JavaScript/Vendors/visualsearch.js\')}',
-		4: '{f:uri.resource(path: \'JavaScript/jquery.visualSearch.js\')}',
-		5: '{f:uri.resource(path: \'JavaScript/jquery.ajaxForm.js\')}',
-		6: '{f:uri.resource(path: \'JavaScript/jquery.editable.js\')}',
-		7: '{f:uri.resource(path: \'JavaScript/Ext.js\')}'
+		4: '{f:uri.resource(path: \'JavaScript/Vendors/dropzone.js\')}',
+		5: '{f:uri.resource(path: \'JavaScript/jquery.visualSearch.js\')}',
+		6: '{f:uri.resource(path: \'JavaScript/jquery.ajaxForm.js\')}',
+		7: '{f:uri.resource(path: \'JavaScript/jquery.editable.js\')}',
+		8: '{f:uri.resource(path: \'JavaScript/Ext.js\')}'
 	}"
 	includeCssFiles="{
 		1: '{f:uri.resource(path: \'StyleSheet/Vendors/bootstrap.min.css\')}',
@@ -27,7 +28,16 @@
 			</div>
 			<div class="typo3-docheader-buttons">
 				<div class="left">
+					<f:link.action class="btn-export-csv" format="csv">
+						<span title="Export CSV" class="t3-icon t3-icon-actions t3-icon-actions-edit t3-icon-document-export-csv">&nbsp;</span>
+					</f:link.action>
+					<f:link.action class="btn-import-csv">
+						<span title="Import CSV" class="t3-icon t3-icon-actions t3-icon-actions-edit t3-icon-edit-upload">&nbsp;</span>
+					</f:link.action>
 
+					<f:form class="hidden" name="import" action="import" enctype="multipart/form-data">
+						<f:form.upload name="file" />
+					</f:form>
 				</div>
 				<div class="right">
 					<f:be.buttons.shortcut />
@@ -38,6 +48,9 @@
 		<div id="typo3-docbody">
 			<div id="typo3-inner-docbody">
 				<f:flashMessages renderMode="div" />
+
+
+
 				<f:render section="content" />
 			</div>
 		</div>

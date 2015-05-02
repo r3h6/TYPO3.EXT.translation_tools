@@ -44,19 +44,15 @@ class FileRepository {
 	 */
 	protected $objectManager;
 
-	protected function makeInstance ($identifier){
-		$extension = pathinfo($identifier, PATHINFO_EXTENSION);
+	protected function makeInstance ($path){
+		// $extension = pathinfo($path, PATHINFO_EXTENSION);
 		// switch ($extension) {
 		// 	case 'xlf': $className = 'MONOGON\\TranslationTools\\Domain\\Model\\FileXliff'; break;
-		// 	case 'xml': $className = 'MONOGON\\TranslationTools\\Domain\\Model\\FileXml'; break;
-		// 	// case 'txt': $className = 'MONOGON\\TranslationTools\\Domain\\Model\\File\\TypoScript'; break;
-		// 	default: throw new \InvalidArgumentException ("Could not find a class for $identifier", 1421615253);
+		// 	case 'xml': $className = 'MONOGON\\TranslationTools\\Domain\\Model\\FileT3locallang'; break;
+		// 	default: throw new \InvalidArgumentException ("Could not find a class for $path", 1421615253);
 		// }
-		$className = 'MONOGON\\TranslationTools\\Domain\\Model\\File';
-		$file = $this->objectManager->get($className, $identifier);
-		$file->setFormat($extension);
-		$file->parse();
-		return $file;
+		//
+		return $this->objectManager->get('MONOGON\\TranslationTools\\Domain\\Model\\File', $path);
 	}
 
 	public function findAllRaw (){
@@ -72,20 +68,20 @@ class FileRepository {
 		$file->save();
 	}
 
-	public function backup (\MONOGON\TranslationTools\Domain\Model\File $file){
-		if ($file->exists()){
-			$backupPath = FileUtility::makeBackupPath($file->getIdentifier());
-			FileUtility::createDirectory(dirname($backupPath));
-			$file->copy($backupPath);
-		}
-	}
+	// public function backup (\MONOGON\TranslationTools\Domain\Model\File $file){
+	// 	if ($file->exists()){
+	// 		$backupPath = FileUtility::makeBackupPath($file->getIdentifier());
+	// 		FileUtility::createDirectory(dirname($backupPath));
+	// 		$file->copy($backupPath);
+	// 	}
+	// }
 
-	public function findSourceCodeFiles ($path){
-		$path = GeneralUtility::getFileAbsFileName(
-			FileUtility::trailingSlash($path)
-		);
-		return GeneralUtility::getAllFilesAndFoldersInPath(array(), $path, 'xhtml,html,xml,json,txt,md,vcf,vcard,php', FALSE, 99, 'Tests|Locallang|Configuration');
-	}
+	// public function findSourceCodeFiles ($path){
+	// 	$path = GeneralUtility::getFileAbsFileName(
+	// 		FileUtility::trailingSlash($path)
+	// 	);
+	// 	return GeneralUtility::getAllFilesAndFoldersInPath(array(), $path, 'xhtml,html,xml,json,txt,md,vcf,vcard,php', FALSE, 99, 'Tests|Locallang|Configuration');
+	// }
 
 	// public function analyseTranslations ($path){
 	// 	$path = GeneralUtility::getFileAbsFileName($path);

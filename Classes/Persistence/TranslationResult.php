@@ -49,7 +49,7 @@ class TranslationResult implements \Countable, \Iterator, \ArrayAccess {
 		if (!isset($this->data[$offset])){
 			$this->data[$offset] = array(
 				// 'units' => array(),
-				'file' => $translation->getFile(),
+				'file' => $translation->getSourceFile(),
 				'id' => $translation->getId(),
 			);
 		}

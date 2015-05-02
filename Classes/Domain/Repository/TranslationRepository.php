@@ -82,11 +82,12 @@ class TranslationRepository {
 		if (!$demand) {
 			return $translations;
 		}
+		if (!$demand->getFiles() && !$demand->getId() && !$demand->getLabel()){
+			return $translations;
+		}
 		// Load files¦
-		if ($file = $demand->getFile()) {
-			// $files = array($this->fileRepository->findByIdentifier($file));
-			$files = array($file);
-		} else {
+		$files = $demand->getFiles();
+		if (empty($files)){
 			$files = $this->fileRepository->findAllRaw();
 		}
 		//$localizationFactory = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Localization\\LocalizationFactory');
@@ -156,17 +157,22 @@ class TranslationRepository {
 						continue;
 					}
 
-
-
-					$translation = $this->createTranslation(array(
-						'source' => $defaultSource,
-						'target' => $target,
-						'id' => $id,
-						// 'file' => FileUtility::determineLanguageFile($file, $language),
-						'file' => $file,
-						'sourceLanguage' => $sourceLanguage,
-						'targetLanguage' => $language,
-					));
+					$translation = GeneralUtility::makeInstance('MONOGON\\TranslationTools\\Domain\\Model\\Translation');
+					$translation->setId($id)
+						->setSource($source)
+						->setTarget($target)
+						->setSourceFile($file)
+						->setSourceLanguage($sourceLanguage)
+						->setTargetLanguage($language);
+					// $translation = $this->createTranslation(array(
+					// 	'source' => $defaultSource,
+					// 	'target' => $target,
+					// 	'id' => $id,
+					// 	'sourceFile' => $file,
+					// 	'targetFile' => FileUtility::determineLanguageFile($file, $language),
+					// 	'sourceLanguage' => $sourceLanguage,
+					// 	'targetLanguage' => $language,
+					// ));
 
 					$translations->addTranslation($translation);
 
@@ -188,7 +194,11 @@ class TranslationRepository {
 	 */
 	public function update(\MONOGON\TranslationTools\Domain\Model\Translation $translation) {
 		// $identifier = FileUtility::determineLanguageFile($translation->getFile(), $translation->getTargetLanguage());
-		$file = $this->fileRepository->findByIdentifier($translation->getFile());
+
+		$path = FileUtility::determineLanguageFile($translation->getFile(), $translation->getTargetLanguage());
+
+
+		$file = $this->fileRepository->findByIdentifier($path);
 		// $file->parse();
 		$file->addTranslation($translation);
 		$this->fileRepository->save($file);
@@ -200,14 +210,14 @@ class TranslationRepository {
 	/**
 	 * @param $properties
 	 */
-	public function createTranslation($properties) {
+	// public function createTranslation($properties) {
 
-		if ($properties['targetLanguage'] == $properties['sourceLanguage']){
-			unset($properties['targetLanguage']);
-		}
+	// 	if ($properties['targetLanguage'] == $properties['sourceLanguage']){
+	// 		unset($properties['targetLanguage']);
+	// 	}
 
-		return $this->propertyMapper->convert($properties, $this->model);
-	}
+	// 	return $this->propertyMapper->convert($properties, $this->model);
+	// }
 
 	protected function emitAfterUpdateSignal (\MONOGON\TranslationTools\Domain\Model\Translation $translation){
 		$this->signalSlotDispatcher->dispatch(__CLASS__, 'afterUpdate', array($translation));

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="{sourceLanguage}" {f:if(condition: targetLanguage, then: 'target-language="{targetLanguage}"')} datatype="plaintext" original="messages" date="{f:format.date(format: 'c', date: 'now')}" product-name="translation_tools">
+	<file source-language="{sourceLanguage}" {f:if(condition: targetLanguage, then: 'target-language="{targetLanguage}"')} datatype="plaintext" original="messages" date="{f:format.date(format: 'c', date: 'now')}" product-name="{extensionKey}">
 		<header>
 			<generator>TranslationTools</generator>
 		</header>
 		<body>
 			<f:for each="{translations}" as="translation">
 			<trans-unit id="{translation.id}" xml:space="preserve">
-				<f:if condition="{targetLanguage}">
+				<f:if condition="{translation.isSource}">
 					<f:then>
-						<source><f:format.htmlspecialchars>{translation.source}</f:format.htmlspecialchars></source>
-						<target><f:format.htmlspecialchars>{translation.target}</f:format.htmlspecialchars></target>
+						<source><f:format.htmlspecialchars>{translation.target}</f:format.htmlspecialchars></source>
 					</f:then>
 					<f:else>
 						<source><f:format.htmlspecialchars>{translation.source}</f:format.htmlspecialchars></source>
+						<target><f:format.htmlspecialchars>{translation.target}</f:format.htmlspecialchars></target>
 					</f:else>
 				</f:if>
 			</trans-unit>

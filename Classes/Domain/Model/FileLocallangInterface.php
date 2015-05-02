@@ -1,12 +1,11 @@
 <?php
-namespace MONOGON\TranslationTools\ViewHelpers\Form\Options;
-use MONOGON\TranslationTools\Domain\Model\Dto\Demand;
+namespace MONOGON\TranslationTools\Domain\Model;
 
 /***************************************************************
  *
  *  Copyright notice
  *
- *  (c) 2014 R3 H6 <r3h6@outlook.com>
+ *  (c) 2015 R3 H6 <r3h6@outlook.com>
  *
  *  All rights reserved
  *
@@ -27,21 +26,10 @@ use MONOGON\TranslationTools\Domain\Model\Dto\Demand;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use MONOGON\TranslationTools\Utility\FileUtility;
-
 /**
- * FilterViewHelper
+ * FileLocallangInterface
  */
-class FilterViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
+interface FileLocallangInterface {
 
-	/**
-	 * @return array Options
-	 */
-	public function render (){
-		return array(
-			Demand::FILTER_TRANSLATED => 'Translated',
-			Demand::FILTER_MISSING => 'Missing',
-		);
-	}
-
+	public function addTranslation (\MONOGON\TranslationTools\Domain\Model\Translation $translation);
 }

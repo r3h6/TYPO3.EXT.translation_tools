@@ -16,7 +16,7 @@ if (TYPO3_MODE === 'BE') {
 		'tools',	// Submodule key
 		'',						// Position
 		array(
-			'Translation' => 'list, update, difference, import',
+			'Translation' => 'list, update, import',
 
 		),
 		array(

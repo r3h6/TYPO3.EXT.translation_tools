@@ -181,8 +181,8 @@ class FileUtility {
 	}
 
 	public static function extractLanguageFromPath ($path){
-		if (preg_match('#/([a-z]{2,})\.locallang#i', $path, $matches)){
-			return $matches[1];
+		if (preg_match('#(/|^)([a-z]{2,})\.locallang#i', $path, $matches)){
+			return $matches[2];
 		}
 		return NULL;
 	}

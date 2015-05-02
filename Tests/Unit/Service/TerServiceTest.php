@@ -1,6 +1,6 @@
 <?php
 
-namespace MONOGON\TranslationTools\Tests\Unit\Domain\Model;
+namespace MONOGON\TranslationTools\Tests\Unit\Service;
 
 /***************************************************************
  *  Copyright notice
@@ -29,22 +29,19 @@ namespace MONOGON\TranslationTools\Tests\Unit\Domain\Model;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Test case for class \MONOGON\TranslationTools\Domain\Model\File.
+ * Test case for class \MONOGON\TranslationTools\Service\TerService.
  *
  * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  * @author R3 H6 <r3h6@outlook.com>
  */
-class FileTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
+class TerServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 
-	/**
-	 * @var \MONOGON\TranslationTools\Domain\Model\File
-	 */
-	protected $subject = NULL;
+	protected $subject;
 
 	protected function setUp() {
-		// $this->subject = $this->getMock('MONOGON\\TranslationTools\\Domain\\Model\\File', array(), array(), '', FALSE);
+		$this->subject = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager')->get('MONOGON\\TranslationTools\\Service\\TerService');
 	}
 
 	protected function tearDown() {
@@ -53,28 +50,22 @@ class FileTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 
 	/**
 	 * @test
+	 * @dataProvider fetchTranslationStatusProvider
 	 */
-	public function exists (){
-		$this->subject = $this->getSubject('EXT:translation_tools/Tests/Resources/Private/Language/de.locallang.xlf');
-		$this->assertSame(
-			TRUE,
-			$this->subject->exists()
+	public function fetchTranslationStatus ($extensionKey, $expected){
+		$this->assertEquals(
+			$expected,
+			is_array($this->subject->fetchTranslationStatus($extensionKey))
+		);
+
+	}
+
+	public function fetchTranslationStatusProvider (){
+		return array(
+			array('news', TRUE),
+			array('not_existing_extension', FALSE),
 		);
 	}
 
-	/**
-	 * @test
-	 */
-	public function getTranslations (){
-		$this->subject = $this->getSubject('EXT:translation_tools/Tests/Resources/Private/Language/de.locallang.xlf');
-		$this->assertCount(
-			3,
-			$this->subject->getTranslations()
-		);
-	}
 
-
-	protected function getSubject ($path){
-		return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Object\ObjectManager')->get('MONOGON\\TranslationTools\\Domain\\Model\\File', $path);
-	}
 }

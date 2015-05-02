@@ -36,51 +36,10 @@ use MONOGON\TranslationTools\Localization\LocalizationFactory;
 class File {
 
 	/**
-	 * Extension key
-	 */
-	const EXT_KEY = 'translation_tools';
-
-	/**
 	 * Translations
 	 * @var array
 	 */
 	protected $translations = array();
-
-	/**
-	 * Identifier
-	 * @var string
-	 */
-	protected $identifier = '';
-
-	/**
-	 * Content
-	 * @var string
-	 */
-	protected $content = '';
-
-	/**
-	 * Format
-	 * @var null
-	 */
-	protected $format = NULL;
-
-	/**
-	 * Target language
-	 * @var string
-	 */
-	protected $targetLanguage = '';
-
-	/**
-	 * Source language
-	 * @var string
-	 */
-	protected $sourceLanguage = 'en';
-
-	/**
-	 * Charset
-	 * @var string
-	 */
-	protected $charset = 'utf8';
 
 	/**
 	 * [$localizationFactory description]
@@ -90,12 +49,10 @@ class File {
 	protected $localizationFactory = NULL;
 
 	/**
-	 * translationRepository
-	 *
-	 * @var \MONOGON\TranslationTools\Domain\Repository\TranslationRepository
-	 * @inject
+	 * [$path description]
+	 * @var string
 	 */
-	protected $translationRepository = NULL;
+	protected $path = '';
 
 	/**
 	 * [$view description]
@@ -104,131 +61,26 @@ class File {
 	 */
 	protected $view;
 
-	/**
-	 * [$configurationManager description]
-	 * @var TYPO3\CMS\Extbase\Configuration\ConfigurationManager
-	 * @inject
-	 */
-	protected $configurationManager;
+	protected $charset = 'utf8';
+	protected $targetLanguage;
+	protected $sourceLanguage = 'en';
+	protected $extensionKey;
 
-	public function __construct ($identifier = NULL){
-		// $this->identifier = $identifier;
-		$this->setIdentifier($identifier);
+	public function __construct ($path = NULL){
+		$this->path = $path;
+		$this->targetLanguage = FileUtility::extractLanguageFromPath($path);
+		$this->extensionKey = FileUtility::extractExtKey($path);
 	}
 
-	/**
-	 * Called after inject depencies.
-	 * @see http://typo3.org/api/typo3cms/_container_8php_source.html#l00149
-	 * @return [type] [description]
-	 */
 	public function initializeObject (){
-
-
-
-		// $this->parse();
-		// $extbaseFrameworkConfiguration = $this->configurationManager->getConfiguration(\TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT);
-		// $templateRootPath = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($extbaseFrameworkConfiguration['view']['templateRootPath']);
-		// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($extbaseFrameworkConfiguration, __CLASS__); exit;
-
+		$this->parse();
 	}
 
 	/**
-	 * Returns the format
+	 * Returns the path
 	 *
-	 * @return string $format
+	 * @return [type] $path
 	 */
-	public function getFormat(){
-		return $this->format;
-	}
-
-	/**
-	 * Sets the format
-	 *
-	 * @param string $format
-	 * @return object $this
-	 */
-	public function setFormat($format){
-		$this->format = $format;
-
-		$extPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath(self::EXT_KEY);
-		$templateRootPath = $extPath . 'Resources/Private/Backend/Templates/File/Render.' . $this->format;
-
-		$this->view->setTemplatePathAndFilename($templateRootPath);
-		$this->view->setFormat($this->format);
-
-		return $this;
-	}
-
-	/**
-	 * Returns the sourceLanguage
-	 *
-	 * @return string $sourceLanguage
-	 */
-	public function getSourceLanguage(){
-		return $this->sourceLanguage;
-	}
-
-	/**
-	 * Sets the sourceLanguage
-	 *
-	 * @param string $sourceLanguage
-	 * @return object $this
-	 */
-	public function setSourceLanguage($sourceLanguage){
-		$this->sourceLanguage = $sourceLanguage;
-		return $this;
-	}
-
-	/**
-	 * Returns the targetLanguage
-	 *
-	 * @return string $targetLanguage
-	 */
-	public function getTargetLanguage(){
-		return $this->targetLanguage;
-	}
-
-	/**
-	 * Sets the targetLanguage
-	 *
-	 * @param string $targetLanguage
-	 * @return object $this
-	 */
-	// public function setTargetLanguage($targetLanguage){
-	// 	$this->targetLanguage = $targetLanguage;
-	// 	return $this;
-	// }
-
-	/**
-	 * Returns the identifier
-	 *
-	 * @return string $identifier
-	 */
-	public function getIdentifier(){
-		return $this->identifier;
-	}
-
-	/**
-	 * Sets the identifier
-	 *
-	 * @param string $identifier
-	 * @return object $this
-	 */
-	public function setIdentifier($identifier){
-		$this->identifier = $identifier;
-
-		$language = FileUtility::extractLanguageFromPath($identifier);
-		if ($language){
-			$this->targetLanguage = $language;
-		}
-
-		return $this;
-	}
-
-	public function getContent (){
-		return $this->content;
-	}
-
 	public function addTranslation (\MONOGON\TranslationTools\Domain\Model\Translation $translation){
 		$this->translations[$translation->getId()] = $translation;
 		return $this;
@@ -238,43 +90,53 @@ class File {
 		return $this->translations;
 	}
 
-	public function removeTranslation (\MONOGON\TranslationTools\Domain\Model\Translation $translation){
-
+	public function getPath(){
+		return $this->path;
 	}
-	// abstract protected function parse ();
+
 	public function parse (){
 		$sourceLanguage = 'default';
-		//$translationRepository = GeneralUtility::makeInstance('MONOGON\\TranslationTools\\Domain\\Repository\\TranslationRepository');
-		// $localizationFactory = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Localization\\LocalizationFactory');
-		$parsedData = $this->localizationFactory->getParsedData($this->identifier, $this->targetLanguage, $this->charset, LocalizationFactory::ERROR_MODE_EXCEPTION);
+				$sourceLanguage = 'default';
 
-		$targetLanguage = ($this->targetLanguage) ? $this->targetLanguage: 'default';
+		$parsedData = $this->localizationFactory->getParsedData($this->path, $this->targetLanguage, $this->charset, LocalizationFactory::ERROR_MODE_EXCEPTION);
 
 		foreach ($parsedData[$sourceLanguage] as $id => $value) {
 			$target = isset($parsedData[$targetLanguage][$id][0]['target']) ? $parsedData[$targetLanguage][$id][0]['target'] : NULL;
 			$source = $parsedData[$sourceLanguage][$id][0]['source'];
-			$this->translations[$id] = $this->translationRepository->createTranslation(array(
-				'source' => $source,
-				'target' => $target,
-				'id' => $id,
-				'file' => $this->identifier,
-				'sourceLanguage' => $this->sourceLanguage,
-				'targetLanguage' => $targetLanguage
-			));
+
+			$translation = GeneralUtility::makeInstance('MONOGON\\TranslationTools\\Domain\\Model\\Translation');
+			$translation->setId($id)
+				->setSource($source)
+				->setTarget($target)
+				->setSourceLanguage($this->sourceLanguage)
+				->setTargetLanguage($this->targetLanguage);
+
+			$this->translations[$id] = $translation;
 		}
 	}
 
-	public function render (){
+	public function __toString (){
 		ksort($this->translations);
+
+		$format = pathinfo($this->path, PATHINFO_EXTENSION);
+
+		$extPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath(self::EXT_KEY);
+		$templateRootPath = $extPath . 'Resources/Private/Backend/Templates/File/Render.' . $format;
+
+		$this->view->setTemplatePathAndFilename($templateRootPath);
+		$this->view->setFormat($format);
+
+		$this->view->assign('extensionKey', $this->extensionKey);
 		$this->view->assign('sourceLanguage', $this->sourceLanguage);
 		$this->view->assign('targetLanguage', $this->targetLanguage);
 		$this->view->assign('translations', $this->translations);
-		$this->content = $this->view->render();
-		return $this;
+
+		return $this->view->render();
 	}
 
 	public function save (){
-		$this->saveAs($this->identifier, TRUE);
+		$this->saveAs($this->path, TRUE);
+		return $this;
 	}
 
 	public function saveAs ($path, $overwrite = FALSE){
@@ -288,21 +150,18 @@ class File {
 			throw new \Exception("Not allowed to overwrite file '$path'!", 1421790718);
 		}
 
-		// if (!$this->content){
-		$this->render();
-		// }
-
 		FileUtility::createDirectory(dirname($path));
 
-		if (!GeneralUtility::writeFile($path, $this->content)){
+		if (!GeneralUtility::writeFile($path, $this->__toString())){
 			throw new \Exception("Could not save file '$path'!", 1422005075);
 		}
 
-		$this->identifier = FileUtility::getRelativePath($path);
+		$this->path = FileUtility::getRelativePath($path);
+		return $this;
 	}
 
 	public function getAbsolutePath (){
-		return GeneralUtility::getFileAbsFileName($this->identifier);
+		return GeneralUtility::getFileAbsFileName($this->path);
 	}
 
 	public function exists (){

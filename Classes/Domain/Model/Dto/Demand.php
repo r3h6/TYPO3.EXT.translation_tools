@@ -26,6 +26,8 @@ namespace MONOGON\TranslationTools\Domain\Model\Dto;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use MONOGON\TranslationTools\Utility\FileUtility;
+
 /**
  * Translation
  */
@@ -38,9 +40,9 @@ class Demand extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
 	/**
 	 *
-	 * @var string
+	 * @var array
 	 */
-	protected $file;
+	protected $files = array();
 
 	/**
 	 *
@@ -67,27 +69,29 @@ class Demand extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 */
 	protected $languages = array();
 
-	// public function __construct(){
-	// 	$this->languages = array('default');
-	// }
+	/**
+	 * @var MONOGON\TranslationTools\Domain\Repository\SystemLanguageRepository
+	 * @inject
+	 */
+	protected $systemLanguageRepository = NULL;
 
 	/**
-	 * Returns the  file
+	 * Returns the  files
 	 *
-	 * @return string $file
+	 * @return string $files
 	 */
-	public function getFile(){
-		return $this->file;
+	public function getFiles(){
+		return $this->files;
 	}
 
 	/**
-	 * Sets the file
+	 * Sets the files
 	 *
-	 * @param string $file
+	 * @param string $files
 	 * @return object $this
 	 */
-	public function setFile($file){
-		$this->file = $file;
+	public function setFiles($files){
+		$this->files = $files;
 		return $this;
 	}
 
@@ -180,5 +184,27 @@ class Demand extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 			Demand::FILTER_MISSING => 'Missing',
 			Demand::FILTER_CHANGED => 'Changed',
 		);
+	}
+
+	public function getLanguageOptions (){
+		$options = array();
+		$systemLanguages = $this->systemLanguageRepository->findAllAccessableSystemLanguages();
+
+		foreach ($systemLanguages as $systemLanguage) {
+			$options[$systemLanguage->getFlag()] = $systemLanguage->getTitle();
+		}
+
+		return $options;
+	}
+
+	public function getFileOptions (){
+		$options = array();
+		$files = FileUtility::getLocallangFiles();
+
+		foreach ($files as $file) {
+			$options[$file] = $file;
+		}
+
+		return $options;
 	}
 }

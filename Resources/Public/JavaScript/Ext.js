@@ -6,18 +6,18 @@ jQuery(document).ready(function($) {
 
 
 		var id = $el.data('id');
-		var file = $el.data('file');
+		var targetFile = $el.data('target-file');
 		var targetLanguage = $el.data('target-language');
 		var source = $el.data('source');
 		var target = value;
 
-		if (!targetLanguage){
-			source = value;
-			target = '';
-		}
+		// if (!targetLanguage){
+		// 	source = value;
+		// 	target = '';
+		// }
 
 		$('[name$="[id]"]', $form).val(id);
-		$('[name$="[file]"]', $form).val(file);
+		$('[name$="[targetFile]"]', $form).val(targetFile);
 		$('[name$="[targetLanguage]"]', $form).val(targetLanguage);
 		$('[name$="[source]"]', $form).val(source);
 		$('[name$="[target]"]', $form).val(target);
@@ -54,14 +54,25 @@ jQuery(document).ready(function($) {
 	// 	//
 	// });
 
-	$('.btn-csv').on('click', function (event){
+	$('.btn-export-csv').on('click', function (event){
 		event.preventDefault();
 		var data = $('form[name="demand"]').serialize();
-		console.log(data);
-
 		var uri = $(this).attr('href') + '&' + data;
-
 		window.location = uri;
+	});
+
+	var $importForm = $('form[name="import"]');
+	var $inputFile = $('input[name$="[file]"]', $importForm);
+
+	$('.btn-import-csv').on('click', function (event){
+		event.preventDefault();
+		$inputFile.trigger('click');
+	});
+
+	$inputFile.on('change', function (){
+		if (this.value != ''){
+			$importForm.trigger('submit');
+		}
 	});
 
 });

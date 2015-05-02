@@ -4,14 +4,12 @@
 
 <f:section name="content">
 
-<f:flashMessages />
-
 <f:form class="inline-form" action="list" name="demand" object="{demand}" additionalAttributes="{data-ajaxform: '1', data-visualsearch: '1', data-target: '.results'}">
   <div class="form-group">
-    <f:form.select title="{f:translate(key:'translation_demand.file')}" property="file" options="{mgn:form.options.files()}" size="1" class="form-control" prependOptionValue="" prependOptionLabel="" />
+    <f:form.select title="{f:translate(key:'translation_demand.file')}" multiple="multiple" property="files" options="{demand.fileOptions}" class="form-control" multiple="multiple" />
   </div>
   <div class="form-group">
-    <f:form.select title="Language" class="form-control" multiple="multiple" property="languages" options="{mgn:form.options.systemLanguages()}" />
+    <f:form.select title="Language" class="form-control" multiple="multiple" property="languages" options="{demand.languageOptions}" />
   </div>
   <div class="form-group">
     <f:form.textfield title="ID" property="id" class="form-control" placeholder="id" />
@@ -31,11 +29,9 @@
   </f:if>
 </div>
 
-<f:link.action format="csv" class="btn btn-default btn-csv">Download CSV</f:link.action>
-
 <f:form class="hidden" name="translation" action="update">
   <f:form.hidden property="id" />
-  <f:form.hidden property="file" />
+  <f:form.hidden property="targetFile" />
   <f:form.hidden property="targetLanguage" />
   <f:form.hidden property="source" />
   <f:form.hidden property="target" />
@@ -46,7 +42,7 @@
 
 <f:section name="ajax">
 
-<f:flashMessages />
+<f:flashMessages renderMode="div" />
 <f:render partial="FormErrors" />
 
 <f:if condition="{translations}">
@@ -69,7 +65,7 @@
               <mgn:variable.access var="{translationGroup}" propertyName="{language}" as="translation">
                 <td class="editable"
                   data-id="{translation.id}"
-                  data-file="{mgn:utility.file.determineLanguageFile(sourcePath: translation.file, language: language)}"
+                  data-source-file="{translation.sourceFile}"
                   data-source="{translation.source}"
                   data-target-language="{translation.targetLanguage}"><f:format.raw>{translation.target}</f:format.raw></td>
               </mgn:variable.access>

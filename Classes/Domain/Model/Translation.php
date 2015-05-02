@@ -31,6 +31,8 @@ namespace MONOGON\TranslationTools\Domain\Model;
  */
 class Translation extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
+	const DEFAULT_LANGUAGE = 'default';
+
 	/**
 	 * [$source description]
 	 *
@@ -67,11 +69,18 @@ class Translation extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	protected $id = '';
 
 	/**
-	 * [$file description]
+	 * [$sourceFile description]
 	 *
 	 * @var string
 	 */
-	protected $file = '';
+	protected $sourceFile = '';
+
+	/**
+	 * [$targetFile description]
+	 *
+	 * @var string
+	 */
+	protected $targetFile = '';
 
 	/**
 	 * Returns the  source
@@ -154,22 +163,42 @@ class Translation extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	}
 
 	/**
-	 * Returns the  file
+	 * Returns the sourceFile
 	 *
-	 * @return string $file
+	 * @return string $sourceFile
 	 */
-	public function getFile() {
-		return $this->file;
+	public function getSourceFile(){
+		return $this->sourceFile;
 	}
 
 	/**
-	 * Sets the file
+	 * Sets the sourceFile
 	 *
-	 * @param string $file
+	 * @param string $sourceFile
 	 * @return object $this
 	 */
-	public function setFile($file) {
-		$this->file = $file;
+	public function setSourceFile($sourceFile){
+		$this->sourceFile = $sourceFile;
+		return $this;
+	}
+
+	/**
+	 * Returns the targetFile
+	 *
+	 * @return string $targetFile
+	 */
+	public function getTargetFile(){
+		return $this->targetFile;
+	}
+
+	/**
+	 * Sets the targetFile
+	 *
+	 * @param string $targetFile
+	 * @return object $this
+	 */
+	public function setTargetFile($targetFile){
+		$this->targetFile = $targetFile;
 		return $this;
 	}
 
@@ -200,6 +229,14 @@ class Translation extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 */
 	public function getHashKey() {
 		return md5($this->file . ':' . $this->id);
+	}
+
+	public function isSource (){
+		return (!$this->targetLanguage || $this->targetLanguage == Translation::DEFAULT_LANGUAGE);
+	}
+
+	public function getIsSource (){
+		return $this->isSource();
 	}
 
 }

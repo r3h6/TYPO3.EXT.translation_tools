@@ -87,18 +87,6 @@ class TranslationController extends ActionController {
 	}
 
 	/**
-	 * [initializeUpdateAction description]
-	 *
-	 * @return void
-	 */
-	// protected function initializeUpdateAction() {
-	// 	if ($this->request->hasArgument('translation')) {
-	// 		$translation = $this->translationRepository->createTranslation($this->request->getArgument('translation'));
-	// 		$this->request->setArgument('translation', $translation);
-	// 	}
-	// }
-
-	/**
 	 * action update
 	 *
 	 * @param \MONOGON\TranslationTools\Domain\Model\Translation $translation
@@ -110,5 +98,16 @@ class TranslationController extends ActionController {
 		$this->addFlashMessage('Successfully updated constant ' . $translation->getId());
 	}
 
+	/**
+	 * action import
+	 *
+	 * @param array $file
+	 * @return void
+	 */
+	public function importAction($file) {
 
+
+		$this->addFlashMessage(print_r($file, TRUE));
+		$this->redirect('list');
+	}
 }
