@@ -6,7 +6,7 @@ jQuery(document).ready(function($) {
 
 
 		var id = $el.data('id');
-		var targetFile = $el.data('target-file');
+		var sourceFile = $el.data('source-file');
 		var targetLanguage = $el.data('target-language');
 		var source = $el.data('source');
 		var target = value;
@@ -17,7 +17,7 @@ jQuery(document).ready(function($) {
 		// }
 
 		$('[name$="[id]"]', $form).val(id);
-		$('[name$="[targetFile]"]', $form).val(targetFile);
+		$('[name$="[sourceFile]"]', $form).val(sourceFile);
 		$('[name$="[targetLanguage]"]', $form).val(targetLanguage);
 		$('[name$="[source]"]', $form).val(source);
 		$('[name$="[target]"]', $form).val(target);
@@ -29,7 +29,7 @@ jQuery(document).ready(function($) {
 			data: $form.serialize(),
 		})
 		.done(function(data, textStatus, jqXHR) {
-			TYPO3.Flashmessage.display(TYPO3.Severity.ok, 'Update', data, 5);
+			TYPO3.Flashmessage.display(TYPO3.Severity.ok, '', data, 15);
 		})
 		.fail(function(jqXHR, textStatus, errorThrown) {
 			TYPO3.Flashmessage.display(TYPO3.Severity.error, errorThrown, jqXHR.responseText, 5);

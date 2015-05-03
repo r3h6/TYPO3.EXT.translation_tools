@@ -5,11 +5,10 @@
 		1: '{f:uri.resource(path: \'JavaScript/Vendors/bootstrap.min.js\')}',
 		2: '{f:uri.resource(path: \'JavaScript/Vendors/dependencies.js\')}',
 		3: '{f:uri.resource(path: \'JavaScript/Vendors/visualsearch.js\')}',
-		4: '{f:uri.resource(path: \'JavaScript/Vendors/dropzone.js\')}',
-		5: '{f:uri.resource(path: \'JavaScript/jquery.visualSearch.js\')}',
-		6: '{f:uri.resource(path: \'JavaScript/jquery.ajaxForm.js\')}',
-		7: '{f:uri.resource(path: \'JavaScript/jquery.editable.js\')}',
-		8: '{f:uri.resource(path: \'JavaScript/Ext.js\')}'
+		4: '{f:uri.resource(path: \'JavaScript/jquery.visualSearch.js\')}',
+		5: '{f:uri.resource(path: \'JavaScript/jquery.ajaxForm.js\')}',
+		6: '{f:uri.resource(path: \'JavaScript/jquery.editable.js\')}',
+		7: '{f:uri.resource(path: \'JavaScript/Ext.js\')}'
 	}"
 	includeCssFiles="{
 		1: '{f:uri.resource(path: \'StyleSheet/Vendors/bootstrap.min.css\')}',
@@ -48,7 +47,7 @@
 		<div id="typo3-docbody">
 			<div id="typo3-inner-docbody">
 				<f:flashMessages renderMode="div" />
-
+				<f:render partial="FormErrors" />
 
 
 				<f:render section="content" />

@@ -90,14 +90,12 @@ class TranslationRepository {
 		if (empty($files)){
 			$files = $this->fileRepository->findAllRaw();
 		}
-		//$localizationFactory = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Localization\\LocalizationFactory');
+
 		$sourceLanguage = 'default';
 		$languages = $demand->getLanguages();
 		$charset = 'utf8';
 		$microTimeLimit = $GLOBALS['TYPO3_MISC']['microtime_start'] + 0.75 * PhpIni::getMaxExecutionTime();
 
-		// $filtered = array();
-// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($languages);
 		foreach ($files as $file) {
 			if (microtime(TRUE) > $microTimeLimit) {
 				throw new ExecutionTimeException('Running out of time...', 1420919679);
@@ -117,42 +115,19 @@ class TranslationRepository {
 					if ($demand->getLabel() && stripos("{$source},{$target}", $demand->getLabel()) === FALSE) {
 						continue;
 					}
+
 					if ($demand->getId() && stripos($id, $demand->getId()) === FALSE) {
 						continue;
 					}
-					// $key = sha1($file . $id);
-
-					// if (!isset($translations[$key])) {
-					// 	$translations[$key] = array(
-					// 		'_id' => $id,
-					// 		'_file' => $file,
-					// 		'_source' => $source
-					// 	);
-					// }
-					// $translations[$key][$language] = $this->createTranslation(array(
-					// 		'source' => $source,
-					// 		'target' => $target,
-					// 		'id' => $id,
-					// 		'file' => FileUtility::determineLanguageFile($file, $language),
-					// 		'sourceLanguage' => $sourceLanguage,
-					// 		'targetLanguage' => $language
-					// 	));
-
-					// if ($demand->getFilter() == Demand::FILTER_MISSING && !$target){
-					// 	$filtered[$key] = TRUE;
-					// }
-					// if ($demand->getFilter() == Demand::FILTER_TRANSLATED && $target){
-					// 	$filtered[$key] = TRUE;
-					// }
-					//
-
 
 					if ($demand->getFilter() === Demand::FILTER_MISSING && $target){
 						continue;
 					}
+
 					if ($demand->getFilter() === Demand::FILTER_TRANSLATED && !$target){
 						continue;
 					}
+
 					if ($demand->getFilter() === Demand::FILTER_CHANGED && $source !== NULL && $source === $defaultSource){
 						continue;
 					}
@@ -164,27 +139,11 @@ class TranslationRepository {
 						->setSourceFile($file)
 						->setSourceLanguage($sourceLanguage)
 						->setTargetLanguage($language);
-					// $translation = $this->createTranslation(array(
-					// 	'source' => $defaultSource,
-					// 	'target' => $target,
-					// 	'id' => $id,
-					// 	'sourceFile' => $file,
-					// 	'targetFile' => FileUtility::determineLanguageFile($file, $language),
-					// 	'sourceLanguage' => $sourceLanguage,
-					// 	'targetLanguage' => $language,
-					// ));
 
 					$translations->addTranslation($translation);
-
-
 				}
 			}
 		}
-
-		// $translations->applyWhiteList();
-		// if (!empty($filtered)){
-		// 	$translations = array_intersect_key($translations, $filtered);
-		// }
 
 		return $translations;
 	}
@@ -193,31 +152,12 @@ class TranslationRepository {
 	 * @param $translation
 	 */
 	public function update(\MONOGON\TranslationTools\Domain\Model\Translation $translation) {
-		// $identifier = FileUtility::determineLanguageFile($translation->getFile(), $translation->getTargetLanguage());
-
-		$path = FileUtility::determineLanguageFile($translation->getFile(), $translation->getTargetLanguage());
-
-
-		$file = $this->fileRepository->findByIdentifier($path);
-		// $file->parse();
+		$file = $this->fileRepository->findByIdentifier($translation->getTargetFile());
 		$file->addTranslation($translation);
 		$this->fileRepository->save($file);
-		// LocalconfUtility::update();
+
 		$this->emitAfterUpdateSignal($translation);
 	}
-
-
-	/**
-	 * @param $properties
-	 */
-	// public function createTranslation($properties) {
-
-	// 	if ($properties['targetLanguage'] == $properties['sourceLanguage']){
-	// 		unset($properties['targetLanguage']);
-	// 	}
-
-	// 	return $this->propertyMapper->convert($properties, $this->model);
-	// }
 
 	protected function emitAfterUpdateSignal (\MONOGON\TranslationTools\Domain\Model\Translation $translation){
 		$this->signalSlotDispatcher->dispatch(__CLASS__, 'afterUpdate', array($translation));

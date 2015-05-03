@@ -3,6 +3,8 @@ namespace MONOGON\TranslationTools\Controller;
 
 use MONOGON\TranslationTools\Exception\ExecutionTimeException;
 use MONOGON\TranslationTools\Utility\TranslationUtility;
+use MONOGON\TranslationTools\Utility\LocalizationUtility;
+
 /***************************************************************
  *
  *  Copyright notice
@@ -28,7 +30,6 @@ use MONOGON\TranslationTools\Utility\TranslationUtility;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use MONOGON\TranslationTools\Property\TypeConverter\FileUploadConverter;
 
 /**
  * TranslationController
@@ -50,6 +51,13 @@ class TranslationController extends ActionController {
 	 */
 	protected $sessionService = NULL;
 
+	/**
+	 * [$importCsvService description]
+	 * @var \MONOGON\TranslationTools\Service\ImportCsvService
+	 * @inject
+	 */
+	protected $importCsvService = NULL;
+
 
 	/**
 	 * @param $view
@@ -67,9 +75,9 @@ class TranslationController extends ActionController {
 	 */
 	public function listAction(\MONOGON\TranslationTools\Domain\Model\Dto\Demand $demand = NULL) {
 
-		// if (!$demand){
-		// 	$demand = $this->sessionService->get('demand');
-		// }
+		if ($demand === NULL) {
+			$demand = $this->objectManager->get('MONOGON\\TranslationTools\\Domain\\Model\\Dto\\Demand');
+		}
 
 		try {
 			$translations = $this->translationRepository->findDemanded($demand);
@@ -77,9 +85,7 @@ class TranslationController extends ActionController {
 			$translations = NULL;
 			$this->addFlashMessage($exception->getMessage());
 		}
-		if ($demand === NULL) {
-			$demand = $this->objectManager->get('MONOGON\\TranslationTools\\Domain\\Model\\Dto\\Demand');
-		}
+
 		$this->view->assign('translations', $translations);
 		$this->view->assign('demand', $demand);
 
@@ -95,19 +101,30 @@ class TranslationController extends ActionController {
 	public function updateAction(\MONOGON\TranslationTools\Domain\Model\Translation $translation) {
 		$this->translationRepository->update($translation);
 
-		$this->addFlashMessage('Successfully updated constant ' . $translation->getId());
+		$this->addFlashMessage(LocalizationUtility::translate(
+			'Updated constant "%s" in file "%s".',
+			array(
+				$translation->getId(),
+				$translation->getTargetFile(),
+			)
+		));
 	}
 
 	/**
 	 * action import
 	 *
 	 * @param array $file
+	 * @validate $file NotEmpty
+	 * @validate $file MONOGON\TranslationTools\Domain\Validator\FileUploadValidator(allowedExtensions='csv')
 	 * @return void
 	 */
 	public function importAction($file) {
-
-
-		$this->addFlashMessage(print_r($file, TRUE));
+		// $this->addFlashMessage(print_r($file, TRUE));
+		try {
+			$this->importCsvService->importFile($file['tmp_name']);
+		} catch (Exception $exception){
+			$this->addFlashMessage($exception->getMessage(), 'Import failed',\TYPO3\CMS\Core\Messaging\AbstractMessage::ERROR);
+		}
 		$this->redirect('list');
 	}
 }

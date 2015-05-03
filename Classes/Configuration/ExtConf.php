@@ -40,6 +40,7 @@ class ExtConf {
 	 */
 	const EXT_KEY = 'translation_tools';
 
+
 	private static $instance;
 
 	/**
@@ -49,8 +50,9 @@ class ExtConf {
 
 	public static function get ($key){
 		$extConf = self::makeInstance();
-		if (method_exists($extConf, $key)){
-			return $extConf->$key();
+		$getter = 'get' . ucfirst($key);
+		if (method_exists($extConf, $getter)){
+			return $extConf->$getter();
 		}
 		return $extConf->_get($key);
 	}
@@ -75,9 +77,8 @@ class ExtConf {
 	private function _get ($key) {
 		if (is_array($this->configuration) && array_key_exists($key, $this->configuration)) {
 			return $this->configuration[$key];
-		} else {
-			return NULL;
 		}
+		return NULL;
 	}
 
 	private function getAllowWriteToExtension (){
@@ -86,18 +87,6 @@ class ExtConf {
 
 	private function getAllowWriteToL10nDir (){
 		return GeneralUtility::trimExplode(',', $this->_get('getAllowWriteToL10nDir'));
-	}
-
-	private function getUseTypeScript (){
-		return (boolean) $this->get('useTypeScript');
-	}
-
-	private function getStorageFolder (){
-		$storageFolder = $this->get('storageFolder');
-		if ($storageFolder){
-			return \MONOGON\TranslationTools\Utility\FileUtility::trailingSlash($storageFolder);
-		}
-		return NULL;
 	}
 }
 

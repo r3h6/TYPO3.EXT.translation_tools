@@ -27,8 +27,9 @@ namespace MONOGON\TranslationTools\Domain\Model;
  ***************************************************************/
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use MONOGON\TranslationTools\Utility\FileUtility;
+use MONOGON\TranslationTools\Configuration\ExtConf;
 use MONOGON\TranslationTools\Localization\LocalizationFactory;
+use MONOGON\TranslationTools\Utility\FileUtility;
 
 /**
  * File
@@ -96,12 +97,11 @@ class File {
 
 	public function parse (){
 		$sourceLanguage = 'default';
-				$sourceLanguage = 'default';
 
 		$parsedData = $this->localizationFactory->getParsedData($this->path, $this->targetLanguage, $this->charset, LocalizationFactory::ERROR_MODE_EXCEPTION);
 
 		foreach ($parsedData[$sourceLanguage] as $id => $value) {
-			$target = isset($parsedData[$targetLanguage][$id][0]['target']) ? $parsedData[$targetLanguage][$id][0]['target'] : NULL;
+			$target = isset($parsedData[$this->targetLanguage][$id][0]['target']) ? $parsedData[$this->targetLanguage][$id][0]['target'] : NULL;
 			$source = $parsedData[$sourceLanguage][$id][0]['source'];
 
 			$translation = GeneralUtility::makeInstance('MONOGON\\TranslationTools\\Domain\\Model\\Translation');
@@ -120,7 +120,7 @@ class File {
 
 		$format = pathinfo($this->path, PATHINFO_EXTENSION);
 
-		$extPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath(self::EXT_KEY);
+		$extPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath(ExtConf::EXT_KEY);
 		$templateRootPath = $extPath . 'Resources/Private/Backend/Templates/File/Render.' . $format;
 
 		$this->view->setTemplatePathAndFilename($templateRootPath);

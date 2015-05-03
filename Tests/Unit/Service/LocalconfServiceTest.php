@@ -1,8 +1,8 @@
 <?php
-namespace MONOGON\TranslationTools\Domain\Model;
+
+namespace MONOGON\TranslationTools\Tests\Unit\Service;
 
 /***************************************************************
- *
  *  Copyright notice
  *
  *  (c) 2015 R3 H6 <r3h6@outlook.com>
@@ -12,7 +12,7 @@ namespace MONOGON\TranslationTools\Domain\Model;
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 3 of the License, or
+ *  the Free Software Foundation; either version 2 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
@@ -26,10 +26,34 @@ namespace MONOGON\TranslationTools\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-/**
- * FileLocallangInterface
- */
-interface FileLocallangInterface {
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-	public function addTranslation (\MONOGON\TranslationTools\Domain\Model\Translation $translation);
+/**
+ * Test case for class \MONOGON\TranslationTools\Service\LocalconfService.
+ *
+ * @copyright Copyright belongs to the respective authors
+ * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
+ *
+ * @author R3 H6 <r3h6@outlook.com>
+ */
+class LocalconfServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
+
+	protected $subject;
+
+	protected function setUp() {
+		$this->subject = new \MONOGON\TranslationTools\Service\LocalconfService();
+	}
+
+	protected function tearDown() {
+		unset($this->subject);
+	}
+
+	/**
+	 * @test
+	 */
+	public function update (){
+		$this->subject->update('l10n_overwrite');
+	}
+
+
 }

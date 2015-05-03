@@ -26,6 +26,8 @@ namespace MONOGON\TranslationTools\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use MONOGON\TranslationTools\Utility\FileUtility;
+
 /**
  * Translation
  */
@@ -188,19 +190,12 @@ class Translation extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 * @return string $targetFile
 	 */
 	public function getTargetFile(){
+		if (empty($this->targetFile)){
+			$this->targetFile = FileUtility::determineLanguageFile($this->sourceFile, $this->targetLanguage);
+		}
 		return $this->targetFile;
 	}
 
-	/**
-	 * Sets the targetFile
-	 *
-	 * @param string $targetFile
-	 * @return object $this
-	 */
-	public function setTargetFile($targetFile){
-		$this->targetFile = $targetFile;
-		return $this;
-	}
 
 	/**
 	 * Returns the  id
@@ -228,7 +223,11 @@ class Translation extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 * @return string [description]
 	 */
 	public function getHashKey() {
-		return md5($this->file . ':' . $this->id);
+		return md5($this->getFullQualifiedId());
+	}
+
+	public function getFullQualifiedId (){
+		return $this->sourceFile . ':' . $this->id;
 	}
 
 	public function isSource (){

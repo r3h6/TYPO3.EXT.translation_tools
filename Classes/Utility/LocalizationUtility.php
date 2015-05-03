@@ -1,5 +1,5 @@
 <?php
-namespace MONOGON\TranslationTools\Hooks;
+namespace MONOGON\TranslationTools\Utility;
 
 /***************************************************************
  *
@@ -27,18 +27,29 @@ namespace MONOGON\TranslationTools\Hooks;
  ***************************************************************/
 
 /**
- *
+ * LocalizationUtility
  */
-class LocalconfSlot {
+class LocalizationUtility {
+
+	const EXTENSION_NAME = 'TranslationTools';
 
 	/**
-	 * [$localconfService description]
-	 * @var MONOGON\TranslationTools\Service\LocalconfService
-	 * @inject
+	 * [translate description]
+	 * @param  string $key       [description]
+	 * @param  array  $arguments [description]
+	 * @param  string $default   [description]
+	 * @return string            [description]
 	 */
-	protected $localconfService;
+	public static function translate ($key, $arguments = array(), $default = NULL){
 
-	public function update ($translation){
-		$this->localconfService->update();
+		$value = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate($key, LocalizationUtility::EXTENSION_NAME, $arguments);
+
+		if ($value === NULL){
+			$value = ($default !== NULL) ? $default: $key;
+			if (is_array($arguments) && $value !== NULL) {
+				return vsprintf($value, $arguments);
+			}
+		}
+		return $value;
 	}
 }

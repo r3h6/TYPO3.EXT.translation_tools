@@ -36,12 +36,14 @@ td.editable {
 	position: relative;
 }
 td.editable .translation-source{
-	/*position: absolute;
-	left: 0;
-	padding: 8px;
-	width: 100%;
-	z-index: 1;*/
+
 	border-top: 1px dotted #CCC;
 	padding-top: 3px;
 	color: #CCC;
+}
+.msg-div .typo3-message{
+	width: 600px !important;
+}
+.msg-div .flash-message {
+	word-break: break-all !important;
 }

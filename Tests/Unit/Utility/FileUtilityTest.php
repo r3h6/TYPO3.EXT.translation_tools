@@ -53,9 +53,8 @@ class FileUtilityTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	protected function setUp() {
 		$this->extConf = $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][self::EXT_KEY];
 		$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][self::EXT_KEY] = serialize(array(
-			'allowWriteToExtension' => '',
-			'getAllowWriteToL10nDir' => '',
-			'allowWriteToExtension' => '0',
+			'allowWriteToExtension' => 'translation_tools',
+			'allowWriteToL10nDir' => '',
 			'locallangDirectories' => 'EXT:translation_tools/Tests/',
 		));
 	}
@@ -71,26 +70,16 @@ class FileUtilityTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		$files = FileUtility::getLocallangFiles(FALSE);
 	}
 
-	/**
-	 * @test
-	 */
-	public function getExtensionDirectories (){
-		$files = FileUtility::getExtensionDirectories();
-
-		\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($files);
-		exit;
-	}
-
 
 	/**
 	 * @test
-	 * @dataProvider addLanguageToPathProvider
+	 * @dataProvider addLanguageToFileNameProvider
 	 */
-	public function addLanguageToPath ($language, $identifier, $expected){
-		$this->assertEquals($expected, FileUtility::addLanguageToPath($identifier, $language));
+	public function addLanguageToFileName ($language, $identifier, $expected){
+		$this->assertEquals($expected, FileUtility::addLanguageToFileName($identifier, $language));
 	}
 
-	public function addLanguageToPathProvider (){
+	public function addLanguageToFileNameProvider (){
 		return array(
 			array(
 				'de',
@@ -104,6 +93,11 @@ class FileUtilityTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 			),
 			array(
 				'default',
+				'EXT:news/Resources/Private/Language/locallang.xlf',
+				'EXT:news/Resources/Private/Language/locallang.xlf',
+			),
+			array(
+				'',
 				'EXT:news/Resources/Private/Language/locallang.xlf',
 				'EXT:news/Resources/Private/Language/locallang.xlf',
 			),
@@ -131,6 +125,16 @@ class FileUtilityTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 				$this->l10nOverwriteDir . 'news/Resources/Private/Language/de.locallang.xml',
 			),
 			array(
+				'default',
+				'EXT:news/Resources/Private/Language/locallang.xml',
+				$this->l10nOverwriteDir . 'news/Resources/Private/Language/locallang.xml',
+			),
+			array(
+				'',
+				'EXT:news/Resources/Private/Language/locallang.xml',
+				$this->l10nOverwriteDir . 'news/Resources/Private/Language/locallang.xml',
+			),
+			array(
 				'fr',
 				'typo3conf/ext/test_extension/Resources/Private/Language/locallang.xlf',
 				$this->l10nDir . "fr/test_extension/Resources/Private/Language/fr.locallang.xlf",
@@ -141,19 +145,24 @@ class FileUtilityTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 				$this->l10nDir . "fr/test_extension/Resources/Private/Language/fr.locallang.xlf",
 			),
 			array(
+				'default',
+				'EXT:test_extension/Resources/Private/Language/locallang.xlf',
+				$this->l10nOverwriteDir . "test_extension/Resources/Private/Language/locallang.xlf",
+			),
+			array(
 				'de',
 				'typo3conf/ext/translation_tools/Tests/Resources/Private/Language/locallang.xlf',
-				$this->l10nOverwriteDir . "translation_tools/Tests/Resources/Private/Language/de.locallang.xlf",
+				"EXT:translation_tools/Tests/Resources/Private/Language/de.locallang.xlf",
 			),
 			array(
 				'de',
 				'EXT:translation_tools/Tests/Resources/Private/Language/locallang.xlf',
-				$this->l10nOverwriteDir . "translation_tools/Tests/Resources/Private/Language/de.locallang.xlf",
+				"EXT:translation_tools/Tests/Resources/Private/Language/de.locallang.xlf",
 			),
 			array(
 				'default',
 				'typo3conf/ext/translation_tools/Tests/Resources/Private/Language/locallang.xlf',
-				$this->l10nOverwriteDir . "translation_tools/Tests/Resources/Private/Language/locallang.xlf",
+				"EXT:translation_tools/Tests/Resources/Private/Language/locallang.xlf",
 			),
 		);
 	}

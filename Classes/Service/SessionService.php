@@ -40,7 +40,7 @@ class SessionService {
 
 	protected $sessionObject;
 
-	private static $runtimeData = array();
+	private static $runtimeStorage = array();
 
 	public function __construct ($storageKey = 'tx_translationtools'){
 		$this->storageKey = $storageKey;
@@ -71,7 +71,7 @@ class SessionService {
 
 	protected function setSessionData (array $sessionData, $persistent){
 		if ($persistent === SessionService::PERSIST_RUNTIME){
-			static::$runtimeData = $sessionData;
+			static::$runtimeStorage = $sessionData;
 		}
 		else if ($persistent === SessionService::PERSIST_USER && TYPO3_MODE === 'FE'){
 			$this->sessionObject->setKey('user', $data);
@@ -83,7 +83,7 @@ class SessionService {
 
 	protected function getSessionData ($persistent){
 		if ($persistent === SessionService::PERSIST_RUNTIME){
-			$sessionData = static::$runtimeData;
+			$sessionData = static::$runtimeStorage;
 		}
 		else if ($persistent === SessionService::PERSIST_USER && TYPO3_MODE === 'FE'){
 			$sessionData = $this->sessionObject->getKey('user', $this->storageKey);

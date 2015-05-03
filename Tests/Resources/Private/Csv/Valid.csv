@@ -1,0 +1,6 @@
+ID;"default
+foobar";de
+"DO NOT DELETE THIS LINE!";"UTF-8 ÄäÖöÜüÊêÇç"
+tx_addresscollection_domain_model_address;Address;"Address de
+with second line."
+tx_addresscollection_domain_model_address.name;Name;

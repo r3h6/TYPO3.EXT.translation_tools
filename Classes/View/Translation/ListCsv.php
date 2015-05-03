@@ -44,7 +44,7 @@ class ListCsv extends \TYPO3\CMS\Extbase\Mvc\View\AbstractView {
 		$demand = $this->variables['demand'];
 		$languages = $demand->getLanguages();
 
-		$tempFile = GeneralUtility::tempnam('translations', '.csv');
+		// $tempFile = GeneralUtility::tempnam('translations', '.csv');
 		// $fp = fopen($tempFile, 'w');
 		$fp = fopen('php://output', 'w');
 
@@ -58,6 +58,14 @@ class ListCsv extends \TYPO3\CMS\Extbase\Mvc\View\AbstractView {
 			$fields[] =$language;
 		}
 		fputcsv($fp, $fields, $this->delimeter);
+
+
+		fputcsv($fp, array(
+			'DO NOT DELETE THIS LINE!',
+			'UTF-8 ÄäÖöÜüÊêÇç'
+		), $this->delimeter);
+
+
 
 		// Body
 		foreach ($translations as $translationGroup){

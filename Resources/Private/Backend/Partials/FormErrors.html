@@ -1,14 +1,16 @@
 
 <f:form.validationResults>
 	<f:if condition="{validationResults.flattenedErrors}">
-		<ul>
+		<div class="typo3-messages">
 			<f:for each="{validationResults.flattenedErrors}" key="propertyPath" as="errors">
-				<li><f:translate key="{propertyPath}">{propertyPath}:</f:translate>
-					<ul>
-						<f:for each="{errors}" as="error"><li><!-- {error.code} --><f:translate key="error.{error.code}">{error}</f:translate></li></f:for>
-					</ul>
-				</li>
+				<div class="typo3-message message-error">
+					<f:for each="{errors}" as="error">
+						<div class="message-body"><!-- {error.code} -->
+							<f:translate key="error.{error.code}">{error}</f:translate>
+						</div>
+					</f:for>
+				</div>
 			</f:for>
-		</ul>
-</f:if>
+		</div>
+	</f:if>
 </f:form.validationResults>

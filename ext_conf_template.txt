@@ -6,9 +6,3 @@ allowWriteToExtension =
 
 # cat=basic//; type=string; label= Allow write to l10n: Comma seperated list of extensions keys where the locallang is written into the l10n directory.
 allowWriteToL10nDir =
-
-# cat=basic//; type=string; label= Storage folder: Where to store generated files.
-storageFolder = EXT:l10n_overwrite/Resources/Private/l10n/
-
-# cat=basic//; type=string; label= Default language code: A iso code and a Label seperated by a colon.
-defaultLanguage = default:Default
