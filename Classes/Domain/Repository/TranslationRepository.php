@@ -152,6 +152,7 @@ class TranslationRepository {
 	 * @param $translation
 	 */
 	public function update(\MONOGON\TranslationTools\Domain\Model\Translation $translation) {
+
 		$file = $this->fileRepository->findByIdentifier($translation->getTargetFile());
 		$file->addTranslation($translation);
 		$this->fileRepository->save($file);

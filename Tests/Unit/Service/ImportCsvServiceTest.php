@@ -41,7 +41,8 @@ class ImportCsvServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	protected $subject;
 
 	protected function setUp() {
-		$this->subject = new \MONOGON\TranslationTools\Service\ImportCsvService();
+		// $this->subject = new \MONOGON\TranslationTools\Service\ImportCsvService();
+		$this->subject = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager')->get('MONOGON\\TranslationTools\\Service\\ImportCsvService');
 	}
 
 	protected function tearDown() {
@@ -56,8 +57,8 @@ class ImportCsvServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		$this->subject->importFile($file);
 
 
-		$file = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('translation_tools') . 'Tests/Resources/Private/Csv/Excel.csv';
-		$this->subject->importFile($file);
+		// $file = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('translation_tools') . 'Tests/Resources/Private/Csv/Excel.csv';
+		// $this->subject->importFile($file);
 
 		exit;
 	}

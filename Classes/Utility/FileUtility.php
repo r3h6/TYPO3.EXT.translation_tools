@@ -214,6 +214,19 @@ class FileUtility {
 		return NULL;
 	}
 
+	public function isLocallangFile ($path){
+		$path = GeneralUtility::getFileAbsFileName($path);
+
+		if (strpos($path, PATH_site . 'fileadmin/') === FALSE && strpos($path, PATH_site . 'typo3conf/ext/') === FALSE){
+			return FALSE;
+		}
+		$baseName = pathinfo($path, PATHINFO_BASENAME);
+		if (!preg_match('/^(?:[a-z]{2}\.)?locallang\.(xml|xlf)$/i', $baseName)){
+			return FALSE;
+		}
+		return TRUE;
+	}
+
 	public static function convertToOriginalPath ($path){
 		$path = GeneralUtility::getFileAbsFileName($path);
 		$l10nDir = GeneralUtility::getFileAbsFileName(self::OVERWRITE_PATH);

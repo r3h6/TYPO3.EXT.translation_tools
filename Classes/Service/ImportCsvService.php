@@ -28,11 +28,19 @@ namespace MONOGON\TranslationTools\Service;
  ***************************************************************/
 
 use \Keboola\Csv\CsvFile;
-
+use \TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * ImportCsvService
  */
 class ImportCsvService {
+
+	/**
+	 * [$fileRepository description]
+	 *
+	 * @var \MONOGON\TranslationTools\Domain\Repository\FileRepository
+	 * @inject
+	 */
+	protected $fileRepository = NULL;
 
 	public function __construct(){
 		$extensionPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('translation_tools');
@@ -42,11 +50,6 @@ class ImportCsvService {
 	}
 
 	public function importFile ($file, $autoEncode = TRUE){
-		// $csv = new CsvFile($file);
-		// $header = $csv->getHeader();
-
-
-
 		$csv = new \File_CSV();
 		$config = $csv->discoverFormat($file);
 
@@ -54,12 +57,14 @@ class ImportCsvService {
 
 		while(($row = $csv->read($file, $config)) !== FALSE){
 			if (!empty($row)){
+				$line++;
 				$header = $row;
 				break;
 			}
 		}
 		while(($row = $csv->read($file, $config)) !== FALSE){
 			if (!empty($row)){
+				$line++;
 				$check = $row;
 				break;
 			}
@@ -67,30 +72,65 @@ class ImportCsvService {
 
 		if ($check[1] !== 'UTF-8 ÄäÖöÜüÊêÇç'){
 			if ($autoEncode){
-				$tmp = "$file.tmp";
-				file_put_contents($tmp, mb_convert_encoding(file_get_contents($file), 'UTF-8'));
-				$success = $this->importFile($tmp, FALSE);
-				@unlink($tmp);
+				$tmpFile = GeneralUtility::tempnam('import_', '.csv');
+				$error = GeneralUtility::writeFileToTypo3tempDir($tmpFile, mb_convert_encoding(file_get_contents($file), 'UTF-8'));
+				if ($error){
+					throw new \Exception($error, 1430771681);
+				}
+				$success = $this->importFile($tmpFile, FALSE);
+				GeneralUtility::unlink_tempfile($tmpFile);
 				return $success;
 			}
-			throw new \Exception("Invalid encoding!", 1);
+			throw new \Exception("Invalid encoding!", 1430771687);
 		}
 
+		$locallangFiles = array();
 
-		//mb_detect_order('ASCII, ISO-8859-1, Windows-1251, Windows-1252, UTF-8');
+		while(($row = $csv->read($file, $config)) !== FALSE){
+			if (!empty($row)){
+				$line++;
 
-		$encoding = mb_detect_encoding($check[1]);
+				$col1 = GeneralUtility::trimExplode(':', $row[0]);
+				$id = array_pop($col1);
+				$file = join(':', $col1);
+				$source = $row[1];
 
-		\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($header);
-		\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($check);
-		// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump(mb_detect_order());
-		// \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($encoding);
 
-		if ($check[1] !== 'UTF-8 ÄäÖöÜüÊêÇç'){
-			\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump(
-				"**"
-			);
+
+				for ($i = 2; $i < count($header); $i++){
+					try {
+						$language = $header[$i];
+						$target = $row[$i];
+
+						if (empty($target)){
+							continue;
+						}
+
+						$translation = GeneralUtility::makeInstance('MONOGON\\TranslationTools\\Domain\\Model\\Translation');
+						$translation->setId($id)
+							->setSource($source)
+							->setTarget($target)
+							->setSourceFile($file)
+							->setTargetLanguage($language);
+
+						$targetFile = $translation->getTargetFile();
+						$sha1 = sha1($targetFile);
+						if (!isset($locallangFiles[$sha1])){
+							$locallangFiles[$sha1] = $this->fileRepository->findByIdentifier($targetFile);
+						}
+						$locallangFiles[$sha1]->addTranslation($translation);
+
+
+					} catch (\Exception $exception){
+
+					}
+				}
+				break;
+			}
 		}
+
+		\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($locallangFiles);
 
 	}
+
 }

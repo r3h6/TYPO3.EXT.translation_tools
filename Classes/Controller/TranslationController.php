@@ -99,6 +99,7 @@ class TranslationController extends ActionController {
 	 * @return void
 	 */
 	public function updateAction(\MONOGON\TranslationTools\Domain\Model\Translation $translation) {
+
 		$this->translationRepository->update($translation);
 
 		$this->addFlashMessage(LocalizationUtility::translate(

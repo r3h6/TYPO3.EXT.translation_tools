@@ -34,7 +34,9 @@ use MONOGON\TranslationTools\Utility\TranslationUtility;
 /**
  * FileRepository
  */
-class FileRepository {
+class FileRepository implements \TYPO3\CMS\Core\SingletonInterface {
+
+	protected $cachedInstances = array();
 
 	/**
 	 * [$objectManager description]
@@ -45,14 +47,14 @@ class FileRepository {
 	protected $objectManager;
 
 	protected function makeInstance ($path){
-		// $extension = pathinfo($path, PATHINFO_EXTENSION);
-		// switch ($extension) {
-		// 	case 'xlf': $className = 'MONOGON\\TranslationTools\\Domain\\Model\\FileXliff'; break;
-		// 	case 'xml': $className = 'MONOGON\\TranslationTools\\Domain\\Model\\FileT3locallang'; break;
-		// 	default: throw new \InvalidArgumentException ("Could not find a class for $path", 1421615253);
-		// }
-		//
-		return $this->objectManager->get('MONOGON\\TranslationTools\\Domain\\Model\\File', $path);
+		if (FileUtility::isLocallangFile($path)){
+			throw new \Exception("Path is not a valid locallang file.", 1430773597);
+		}
+		$cacheKey = sha1($path);
+		if (!isset($this->cachedInstances[$cacheKey])){
+			$this->cachedInstances[$cacheKey] = $this->objectManager->get('MONOGON\\TranslationTools\\Domain\\Model\\File', $path);
+		}
+		return $this->cachedInstances[$cacheKey];
 	}
 
 	public function findAllRaw (){
@@ -61,6 +63,12 @@ class FileRepository {
 	}
 
 	public function findByIdentifier ($identifier){
+		// try {
+		// 	$locallangFile = $this->makeInstance($identifier);
+		// } catch (\Exception $exception){
+		// 	$locallangFile = NULL;
+		// }
+		// return $locallangFile;
 		return $this->makeInstance($identifier);
 	}
 

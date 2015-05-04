@@ -1,6 +1,53 @@
-ID;"default
-foobar";de
+﻿ID;default;de
 "DO NOT DELETE THIS LINE!";"UTF-8 ÄäÖöÜüÊêÇç"
-tx_addresscollection_domain_model_address;Address;"Address de
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address;Address;"Address de
 with second line."
-tx_addresscollection_domain_model_address.name;Name;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.name;Name;"Hello <b>bold</b>."
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.first_name;"First Name";
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.middle_name;"Middle Name";
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.last_name;"Last Name";
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.gender;Gender;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.birthday;Birthday;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.title;Title;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.email;Email;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.phone;Phone;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.mobile;Mobile;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.fax;Fax;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.www;Www;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.company;Company;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.address;Address;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.building;Building;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.room;Room;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.zip;Zip;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.city;City;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.region;Region;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.country;Country;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.image;Image;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.images;Images;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.description;Description;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.position;Position;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.department;Department;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.qualifications;Qualifications;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.nick_name;"Nick Name";
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.post_office_box;"Post Office Box";
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.longitude;Longitude;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.latitude;Latitude;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.skype;Skype;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.twitter;Twitter;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.facebook;Facebook;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.linked_in;"Linked In";
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.user;User;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.address_groups;"Address Groups";
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_addressgroup;"Address Group";
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_addressgroup.title;Title;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_addressgroup.description;Description;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_addressgroup.parent_group;"Parent Group";
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_user;User;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_deliveryaddress;"Delivery Address";
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_billingaddress;"Billing Address";
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_personaladdress;"Personal Address";
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_businessaddress;"Business Address";
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_companyaddress;"Company Address";
+EXT:address_collection/Resources/Private/Language/locallang.xlf:button.search;Search;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.gender.f;Ms;
+EXT:address_collection/Resources/Private/Language/locallang.xlf:tx_addresscollection_domain_model_address.gender.m;Mr;

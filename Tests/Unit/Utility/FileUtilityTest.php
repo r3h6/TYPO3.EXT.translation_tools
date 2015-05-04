@@ -215,5 +215,25 @@ class FileUtilityTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 		);
 	}
 
+	/**
+	 * @test
+	 * @dataProvider isLocallangFileProvider
+	 */
+	public function isLocallangFile ($path, $expected){
+		$this->assertEquals($expected, FileUtility::isLocallangFile($path));
+	}
+
+	public function isLocallangFileProvider (){
+		return array(
+			array(PATH_site . 'fileadmin/templates/locallang.xml', TRUE),
+			array(PATH_site . 'fileadmin/templates/locallang.xlf', TRUE),
+			array(PATH_site . 'fileadmin/templates/de.locallang.xml', TRUE),
+			array(PATH_site . 'fileadmin/templates/de.locallang.xlf', TRUE),
+			array(PATH_site . 'typo3conf/ext/locallang.xlf', TRUE),
+			array(PATH_site . 'locallang.xlf', FALSE),
+			array('/locallang.xlf', FALSE),
+			array(PATH_site . 'fileadmin/templates/locallang.php', FALSE),
+		);
+	}
 
 }

@@ -70,7 +70,7 @@ class ListCsv extends \TYPO3\CMS\Extbase\Mvc\View\AbstractView {
 		// Body
 		foreach ($translations as $translationGroup){
 			$fields = array();
-			$fields[] =$translationGroup['id'];
+			$fields[] = $translationGroup['file'] . ':' . $translationGroup['id'];
 			// $fields[] = $translationGroup['id'];
 			foreach ($languages as $language){
 				$fields[] =$translationGroup[$language]->getTarget();
