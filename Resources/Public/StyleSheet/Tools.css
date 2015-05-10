@@ -36,10 +36,10 @@ td.editable {
 	position: relative;
 }
 td.editable .translation-source{
-
-	border-top: 1px dotted #CCC;
-	padding-top: 3px;
-	color: #CCC;
+	margin: 8px -8px -8px -8px;
+	padding: 8px;
+	background-color: #DFF0D8;
+	color: #468847;
 }
 .msg-div .typo3-message{
 	width: 600px !important;

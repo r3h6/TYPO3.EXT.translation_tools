@@ -54,8 +54,9 @@ class ListCsv extends \TYPO3\CMS\Extbase\Mvc\View\AbstractView {
 		// Header
 		$fields = array();
 		$fields[] ='ID';
+		$fields[] ='Source';
 		foreach ($languages as $language) {
-			$fields[] =$language;
+			$fields[] = $language;
 		}
 		fputcsv($fp, $fields, $this->delimeter);
 
@@ -71,7 +72,7 @@ class ListCsv extends \TYPO3\CMS\Extbase\Mvc\View\AbstractView {
 		foreach ($translations as $translationGroup){
 			$fields = array();
 			$fields[] = $translationGroup['file'] . ':' . $translationGroup['id'];
-			// $fields[] = $translationGroup['id'];
+			$fields[] = $translationGroup['source'];
 			foreach ($languages as $language){
 				$fields[] =$translationGroup[$language]->getTarget();
 			}

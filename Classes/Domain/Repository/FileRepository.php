@@ -47,8 +47,8 @@ class FileRepository implements \TYPO3\CMS\Core\SingletonInterface {
 	protected $objectManager;
 
 	protected function makeInstance ($path){
-		if (FileUtility::isLocallangFile($path)){
-			throw new \Exception("Path is not a valid locallang file.", 1430773597);
+		if (!FileUtility::isLocallangFile($path)){
+			throw new \Exception("Path '$path' is not a valid locallang file.", 1430773597);
 		}
 		$cacheKey = sha1($path);
 		if (!isset($this->cachedInstances[$cacheKey])){

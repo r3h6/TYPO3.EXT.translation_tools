@@ -4,7 +4,7 @@
 
 <f:section name="content">
 
-<f:form class="inline-form" action="list" name="demand" object="{demand}" additionalAttributes="{data-ajaxform: '1', data-visualsearch: '1', data-target: '.results'}">
+<f:form class="inline-form hidden" action="list" name="demand" object="{demand}" additionalAttributes="{data-ajaxform: '1', data-visualsearch: '1', data-target: '.results'}">
   <div class="form-group">
     <f:form.select title="{f:translate(key:'translation_demand.file')}" multiple="multiple" property="files" options="{demand.fileOptions}" class="form-control" multiple="multiple" />
   </div>
@@ -59,7 +59,10 @@
 
       <f:for each="{translations}" as="translationGroup">
         <tr>
-          <td title="{translationGroup.file}">{translationGroup.id}</td>
+          <td title="{translationGroup.file}">
+            <div>{translationGroup.source}</div>
+            <div><small class="text-muted">{translationGroup.id}</small></div>
+          </td>
           <f:if condition="{demand.languages}">
             <f:for each="{demand.languages}" as="language">
               <mgn:variable.access var="{translationGroup}" propertyName="{language}" as="translation">

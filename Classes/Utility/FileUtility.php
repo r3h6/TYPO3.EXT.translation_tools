@@ -217,7 +217,7 @@ class FileUtility {
 	public function isLocallangFile ($path){
 		$path = GeneralUtility::getFileAbsFileName($path);
 
-		if (strpos($path, PATH_site . 'fileadmin/') === FALSE && strpos($path, PATH_site . 'typo3conf/ext/') === FALSE){
+		if (strpos($path, PATH_site . 'fileadmin/') === FALSE && strpos($path, PATH_site . 'typo3conf/ext/') === FALSE && strpos($path, PATH_site . 'typo3conf/l10n/') === FALSE){
 			return FALSE;
 		}
 		$baseName = pathinfo($path, PATHINFO_BASENAME);
@@ -265,13 +265,24 @@ class FileUtility {
 	 * @return string|NULL             [description]
 	 */
 	public static function extractExtKey ($path){
-		$path = static::getRelativePath($path);
-		if (preg_match('#^typo3conf[/\\\\]{1}ext[/\\\\]{1}([^/\\\\]+)[/\\\\]{1}#i', $path, $matches)){
+		$path = static::getRelativePath(GeneralUtility::getFileAbsFileName($path));
+
+		if (preg_match('#^typo3conf/ext/l10n_overwrite/Resources/Private/l10n/([^/]+)/#i', $path, $matches)){
 			return $matches[1];
 		}
-		if (preg_match('#^EXT:([^/\\\\]+)[/\\\\$]{1}#i', $path, $matches)){
+		if (preg_match('#^typo3conf/l10n/[a-z_]{2,5}/([^/]+)/#i', $path, $matches)){
 			return $matches[1];
 		}
+		if (preg_match('#^typo3conf/ext/([^/]+)/#i', $path, $matches)){
+			return $matches[1];
+		}
+
+		// if (preg_match('#^typo3conf[/\\\\]{1}ext[/\\\\]{1}([^/\\\\]+)[/\\\\]{1}#i', $path, $matches)){
+		// 	return $matches[1];
+		// }
+		// if (preg_match('#^EXT:([^/\\\\]+)[/\\\\$]{1}#i', $path, $matches)){
+		// 	return $matches[1];
+		// }
 		return NULL;
 	}
 

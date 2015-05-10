@@ -134,7 +134,7 @@ class TranslationRepository {
 
 					$translation = GeneralUtility::makeInstance('MONOGON\\TranslationTools\\Domain\\Model\\Translation');
 					$translation->setId($id)
-						->setSource($source)
+						->setSource($defaultSource)
 						->setTarget($target)
 						->setSourceFile($file)
 						->setSourceLanguage($sourceLanguage)

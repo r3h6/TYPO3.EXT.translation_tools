@@ -85,16 +85,20 @@ class ImportCsvService {
 		}
 
 		$locallangFiles = array();
+		$return = array(
+			'success' => array(),
+			'errors' => array(),
+		);
 
 		while(($row = $csv->read($file, $config)) !== FALSE){
+
 			if (!empty($row)){
 				$line++;
 
 				$col1 = GeneralUtility::trimExplode(':', $row[0]);
 				$id = array_pop($col1);
-				$file = join(':', $col1);
+				$sourceFile = join(':', $col1);
 				$source = $row[1];
-
 
 
 				for ($i = 2; $i < count($header); $i++){
@@ -110,7 +114,7 @@ class ImportCsvService {
 						$translation->setId($id)
 							->setSource($source)
 							->setTarget($target)
-							->setSourceFile($file)
+							->setSourceFile($sourceFile)
 							->setTargetLanguage($language);
 
 						$targetFile = $translation->getTargetFile();
@@ -120,17 +124,19 @@ class ImportCsvService {
 						}
 						$locallangFiles[$sha1]->addTranslation($translation);
 
-
+						$return['success'][] = $line;
 					} catch (\Exception $exception){
-
+						$return['error'][] = $line;
 					}
 				}
-				break;
 			}
 		}
 
-		\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($locallangFiles);
+		foreach ($locallangFiles as $locallangFile){
+			$locallangFile->save();
+		}
 
+		return $return;
 	}
 
 }

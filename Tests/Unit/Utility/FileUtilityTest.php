@@ -183,11 +183,11 @@ class FileUtilityTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 			array(NULL, 'fileadmin/templates/Private/Language/locallang.xlf'),
 			array('test', 'typo3conf/ext/test/typo3conf/ext/foobar/locallang.xlf'),
 			array('test', 'EXT:test/typo3conf/EXT:foobar/locallang.xlf'),
-			array('test', 'typo3conf\\ext\\test\\Resources\\Private\\Language\\locallang.xlf'),
-			array('test', 'EXT:test\\Resources\\Private\\Language\\locallang.xlf'),
 			array(NULL, 'fileadmin/templates/typo3conf/ext/test/locallang.xlf'),
 			array(NULL, 'typo3conf/ext/locallang.xlf'),
 			array('test', PATH_site . 'typo3conf/ext/test/Resources/Private/Language/locallang.xlf'),
+			array('news', 'EXT:l10n_overwrite/Resources/Private/l10n/news/Resources/Private/Locallang/locallang.xlf'),
+			array('news', 'typo3conf/l10n/de/news/Resources/Private/Locallang/de.locallang.xlf'),
 		);
 	}
 
@@ -230,6 +230,9 @@ class FileUtilityTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 			array(PATH_site . 'fileadmin/templates/de.locallang.xml', TRUE),
 			array(PATH_site . 'fileadmin/templates/de.locallang.xlf', TRUE),
 			array(PATH_site . 'typo3conf/ext/locallang.xlf', TRUE),
+			array('typo3conf/ext/locallang.xlf', TRUE),
+			array('EXT:l10n_overwrite/Resources/Private/l10n/address_collection/Resources/Private/Language/locallang.xlf', TRUE),
+			array('typo3conf/l10n/de/translation_tools/Tests/Resources/Private/Language/de.locallang.xlf', TRUE),
 			array(PATH_site . 'locallang.xlf', FALSE),
 			array('/locallang.xlf', FALSE),
 			array(PATH_site . 'fileadmin/templates/locallang.php', FALSE),

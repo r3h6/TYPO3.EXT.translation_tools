@@ -51,6 +51,7 @@ class TranslationResult implements \Countable, \Iterator, \ArrayAccess {
 				// 'units' => array(),
 				'file' => $translation->getSourceFile(),
 				'id' => $translation->getId(),
+				'source' => $translation->getSource(),
 			);
 		}
 

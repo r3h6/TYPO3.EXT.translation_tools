@@ -122,9 +122,13 @@ class TranslationController extends ActionController {
 	public function importAction($file) {
 		// $this->addFlashMessage(print_r($file, TRUE));
 		try {
-			$this->importCsvService->importFile($file['tmp_name']);
+			$return = $this->importCsvService->importFile($file['tmp_name']);
+			$this->addFlashMessage(LocalizationUtility::translate("Imported %s constants.", array(count($return['success']))));
+			if (count($return['error'])){
+				throw new Exception(LocalizationUtility::translate("Import failed for %s constants.", array(count($return['error']))));
+			}
 		} catch (Exception $exception){
-			$this->addFlashMessage($exception->getMessage(), 'Import failed',\TYPO3\CMS\Core\Messaging\AbstractMessage::ERROR);
+			$this->addFlashMessage($exception->getMessage(), '',\TYPO3\CMS\Core\Messaging\AbstractMessage::ERROR);
 		}
 		$this->redirect('list');
 	}

@@ -30,9 +30,11 @@
 					<f:link.action class="btn-export-csv" format="csv">
 						<span title="Export CSV" class="t3-icon t3-icon-actions t3-icon-actions-edit t3-icon-document-export-csv">&nbsp;</span>
 					</f:link.action>
-					<f:link.action class="btn-import-csv">
-						<span title="Import CSV" class="t3-icon t3-icon-actions t3-icon-actions-edit t3-icon-edit-upload">&nbsp;</span>
-					</f:link.action>
+					<mgn:be.security.isAdmin>
+						<f:link.action class="btn-import-csv">
+							<span title="Import CSV" class="t3-icon t3-icon-actions t3-icon-actions-edit t3-icon-edit-upload">&nbsp;</span>
+						</f:link.action>
+					</mgn:be.security.isAdmin>
 
 					<f:form class="hidden" name="import" action="import" enctype="multipart/form-data">
 						<f:form.upload name="file" />
