@@ -49,10 +49,10 @@
   <f:then>
     <table class="translations table table-bordered" >
       <tr>
-        <th width="25%">ID</th>
+        <th><f:translate key="list.header.source">Source / ID</f:translate></th>
         <f:if condition="{demand.languages}">
           <f:for each="{demand.languages}" as="language">
-            <th>{language}</th>
+            <th><f:translate key="language.{language}"><mgn:language.title key="{language}" /></f:translate></th>
           </f:for>
         </f:if>
       </tr>

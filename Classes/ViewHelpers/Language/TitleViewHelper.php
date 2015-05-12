@@ -1,5 +1,5 @@
 <?php
-namespace MONOGON\TranslationTools\ViewHelpers;
+namespace MONOGON\TranslationTools\ViewHelpers\Language;
 
 /***************************************************************
  *
@@ -27,13 +27,27 @@ namespace MONOGON\TranslationTools\ViewHelpers;
  ***************************************************************/
 
 /**
- * EditableViewHelper
+ * TitleViewHelper
  */
-class EditableViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
+class TitleViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
 
-	public function render ($translations, $languages, $as = 'unit'){
+	/**
+	 * @var MONOGON\TranslationTools\Domain\Repository\SystemLanguageRepository
+	 * @inject
+	 */
+	protected $systemLanguageRepository = NULL;
 
-
+	/**
+	 * [render description]
+	 * @param  string $key [description]
+	 * @return [type]      [description]
+	 */
+	public function render ($key){
+		$language = $this->systemLanguageRepository->findByFlag($key)->getFirst();
+		if ($language){
+			return $language->getTitle();
+		}
+		return ucfirst($key);
 	}
 
 }
