@@ -27,12 +27,11 @@ namespace MONOGON\TranslationTools\Service;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use \Keboola\Csv\CsvFile;
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * ImportCsvService
  */
-class ImportCsvService {
+class ImportCsvService implements \TYPO3\CMS\Core\SingletonInterface {
 
 	/**
 	 * [$fileRepository description]

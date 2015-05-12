@@ -35,7 +35,7 @@ use MONOGON\TranslationTools\Utility\FileUtility;
 /**
  * LocalconfService
  */
-class LocalconfService {
+class LocalconfService implements \TYPO3\CMS\Core\SingletonInterface {
 
 	const OVERWRITE_TOKEN = '## OVERWRITE_TOKEN';
 

@@ -33,7 +33,7 @@ use MONOGON\TranslationTools\Configuration\ExtConf;
 /**
  * TerService
  */
-class TerService {
+class TerService implements \TYPO3\CMS\Core\SingletonInterface {
 
 	/**
 	 * [$ter description]
