@@ -51,13 +51,13 @@ class FileUtility {
 		$files = array();
 
 		$extLocations = GeneralUtility::trimExplode(',', ExtConf::get('locallangDirectories'));
-		// $files = array();
+		$files = array();
 
 		// Traverse extension locations:
 		foreach($extLocations as $path) {
 			$path = GeneralUtility::getFileAbsFileName(static::trailingSlash($path));
 			if (is_dir($path)) {
-				$files = GeneralUtility::getAllFilesAndFoldersInPath(array(), $path, 'xml,xlf', FALSE, 99, 'Tests');
+				$files = array_merge($files, GeneralUtility::getAllFilesAndFoldersInPath(array(), $path, 'xml,xlf', FALSE, 99, 'Tests'));
 			}
 		}
 

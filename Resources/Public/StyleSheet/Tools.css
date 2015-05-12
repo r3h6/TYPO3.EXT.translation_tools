@@ -47,3 +47,7 @@ td.editable .translation-source{
 .msg-div .flash-message {
 	word-break: break-all !important;
 }
+.VS-interface.ui-autocomplete {
+	width: auto !important;
+	max-width: none !important;
+}
